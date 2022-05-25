@@ -37,6 +37,13 @@ resource synapse_workspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
     sqlAdministratorLogin: sqlAdministratorLogin
     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
     managedResourceGroupName: synapse_managedResourceGroupName
+    workspaceRepositoryConfiguration: {
+      accountName: 'weslbo'
+      collaborationBranch: 'main'
+      repositoryName: 'dp-500'
+      rootFolder: '/synapse/'
+      type: 'WorkspaceGitHubConfiguration'
+    }
   }
 }
 
