@@ -1,0 +1,25 @@
+{
+	"name": "adventureworkslt_azuresqldatabase_linkedservice",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=sqlserver-6i6nkvrr23bng.database.windows.net;Initial Catalog=AdventureWorksLT;User ID=azureuser",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "keyvault_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "6i6nkvrr23bng"
+					}
+				},
+				"secretName": "sqlpassword"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
