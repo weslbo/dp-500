@@ -9,7 +9,7 @@
 		"annotations": [],
 		"type": "AzureBlobFS",
 		"typeProperties": {
-			"url": "https://datalake6i6nkvrr23bng.dfs.core.windows.net"
+			"url": "@{concat('https://datalake', linkedService().suffix, '.dfs.core.windows.net')}"
 		},
 		"connectVia": {
 			"referenceName": "AutoResolveIntegrationRuntime",
