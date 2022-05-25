@@ -1,0 +1,19 @@
+{
+	"name": "datalake_linkedservice",
+	"properties": {
+		"parameters": {
+			"suffix": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://datalake6i6nkvrr23bng.dfs.core.windows.net"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
