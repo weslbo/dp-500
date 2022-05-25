@@ -12,3 +12,4 @@ choco install azcopy -y
 choco install microsoft-windows-terminal --pre -y
 choco install powerbi -y
 choco install daxstudio -y
+choco install azure-data-studio -y
