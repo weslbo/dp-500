@@ -1,0 +1,6 @@
+{
+	"name": "synapse-selfhosted-integrationruntime",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
