@@ -37,6 +37,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-07-01' = {
               service: 'Microsoft.Storage'
             }
           ]
+          networkSecurityGroup: {
+            id: nsg.id
+          }
         }
       }
       {
@@ -45,6 +48,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-07-01' = {
           addressPrefix: '10.10.1.0/24'
           privateEndpointNetworkPolicies: 'Disabled'
           privateLinkServiceNetworkPolicies: 'Disabled'
+          networkSecurityGroup: {
+            id: nsg.id
+          }
         }
       }
     ]
@@ -175,27 +181,10 @@ resource vm_powerbi_networkInterface 'Microsoft.Network/networkInterfaces@2018-1
           subnet: {
             id: '${vnet.id}/subnets/PowerBISubnet'
           }
-          publicIPAddress: {
-            id: vm_powerbi_publicIPAddress.id
-          }
           privateIPAllocationMethod: 'Dynamic'
         }
       }
     ]
-  }
-}
-
-resource vm_powerbi_publicIPAddress 'Microsoft.Network/publicIPAddresses@2020-03-01' = {
-  name: 'vm-powerbi-pip'
-  location: location
-  sku: {
-    name: 'Standard'
-  }
-  properties: {
-    publicIPAllocationMethod: 'Static'
-    dnsSettings: {
-      domainNameLabel: 'vm-powerbi'
-    }
   }
 }
 
@@ -220,4 +209,92 @@ resource vm_powerbi_shutdown_name 'Microsoft.DevTestLab/schedules@2018-09-15' = 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
   name: 'managed-identity'
   location: location
+}
+
+
+resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
+  name: 'nsg-vnet-dp-500'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowGatewayManager'
+        properties: {
+          description: 'Allow GatewayManager'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '443'
+          sourceAddressPrefix: 'GatewayManager'
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 2702
+          direction: 'Inbound'
+          sourcePortRanges: []
+          destinationPortRanges: []
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+        }
+      }
+      {
+        name: 'AllowHttpsInBound'
+        properties: {
+          description: 'Allow HTTPs'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '443'
+          sourceAddressPrefix: 'Internet'
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 2703
+          direction: 'Inbound'
+          sourcePortRanges: []
+          destinationPortRanges: []
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+        }
+      }
+      {
+        name: 'AllowSshRdpOutbound'
+        properties: {
+          protocol: '*'
+          sourcePortRange: '*'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: 'VirtualNetwork'
+          access: 'Allow'
+          priority: 100
+          direction: 'Outbound'
+          sourcePortRanges: []
+          destinationPortRanges: [
+            '22'
+            '3389'
+          ]
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+        }
+      }
+      {
+        name: 'AllowAzureCloudOutbound'
+        properties: {
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '443'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: 'AzureCloud'
+          access: 'Allow'
+          priority: 110
+          direction: 'Outbound'
+          sourcePortRanges: []
+          destinationPortRanges: []
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+        }
+      }
+    ]
+  }
+}
+
+resource networkwatcher 'Microsoft.Network/networkWatchers@2020-11-01' = {
+  name: 'NetworkWatcher_${location}'
+  location: location
+  properties: {}
 }
