@@ -10,6 +10,7 @@ choco install azure-cli -y
 choco install azurepowershell -y
 choco install azcopy -y
 choco install microsoft-windows-terminal --pre -y
-choco install powerbi -y
+choco install powerbi -y --ignore-checksums
 choco install daxstudio -y
 choco install azure-data-studio -y
+choco install powerbi-reportbuilder -y
