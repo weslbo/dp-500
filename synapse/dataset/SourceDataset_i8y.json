@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_i8y",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "github_dp_500_http_linkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "Allfiles/01/data/2019.csv"
+			}
+		}
+	}
+}
