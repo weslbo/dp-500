@@ -170,7 +170,8 @@
 					"Allfiles/04/data/FactResellerSales.fmt",
 					"Allfiles/04/data/FactResellerSales.txt",
 					"Allfiles/04/data/FactSalesQuota.fmt",
-					"Allfiles/04/data/FactSalesQuota.txt"
+					"Allfiles/04/data/FactSalesQuota.txt",
+					"Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
 				]
 			}
 		},
