@@ -1,0 +1,180 @@
+{
+	"name": "00_setupdata_pipeline",
+	"properties": {
+		"description": "This pipeline sets up some sample data in the data lake",
+		"activities": [
+			{
+				"name": "ForEachFileNameInParam",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('fileNames')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data from Github into ADLS",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "github_dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "adls_landingzone_dataset",
+									"type": "DatasetReference",
+									"parameters": {
+										"fileName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"fileNames": {
+				"type": "Array",
+				"defaultValue": [
+					"Allfiles/01/data/2019.csv",
+					"Allfiles/01/data/2019.snappy.parquet",
+					"Allfiles/01/data/2020.csv",
+					"Allfiles/01/data/2020.snappy.parquet",
+					"Allfiles/01/data/2021.csv",
+					"Allfiles/01/data/2021.snappy.parquet",
+					"Allfiles/01/data/SO43700.json",
+					"Allfiles/01/data/SO43701.json",
+					"Allfiles/01/data/SO43703.json",
+					"Allfiles/01/data/SO43704.json",
+					"Allfiles/01/data/SO43705.json",
+					"Allfiles/03/data/DimAccount.fmt",
+					"Allfiles/03/data/DimAccount.txt",
+					"Allfiles/03/data/DimCurrency.fmt",
+					"Allfiles/03/data/DimCurrency.txt",
+					"Allfiles/03/data/DimCustomer.fmt",
+					"Allfiles/03/data/DimCustomer.txt",
+					"Allfiles/03/data/DimDate.fmt",
+					"Allfiles/03/data/DimDate.txt",
+					"Allfiles/03/data/DimDepartmentGroup.fmt",
+					"Allfiles/03/data/DimDepartmentGroup.txt",
+					"Allfiles/03/data/DimEmployee.fmt",
+					"Allfiles/03/data/DimEmployee.txt",
+					"Allfiles/03/data/DimGeography.fmt",
+					"Allfiles/03/data/DimGeography.txt",
+					"Allfiles/03/data/DimOrganization.fmt",
+					"Allfiles/03/data/DimOrganization.txt",
+					"Allfiles/03/data/DimProduct.fmt",
+					"Allfiles/03/data/DimProduct.txt",
+					"Allfiles/03/data/DimProductCategory.fmt",
+					"Allfiles/03/data/DimProductCategory.txt",
+					"Allfiles/03/data/DimProductSubCategory.fmt",
+					"Allfiles/03/data/DimProductSubCategory.txt",
+					"Allfiles/03/data/DimPromotion.fmt",
+					"Allfiles/03/data/DimPromotion.txt",
+					"Allfiles/03/data/DimReseller.fmt",
+					"Allfiles/03/data/DimReseller.txt",
+					"Allfiles/03/data/DimSalesTerritory.fmt",
+					"Allfiles/03/data/DimSalesTerritory.txt",
+					"Allfiles/03/data/FactInternetSales.fmt",
+					"Allfiles/03/data/FactInternetSales.txt",
+					"Allfiles/03/data/FactResellerSales.fmt",
+					"Allfiles/03/data/FactResellerSales.txt",
+					"Allfiles/04/data/AdventureWorksDWBuildVersion.fmt",
+					"Allfiles/04/data/AdventureWorksDWBuildVersion.txt",
+					"Allfiles/04/data/DimAccount.fmt",
+					"Allfiles/04/data/DimAccount.txt",
+					"Allfiles/04/data/DimCurrency.fmt",
+					"Allfiles/04/data/DimCurrency.txt",
+					"Allfiles/04/data/DimCustomer.fmt",
+					"Allfiles/04/data/DimCustomer.txt",
+					"Allfiles/04/data/DimDate.fmt",
+					"Allfiles/04/data/DimDate.txt",
+					"Allfiles/04/data/DimDepartmentGroup.fmt",
+					"Allfiles/04/data/DimDepartmentGroup.txt",
+					"Allfiles/04/data/DimEmployee.fmt",
+					"Allfiles/04/data/DimEmployee.txt",
+					"Allfiles/04/data/DimGeography.fmt",
+					"Allfiles/04/data/DimGeography.txt",
+					"Allfiles/04/data/DimOrganization.fmt",
+					"Allfiles/04/data/DimOrganization.txt",
+					"Allfiles/04/data/DimProduct.fmt",
+					"Allfiles/04/data/DimProduct.txt",
+					"Allfiles/04/data/DimProductCategory.fmt",
+					"Allfiles/04/data/DimProductCategory.txt",
+					"Allfiles/04/data/DimProductSubCategory.fmt",
+					"Allfiles/04/data/DimProductSubCategory.txt",
+					"Allfiles/04/data/DimPromotion.fmt",
+					"Allfiles/04/data/DimPromotion.txt",
+					"Allfiles/04/data/DimReseller.fmt",
+					"Allfiles/04/data/DimReseller.txt",
+					"Allfiles/04/data/DimSalesReason.fmt",
+					"Allfiles/04/data/DimSalesReason.txt",
+					"Allfiles/04/data/DimSalesTerritory.fmt",
+					"Allfiles/04/data/DimSalesTerritory.txt",
+					"Allfiles/04/data/DimScenario.fmt",
+					"Allfiles/04/data/DimScenario.txt",
+					"Allfiles/04/data/FactCallCenter.fmt",
+					"Allfiles/04/data/FactCallCenter.txt",
+					"Allfiles/04/data/FactCurrencyRate.fmt",
+					"Allfiles/04/data/FactCurrencyRate.txt",
+					"Allfiles/04/data/FactFinance.fmt",
+					"Allfiles/04/data/FactFinance.txt",
+					"Allfiles/04/data/FactInternetSales.fmt",
+					"Allfiles/04/data/FactInternetSales.txt",
+					"Allfiles/04/data/FactInternetSalesReason.fmt",
+					"Allfiles/04/data/FactInternetSalesReason.txt",
+					"Allfiles/04/data/FactProductInventory.fmt",
+					"Allfiles/04/data/FactProductInventory.txt",
+					"Allfiles/04/data/FactResellerSales.fmt",
+					"Allfiles/04/data/FactResellerSales.txt",
+					"Allfiles/04/data/FactSalesQuota.fmt",
+					"Allfiles/04/data/FactSalesQuota.txt",
+					"Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
+				]
+			}
+		},
+		"annotations": []
+	}
+}
