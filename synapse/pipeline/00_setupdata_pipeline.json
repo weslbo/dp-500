@@ -1,9 +1,10 @@
 {
-	"name": "CopyPipeline_i8y",
+	"name": "00_setupdata_pipeline",
 	"properties": {
+		"description": "This pipeline sets up some sample data in the data lake",
 		"activities": [
 			{
-				"name": "Copy_i8y",
+				"name": "Copy github data",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -29,6 +30,9 @@
 						"storeSettings": {
 							"type": "HttpReadSettings",
 							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "BinaryReadSettings"
 						}
 					},
 					"sink": {
@@ -41,13 +45,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_i8y",
+						"referenceName": "github_dataset",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_i8y",
+						"referenceName": "adls_landingzone_dataset",
 						"type": "DatasetReference"
 					}
 				]

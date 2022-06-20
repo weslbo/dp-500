@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_i8y",
+	"name": "github_dataset",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "github_dp_500_http_linkedservice",
