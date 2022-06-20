@@ -2,15 +2,29 @@
 	"name": "adls_landingzone_dataset",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "synapse-6i6nkvrr23bng-WorkspaceDefaultStorage",
-			"type": "LinkedServiceReference"
+			"referenceName": "datalake_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": {
+					"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
 		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "2019.csv",
+				"fileName": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				},
 				"fileSystem": "landing"
 			}
 		}

@@ -5,12 +5,20 @@
 			"referenceName": "github_dp_500_http_linkedservice",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "HttpServerLocation",
-				"relativeUrl": "Allfiles/01/data/2019.csv"
+				"relativeUrl": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				}
 			}
 		}
 	}
