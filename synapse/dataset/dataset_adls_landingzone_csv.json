@@ -12,7 +12,7 @@
 			}
 		},
 		"parameters": {
-			"fileName": {
+			"tableName": {
 				"type": "string"
 			}
 		},
@@ -22,7 +22,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().fileName",
+					"value": "@concat('adventureworkslt/tables/csv/', dataset().tableName, '.csv')",
 					"type": "Expression"
 				},
 				"fileSystem": "landing"

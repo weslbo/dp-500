@@ -22,7 +22,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@concat('adventureworkslt/tables/', dataset().tableName, '.parquet')",
+					"value": "@concat('adventureworkslt/tables/parquet/', dataset().tableName, '.parquet')",
 					"type": "Expression"
 				},
 				"fileSystem": "landing"
