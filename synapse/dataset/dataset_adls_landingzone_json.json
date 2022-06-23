@@ -1,0 +1,64 @@
+{
+	"name": "dataset_adls_landingzone_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": {
+					"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"SalesOrderNumber": {
+					"type": "string"
+				},
+				"SalesOrderLineItem": {
+					"type": "integer"
+				},
+				"OrderDate": {
+					"type": "string"
+				},
+				"CustomerName": {
+					"type": "string"
+				},
+				"EmailAddress": {
+					"type": "string"
+				},
+				"Item": {
+					"type": "string"
+				},
+				"Quantity": {
+					"type": "integer"
+				},
+				"UnitPrice": {
+					"type": "number"
+				},
+				"TaxAmount": {
+					"type": "number"
+				}
+			}
+		}
+	}
+}
