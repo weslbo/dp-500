@@ -32,43 +32,6 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "SO43701",
-				"type": "String"
-			},
-			{
-				"name": "11",
-				"type": "String"
-			},
-			{
-				"name": "2019-07-01",
-				"type": "String"
-			},
-			{
-				"name": "Christy Zhu",
-				"type": "String"
-			},
-			{
-				"name": "christy12@adventure-works.com",
-				"type": "String"
-			},
-			{
-				"name": "Mountain-100 Silver, 44",
-				"type": "String"
-			},
-			{
-				"name": "16",
-				"type": "String"
-			},
-			{
-				"name": "3399.99",
-				"type": "String"
-			},
-			{
-				"name": "271.9992",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }

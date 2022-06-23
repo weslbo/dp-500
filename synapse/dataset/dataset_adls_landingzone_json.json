@@ -12,7 +12,7 @@
 			}
 		},
 		"parameters": {
-			"fileName": {
+			"tableName": {
 				"type": "string"
 			}
 		},
@@ -22,43 +22,12 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().fileName",
+					"value": "@concat('adventureworkslt/tables/json/', dataset().tableName, '.json')",
 					"type": "Expression"
 				},
 				"fileSystem": "landing"
 			}
 		},
-		"schema": {
-			"type": "object",
-			"properties": {
-				"SalesOrderNumber": {
-					"type": "string"
-				},
-				"SalesOrderLineItem": {
-					"type": "integer"
-				},
-				"OrderDate": {
-					"type": "string"
-				},
-				"CustomerName": {
-					"type": "string"
-				},
-				"EmailAddress": {
-					"type": "string"
-				},
-				"Item": {
-					"type": "string"
-				},
-				"Quantity": {
-					"type": "integer"
-				},
-				"UnitPrice": {
-					"type": "number"
-				},
-				"TaxAmount": {
-					"type": "number"
-				}
-			}
-		}
+		"schema": {}
 	}
 }
