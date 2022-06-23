@@ -1,0 +1,17 @@
+{
+	"name": "sql_serverless_parquet",
+	"properties": {
+		"content": {
+			"query": "-- REMEMBER to replace the datalake account url\n\n-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
