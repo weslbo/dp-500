@@ -1,5 +1,5 @@
 {
-	"name": "github_dataset",
+	"name": "dataset_github_dp_500",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "github_dp_500_http_linkedservice",

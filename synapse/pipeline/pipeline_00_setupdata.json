@@ -1,5 +1,5 @@
 {
-	"name": "00_setupdata_pipeline",
+	"name": "pipeline_00_setupdata",
 	"properties": {
 		"description": "This pipeline sets up some sample data in the data lake",
 		"activities": [
@@ -47,7 +47,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "github_dataset",
+									"referenceName": "dataset_github_dp_500",
 									"type": "DatasetReference",
 									"parameters": {
 										"fileName": {
@@ -59,10 +59,86 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "adls_landingzone_dataset",
+									"referenceName": "dataset_adls_landingzone_binary",
 									"type": "DatasetReference",
 									"parameters": {
 										"fileName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "ForEachSqlTableName",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('sqlTableNames')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data from SQL",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dataset_azuresql_adventureworkslt",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dataset_adls_landingzone_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
 											"value": "@item()",
 											"type": "Expression"
 										}
@@ -172,6 +248,21 @@
 					"Allfiles/04/data/FactSalesQuota.fmt",
 					"Allfiles/04/data/FactSalesQuota.txt",
 					"Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
+				]
+			},
+			"sqlTableNames": {
+				"type": "Array",
+				"defaultValue": [
+					"[SalesLT].[Customer]",
+					"[SalesLT].[ProductModel]",
+					"[SalesLT].[ProductDescription]",
+					"[SalesLT].[Product]",
+					"[SalesLT].[ProductModelProductDescription]",
+					"[SalesLT].[ProductCategory]",
+					"[SalesLT].[Address]",
+					"[SalesLT].[CustomerAddress]",
+					"[SalesLT].[SalesOrderDetail]",
+					"[SalesLT].[SalesOrderHeader]"
 				]
 			}
 		},
