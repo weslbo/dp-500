@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "adventureworkslt_azuresqldatabase_linkedservice",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": "@replace(pipeline().DataFactory, 'synapse-', '')"
+			}
 		},
 		"parameters": {
 			"tableName": {
