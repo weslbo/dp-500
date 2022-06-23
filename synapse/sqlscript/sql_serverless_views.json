@@ -1,0 +1,17 @@
+{
+	"name": "sql_serverless_views",
+	"properties": {
+		"content": {
+			"query": "-- Do this only once!\nCREATE DATABASE AdventureWorksLTServerless\n\nUSE AdventureWorksLTServerless\nGO\n\nCREATE SCHEMA SalesLT\n\nCREATE VIEW SalesLT.Address AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Address.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Customer AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Customer.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.CustomerAddress AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Product AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductCategory AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModel AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModelProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderDetail AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderHeader AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet', FORMAT = 'PARQUET') AS [result]\n\n\n\n\n\n\nSELECT * FROM SalesLT.Customer",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLTServerless",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
