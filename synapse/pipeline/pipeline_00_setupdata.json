@@ -85,7 +85,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data from SQL",
+							"name": "Copy data from SQL to Parquet",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -136,6 +136,124 @@
 							"outputs": [
 								{
 									"referenceName": "dataset_adls_landingzone_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@replace(replace(item(), '[', ''), ']', '')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Copy data from SQL to CSV",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dataset_azuresql_adventureworkslt",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dataset_adls_landingzone_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@replace(replace(item(), '[', ''), ']', '')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Copy data from SQL to JSON",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "JsonSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "JsonWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "dataset_azuresql_adventureworkslt",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dataset_adls_landingzone_json",
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {
