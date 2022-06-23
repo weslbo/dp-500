@@ -139,7 +139,7 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"tableName": {
-											"value": "@item()",
+											"value": "@replace(replace(item(), '[', ''), ']', '')",
 											"type": "Expression"
 										}
 									}
