@@ -1,5 +1,5 @@
 {
-	"name": "adls_landingzone_dataset",
+	"name": "dataset_adls_landingzone_parquet",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "datalake_linkedservice",
@@ -12,21 +12,23 @@
 			}
 		},
 		"parameters": {
-			"fileName": {
+			"tableName": {
 				"type": "string"
 			}
 		},
 		"annotations": [],
-		"type": "Binary",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().fileName",
+					"value": "@concat('adventureworkslt/tables/', dataset().tableName, '.parquet')",
 					"type": "Expression"
 				},
 				"fileSystem": "landing"
-			}
-		}
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
 	}
 }

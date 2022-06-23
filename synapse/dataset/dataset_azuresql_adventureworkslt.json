@@ -1,0 +1,23 @@
+{
+	"name": "dataset_azuresql_adventureworkslt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adventureworkslt_azuresqldatabase_linkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
