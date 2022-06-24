@@ -1,0 +1,116 @@
+{
+	"name": "pipeline_01_dwh",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEachSqlTable",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('sqlTableNames')",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy sql Table",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "dataset_azuresql_adventureworks_dwh",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@item()",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "dataset_adls_landingzone_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"tableName": {
+											"value": "@replace(replace(item(), '[', ''), ']', '')",
+											"type": "Expression"
+										},
+										"sourceSystem": "adventureworksdwh"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"sqlTableNames": {
+				"type": "Array",
+				"defaultValue": [
+					"DimAccount",
+					"DimCurrency",
+					"DimCustomer",
+					"DimDate",
+					"DimDepartmentGroup",
+					"DimEmployee",
+					"DimGeography",
+					"DimOrganization",
+					"DimProduct",
+					"DimProductCategory",
+					"DimProductSubcategory",
+					"DimPromotion",
+					"DimReseller",
+					"DimSalesReason",
+					"DimSalesTerritory",
+					"DimScenario",
+					"FactCallCenter",
+					"FactCurrencyRate",
+					"FactFinance",
+					"FactInternetSales",
+					"FactInternetSalesReason",
+					"FactProductInventory",
+					"FactResellerSales",
+					"FactSalesQuota"
+				]
+			}
+		},
+		"annotations": []
+	}
+}
