@@ -1,0 +1,17 @@
+{
+	"name": "sql_serverless_external_tables",
+	"properties": {
+		"content": {
+			"query": "-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA Ext\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\n-- Remember to change datalake url\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'DataLakeLandingZone') \n\tCREATE EXTERNAL DATA SOURCE [DataLakeLandingZone] \n\tWITH (\n\t\tLOCATION = 'abfss://landing@datalake3mstaeetovkk4.dfs.core.windows.net' \n\t)\nGO\n\n-- Note: updated the data types to match the orginal (instead of relying on nvarchar(4000) all the time)\nCREATE EXTERNAL TABLE [Ext].[Address] (\n\t[AddressID] int,\n\t[AddressLine1] nvarchar(60),\n\t[AddressLine2] nvarchar(60),\n\t[City] nvarchar(30),\n\t[StateProvince] nvarchar(50),\n\t[CountryRegion] nvarchar(50),\n\t[PostalCode] nvarchar(15),\n\t[rowguid] UNIQUEIDENTIFIER,\n\t[ModifiedDate] datetime2(7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Address.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM [ext].[Address]\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLTServerless",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
