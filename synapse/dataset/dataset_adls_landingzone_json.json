@@ -1,0 +1,33 @@
+{
+	"name": "dataset_adls_landingzone_json",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": {
+					"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat('adventureworkslt/tables/json/', dataset().tableName, '.json')",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			}
+		},
+		"schema": {}
+	}
+}

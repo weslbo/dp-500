@@ -1,0 +1,37 @@
+{
+	"name": "dataset_adls_landingzone_csv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": {
+					"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat('adventureworkslt/tables/csv/', dataset().tableName, '.csv')",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

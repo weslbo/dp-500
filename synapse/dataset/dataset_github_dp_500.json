@@ -1,0 +1,25 @@
+{
+	"name": "dataset_github_dp_500",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "github_dp_500_http_linkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"fileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": {
+					"value": "@dataset().fileName",
+					"type": "Expression"
+				}
+			}
+		}
+	}
+}

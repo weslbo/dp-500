@@ -1,0 +1,34 @@
+{
+	"name": "dataset_adls_landingzone_parquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "datalake_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": {
+					"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat('adventureworkslt/tables/parquet/', dataset().tableName, '.parquet')",
+					"type": "Expression"
+				},
+				"fileSystem": "landing"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
