@@ -1,0 +1,30 @@
+{
+	"name": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+	"properties": {
+		"parameters": {
+			"suffix": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat('sqlserver-', linkedService().suffix, '.database.windows.net')}\";Initial Catalog=AdventureWorksDW2022-DP-500;User ID=azureuser",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "keyvault_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "@linkedService().suffix"
+					}
+				},
+				"secretName": "sqlpassword"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
