@@ -1,0 +1,26 @@
+{
+	"name": "dataset_azuresql_adventureworks_dwh",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": "@replace(pipeline().DataFactory, 'synapse-', '')"
+			}
+		},
+		"parameters": {
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	}
+}
