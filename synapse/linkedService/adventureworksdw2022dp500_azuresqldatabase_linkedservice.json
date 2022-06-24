@@ -16,7 +16,7 @@
 					"referenceName": "keyvault_linkedservice",
 					"type": "LinkedServiceReference",
 					"parameters": {
-						"suffix": "3mstaeetovkk4"
+						"suffix": "@linkedService().suffix"
 					}
 				},
 				"secretName": "sqlpassword"
