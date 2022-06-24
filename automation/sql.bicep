@@ -37,7 +37,7 @@ resource sqlsvr 'Microsoft.Sql/servers@2021-11-01-preview' = {
 }
 
 // Azure SQL Database
-resource sqldb 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
+resource sqldb_adventureworkslt 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
   parent: sqlsvr
   name: 'AdventureWorksLT'
   location: location
@@ -53,6 +53,25 @@ resource sqldb 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
     autoPauseDelay: 60
     requestedBackupStorageRedundancy: 'Local'
     sampleName: 'AdventureWorksLT'
+  }
+}
+
+// Azure SQL Database
+resource sqldb_adventureworksdwh 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
+  parent: sqlsvr
+  name: 'AdventureWorksDW2022-DP-500'
+  location: location
+  sku: {
+    name: 'GP_S_Gen5' // serverless
+    tier: 'GeneralPurpose'
+    family: 'Gen5'
+    capacity: 1
+  }
+  properties: {
+    collation: 'SQL_Latin1_General_CP1_CI_AS'
+    catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
+    autoPauseDelay: 60
+    requestedBackupStorageRedundancy: 'Local'
   }
 }
 

@@ -26,8 +26,28 @@ resource datalake 'Microsoft.Storage/storageAccounts@2021-09-01' = {
 
   resource service 'blobServices' = {
     name: 'default'
-    resource container 'containers' = {
+    resource synapse 'containers' = {
       name: 'synapse'
+    }
+
+    resource landing 'containers' = {
+      name: 'landing'
+    }
+
+    resource conformance 'containers' = {
+      name: 'conformance'
+    }
+
+    resource standardized 'containers' = {
+      name: 'standardized'
+    }
+
+    resource dataproducts 'containers' = {
+      name: 'dataproducts'
+    }
+
+    resource analytics 'containers' = {
+      name: 'analytics'
     }
   }
 }

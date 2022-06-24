@@ -11,15 +11,23 @@ param sqlAdministratorLogin string = 'azureuser'
 @description('Please specify a password for the Azure SQL Server administrator')
 param sqlAdministratorLoginPassword string
 
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: 'rg-dp-500'
+@description('Specifies the object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault. The object ID must be unique for the list of access policies. Get it by using Get-AzADUser or Get-AzADServicePrincipal cmdlets.')
+param userObjectId string
+
+resource rg_platform 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: 'rg-dp-500-platform'
+  location: location
+}
+
+resource rg_infra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: 'rg-dp-500-infra'
   location: location
 }
 
 // deploy datalake using module
 module datalake 'datalake.bicep' = {
   name: 'datalake-deployment'
-  scope: rg
+  scope: rg_platform
   params: {
     location: location
   }
@@ -27,7 +35,7 @@ module datalake 'datalake.bicep' = {
 
 module synapse 'synapse.bicep' = {
   name: 'synapse-deployment'
-  scope: rg
+  scope: rg_platform
   params: {
     location: location
     sqlAdministratorLogin: sqlAdministratorLogin
@@ -39,7 +47,7 @@ module synapse 'synapse.bicep' = {
 
 module purview 'purview.bicep' = {
   name: 'purview-deployment'
-  scope: rg
+  scope: rg_platform
   params: {
     location: location
   }
@@ -47,7 +55,7 @@ module purview 'purview.bicep' = {
 
 module sql 'sql.bicep' = {
   name: 'sql-deployment'
-  scope: rg
+  scope: rg_platform
   params: {
     location: location
     sqlAdministratorLogin: sqlAdministratorLogin
@@ -57,17 +65,18 @@ module sql 'sql.bicep' = {
 
 module permissions 'permissions.bicep' = {
   name: 'permissions-deployment'
-  scope: rg
+  scope: rg_platform
   params: {
     datalake_name: datalake.outputs.datalake_name
     synapse_name: synapse.outputs.synapse_name
     purview_name: purview.outputs.purview_name
+    userObjectId: userObjectId
   }
 }
 
 module keyvault 'keyvault.bicep' = {
-  name: 'keyvault-deploymnet'
-  scope: rg
+  name: 'keyvault-deployment'
+  scope: rg_platform
   params: {
     location: location
     purview_managed_identity: purview.outputs.purview_managed_identity
@@ -76,9 +85,9 @@ module keyvault 'keyvault.bicep' = {
   }
 }
 
-module vmpowerbi 'vm-powerbi.bicep' = {
-  name: 'vm-powerbi-deployment'
-  scope: rg
+module vmpowerbi 'infra.bicep' = {
+  name: 'infra-deployment'
+  scope: rg_infra
   params: {
     location: location
     sqlAdministratorLogin: sqlAdministratorLogin

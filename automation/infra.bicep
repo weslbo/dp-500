@@ -4,7 +4,7 @@ targetScope = 'resourceGroup'
 param sqlAdministratorLogin string = 'azureuser'
 
 @secure()
-@description('Please specify a password for the Azure SQL Server administrator')
+@description('Please specify a password for the SQL Server administrator')
 param sqlAdministratorLoginPassword string
 
 @description('Please specify a location')
@@ -48,6 +48,22 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-07-01' = {
           addressPrefix: '10.10.1.0/24'
           privateEndpointNetworkPolicies: 'Disabled'
           privateLinkServiceNetworkPolicies: 'Disabled'
+          networkSecurityGroup: {
+            id: nsg.id
+          }
+        }
+      }
+      {
+        name: 'DatabaseSubnet'
+        properties: {
+          addressPrefix: '10.10.2.0/24'
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Enabled'
+          serviceEndpoints: [
+            {
+              service: 'Microsoft.Storage'
+            }
+          ]
           networkSecurityGroup: {
             id: nsg.id
           }
@@ -297,4 +313,102 @@ resource networkwatcher 'Microsoft.Network/networkWatchers@2020-11-01' = {
   name: 'NetworkWatcher_${location}'
   location: location
   properties: {}
+}
+
+resource vm_sqlserver 'Microsoft.Compute/virtualMachines@2020-06-01' = {
+  name: 'vm-sqlserver'
+  location: location
+  properties: {
+    hardwareProfile: {
+      vmSize: 'Standard_D8s_v3'
+    }
+    storageProfile: {
+      osDisk: {
+        name: 'vm-sqlserver-disk-os'
+        createOption: 'FromImage'
+        managedDisk: {
+          storageAccountType: 'Premium_LRS'
+        }
+      }
+      imageReference: {
+        publisher: 'MicrosoftSQLServer'
+        offer: 'sql2019-ws2019'
+        sku: 'sqldev'
+        version: 'latest'
+      }
+      dataDisks: [
+        {
+          name: 'vm-sqlserver-disk-data'
+          lun: 0
+          createOption: 'Empty'
+          diskSizeGB: 1023
+          managedDisk: {
+            storageAccountType: 'Premium_LRS'
+          }
+        }
+      ]
+    }
+    networkProfile: {
+      networkInterfaces: [
+        {
+          id: vm_sqlserver_networkInterface.id
+        }
+      ]
+    }
+    osProfile: {
+      computerName: 'vm-sqlserver'
+      adminUsername: sqlAdministratorLogin
+      adminPassword: sqlAdministratorLoginPassword
+      windowsConfiguration: {
+        enableAutomaticUpdates: true
+        provisionVMAgent: true
+        patchSettings: {
+          patchMode: 'AutomaticByOS'
+        }
+      }
+    }
+    licenseType: 'Windows_Client'
+  }
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+}
+
+resource vm_sqlserver_networkInterface 'Microsoft.Network/networkInterfaces@2018-10-01' = {
+  name: 'vm-sqlserver-nic'
+  location: location
+  properties: {
+    ipConfigurations: [
+      {
+        name: 'ipconfig1'
+        properties: {
+          subnet: {
+            id: '${vnet.id}/subnets/DatabaseSubnet'
+          }
+          privateIPAllocationMethod: 'Dynamic'
+        }
+      }
+    ]
+  }
+}
+
+resource vm_sqlserver_shutdown_name 'Microsoft.DevTestLab/schedules@2018-09-15' = {
+  name: 'shutdown-computevm-${vm_sqlserver.name}'
+  location: location
+  properties: {
+    status: 'Enabled'
+    taskType: 'ComputeVmShutdownTask'
+    dailyRecurrence: {
+      time: '1800'
+    }
+    timeZoneId: 'Central Europe Standard Time'
+    notificationSettings: {
+      status: 'Disabled'
+      timeInMinutes: 30
+    }
+    targetResourceId: vm_sqlserver.id
+  }
 }
