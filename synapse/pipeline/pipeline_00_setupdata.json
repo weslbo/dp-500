@@ -141,7 +141,8 @@
 										"tableName": {
 											"value": "@replace(replace(item(), '[', ''), ']', '')",
 											"type": "Expression"
-										}
+										},
+										"sourceSystem": "adventureworkslt"
 									}
 								}
 							]

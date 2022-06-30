@@ -14,6 +14,9 @@
 		"parameters": {
 			"tableName": {
 				"type": "string"
+			},
+			"sourceSystem": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -22,7 +25,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@concat('adventureworkslt/tables/parquet/', dataset().tableName, '.parquet')",
+					"value": "@concat(dataset().sourceSystem, '/tables/parquet/', dataset().tableName, '.parquet')",
 					"type": "Expression"
 				},
 				"fileSystem": "landing"
