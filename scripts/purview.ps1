@@ -1,6 +1,4 @@
 $suffix=''
-$sqlPassword = ""
-$sqlPasswordSecure = $(ConvertTo-SecureString -String $sqlPassword -AsPlainText -Force)
 
 $purviewAccount = "purview-${suffix}"
 $purviewEndpoint = "https://${purviewAccount}.purview.azure.com/"
@@ -11,16 +9,11 @@ Install-Module -name Az.Purview
 Install-Module -name SqlServer
 Connect-AzAccount # not sure if this is necessary when working with a managed identity?
 
-# Retrieve storage account key
-$storageAccountKey = "$(az storage account keys list --account-name datalake${suffix} --resource-group rg-dp-500-platform --query "[0].{value:value}" --output tsv)"
-
-# Import datawarehouse into SQL
-New-AzSqlDatabaseImport -ResourceGroupName rg-dp-500-platform -ServerName "sqlserver-${suffix}" -DatabaseName "AdventureWorksDW2022-DP-500" -StorageKeyType "StorageAccessKey" -StorageKey $storageAccountKey -StorageUri "https://datalake${suffix}.blob.core.windows.net/landing/Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac" -AdministratorLogin azureuser -AdministratorLoginPassword $sqlPasswordSecure -Edition "GeneralPurpose" -ServiceObjectiveName "GP_S_Gen5_1" -DatabaseMaxSizeBytes 10GB
-
 # Retrieve existing registered data sources from Purview
 $datasources = (Get-AzPurviewDataSource -Endpoint $purviewEndpoint | Select-Object -ExpandProperty Name)
 
 # If not exists, setup a Keyvault connection
+# This will be required in order to retrieve credentials
 $keyvaultConnections = (Get-AzPurviewKeyVaultConnection -Endpoint $purviewEndpoint | Select-Object -ExpandProperty Name)
 if ($keyvaultConnections -NotContains "KeyVaultConnection") {
     $kvConn = New-AzPurviewAzureKeyVaultObject -BaseUrl $keyvaultEndpoint -Description 'Connection to Key Vault'
@@ -44,15 +37,36 @@ if ($datasources -NotContains "AzureSQL") {
     $sql = New-AzPurviewAzureSqlDatabaseDataSourceObject -Kind "AzureSqlDatabase" -CollectionReferenceName $purviewAccount -CollectionType "CollectionReference" -ServerEndpoint $sqlEndpoint
     New-AzPurviewDataSource -Endpoint $purviewEndpoint -Name "AzureSQL" -Body $sql
 
-    # $sql = "CREATE USER [${purviewAccount}] FROM EXTERNAL PROVIDER; EXEC sp_addrolemember 'db_owner', [${purviewAccount}]; CREATE MASTER KEY;"
-    # Invoke-Sqlcmd -Query $sql -ServerInstance $sqlEndpoint -Database AdventureWorksLT -Username azureuser -Password $sqlPassword
+    # Before you set up your scan, we have to create a new credential
+    # Unfortunatly, there is no PowerShell command available yet. 
+    # Check out https://docs.microsoft.com/en-us/powershell/module/az.purview/?view=azps-8.0.0#purview
+    # So, we need to manually create the credential in Azure Purview
+    # - Name: sqlauth
+    # - Authentication method: SQL Authentication
+    # - Username: azureuser
+    # - Password: <keyvault connection>
+    # - Secret name: sqlpassword
+    # - Secret version: use latest version
 
-    $sql_scan = New-AzPurviewAzureSqlDatabaseCredentialScanObject -Kind 'AzureSqlDatabaseCredential' -CollectionReferenceName $purviewAccount -CollectionType 'CollectionReference' -CredentialReferenceName 'sqlauth' -CredentialType 'SqlAuth' -DatabaseName 'AdventureWorksLT' -ScanRulesetName 'AzureSqlDatabase' -ScanRulesetType 'System' -ServerEndpoint $sqlEndpoint
-    New-AzPurviewScan -Endpoint $purviewEndpoint -DataSourceName "AzureSQL" -Name "DataScan-AdventureWorksLT" -Body $sql_scan
+    $AdventureWorksLT_scan = New-AzPurviewAzureSqlDatabaseCredentialScanObject -Kind 'AzureSqlDatabaseCredential' -CollectionReferenceName $purviewAccount -CollectionType 'CollectionReference' -CredentialReferenceName 'sqlauth' -CredentialType 'SqlAuth' -DatabaseName 'AdventureWorksLT' -ScanRulesetName 'AzureSqlDatabase_AdventureWorksLT' -ScanRulesetType 'System' -ServerEndpoint $sqlEndpoint
+    $AdventureWorksDW_scan = New-AzPurviewAzureSqlDatabaseCredentialScanObject -Kind 'AzureSqlDatabaseCredential' -CollectionReferenceName $purviewAccount -CollectionType 'CollectionReference' -CredentialReferenceName 'sqlauth' -CredentialType 'SqlAuth' -DatabaseName 'AdventureWorksDW2022-DP-500' -ScanRulesetName 'AzureSqlDatabase_AdventureWorksDWH' -ScanRulesetType 'System' -ServerEndpoint $sqlEndpoint
+
+    New-AzPurviewScan -Endpoint $purviewEndpoint -DataSourceName "AzureSQL" -Name "DataScan-AdventureWorksLT" -Body $AdventureWorksLT_scan
+    New-AzPurviewScan -Endpoint $purviewEndpoint -DataSourceName "AzureSQL" -Name "DataScan-AdventureWorksDWH" -Body $AdventureWorksDW_scan
+
+    $db_lt_scan_runid = New-Guid
+    $db_dwh_scan_runid = New-Guid
+
+    Start-AzPurviewScanResultScan -Endpoint $purviewEndpoint -DataSourceName "AzureSQL" -ScanName "DataScan-AdventureWorksLT" -ScanLevel 'Full' -RunId $db_lt_scan_runid
+    Start-AzPurviewScanResultScan -Endpoint $purviewEndpoint -DataSourceName "AzureSQL" -ScanName "DataScan-AdventureWorksDWH" -ScanLevel 'Full' -RunId $db_dwh_scan_runid
 }
 
 # If not exists, setup an Azure Synapse source, configure and start a scan 
 if ($datasources -NotContains "Synapses") {
     $synapse = New-AzPurviewAzureSynapseWorkspaceDataSourceObject -Kind "AzureSynapseWorkspace" -CollectionReferenceName $purviewAccount -CollectionType "CollectionReference" -DedicatedSqlEndpoint "synapse-${suffix}.sql.azuresynapse.net" -ServerlessSqlEndpoint "synapse-${suffix}-ondemand.sql.azuresynapse.net"
-    New-AzPurviewDataSource -Endpoint $purviewEndpoint -Name "Synapses" -Body $synapse
+    New-AzPurviewDataSource -Endpoint $purviewEndpoint -Name "Synapse" -Body $synapse
+
+    $synapse_credential = New-AzPurviewAzureSynapseWorkspaceCredentialScanObject -Kind 'AzureSynapseWorkspaceCredential' -CollectionReferenceName $purviewAccount -CollectionType 'CollectionReference' -CredentialReferenceName 'sqlauth' -CredentialType 'SqlAuth' -ScanRulesetName 'AzureSynapseSQL' -ScanRulesetType 'System'
+
+    # TODO
 }
