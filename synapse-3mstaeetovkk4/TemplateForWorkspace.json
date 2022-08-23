@@ -25,7 +25,7 @@
 		},
 		"github_dp_500_http_linkedservice_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/raw/main"
+			"defaultValue": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/"
 		},
 		"keyvault_linkedservice_properties_typeProperties_baseUrl": {
 			"type": "string",
@@ -410,7 +410,7 @@
 							"Allfiles/04/data/FactResellerSales.txt",
 							"Allfiles/04/data/FactSalesQuota.fmt",
 							"Allfiles/04/data/FactSalesQuota.txt",
-							"Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
+							"Allfiles/00-Setup/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
 						]
 					},
 					"sqlTableNames": {
