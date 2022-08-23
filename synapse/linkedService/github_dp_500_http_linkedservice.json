@@ -4,7 +4,7 @@
 		"annotations": [],
 		"type": "HttpServer",
 		"typeProperties": {
-			"url": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/",
+			"url": "https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/raw/main",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Anonymous"
 		},
