@@ -25,7 +25,7 @@
 		},
 		"github_dp_500_http_linkedservice_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/"
+			"defaultValue": "https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/raw/main"
 		},
 		"keyvault_linkedservice_properties_typeProperties_baseUrl": {
 			"type": "string",

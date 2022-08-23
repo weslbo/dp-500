@@ -18,7 +18,7 @@
 			"value": "@{concat('https://datalake', linkedService().suffix, '.dfs.core.windows.net')}"
 		},
 		"github_dp_500_http_linkedservice_properties_typeProperties_url": {
-			"value": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/"
+			"value": "https://github.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/raw/main"
 		},
 		"keyvault_linkedservice_properties_typeProperties_baseUrl": {
 			"value": "@{concat('https://keyvault-', linkedService().suffix, '.vault.azure.net/')}"
