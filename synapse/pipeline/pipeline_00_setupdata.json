@@ -366,7 +366,7 @@
 					"Allfiles/04/data/FactResellerSales.txt",
 					"Allfiles/04/data/FactSalesQuota.fmt",
 					"Allfiles/04/data/FactSalesQuota.txt",
-					"Allfiles/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
+					"Allfiles/00-Setup/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
 				]
 			},
 			"sqlTableNames": {
