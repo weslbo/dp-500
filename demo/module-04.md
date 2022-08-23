@@ -1,46 +1,32 @@
-# Module 4: Prepare data for tabular models in Power BI
+# Module 04: Design and build tabular models
 
-## Usefull links
+## Microsoft Learn Modules
 
-- Learning path: [Prepare data for tabular models in Power BI](https://docs.microsoft.com/en-us/learn/paths/prepare-data-for-tabular-models-power-bi/)
-- Lab: [Create a star schema model](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/04-create-a-star-schema-model.html) (30 min)
-- Lab: [Create a dataflow](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/05-create-a-dataflow.html) (45 min)
+- [Create Power BI model relationships](https://docs.microsoft.com/learn/modules/create-power-bi-model-relationships/)
+- [Use DAX time intelligence functions in Power BI Desktop models](https://docs.microsoft.com/learn/modules/dax-power-bi-time-intelligence/)
+- [Create calculation groups](https://docs.microsoft.com/learn/modules/create-calculation-groups/)
+- [Enforce Power BI model security](https://docs.microsoft.com/learn/modules/enforce-power-bi-model-security/)
+- [Use tools to optimize Power BI performance](https://docs.microsoft.com/learn/modules/use-tools-optimize-power-bi-performance/)
 
-## Topics covered
+## Labs
 
-- Choose a Power BI model framework
-  - Describe Power BI model fundamentals
-    - Data model
-    - Power BI dataset
-    - Analytic query
-    - Tabular model
-    - Star schema design
-    - Table storage mode
-    - Model framework
-  - Determine when to develop an import model
-    - Import model benefits
-    - Import model limitations
-  - Determine when to develop a DirectQuery model
-    - DirectQuery model benefits
-    - DirectQuery model limitations
-    - Boost DirectQuery model performance
-  - Determine when to develop a composite model
-    - Composite model benefits
-    - Composite model limitations
-    - Boost DirectQuery model performance with import data
-    - Deliver real-time data from an import model
-  - Choose an appropriate Power BI model framework
-- Understand scalability in Power BI
-  - Describe the significance of scalable models
-    - What is enterprise or large-scale data?
-    - What is scalability and why is it important?
-    - How do I design for scalability?
-  - Implement Power BI data modeling best practices
-    - Choose the correct Power BI model framework
-    - Implement data modeling best practices
-  - Configure large datasets
-    - Enable large dataset storage format
-- Optimize Power Query for scalable solutions
-  - TBD
-- Create and manage scalable Power BI dataflows
-  - TBD
+- [Work with model relationships](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/06-work-with-model-relationships.html)
+- [Create calculation groups](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/07-create-calculation-groups.html)
+- [Enforce model security](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/09-enforce-model-security.html)
+- [Improve query performance with dual storage mode](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/11-improve-query-performance-with-dual-storage-mode.html)
+- [Use tools to optimize Power BI performance](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/13-use-tools-to-optimize-power-bi-performance.html)
+
+## Demo
+
+- Create a model with 2 tables without a relationship (product-sales) and create a chart. Fix the wrong aggregated values by introducting a relationship
+- Create an inactive relationships (eg on shipdate) and use it in a DAX expression
+- Demonstrate DAX filter context and use CALCULATE() to overide a filter
+- Setup a date table using CALENDAR() and CALENDARAUTO()
+- Use TOTALYTD() to summarize over time
+- Use PREVIOUSQUARTER() to compare over time
+- Create a calculation group using Tabular Editor
+- Setup and test row level security (static and dynamic)
+- Setup OLS rules to a Power BI Desktop model by using an XML for Analysis (XMLA) endpoint
+- Show performance studio, while connected to a direct query model
+- Show DAX Studio and look for some model metrics
+- Use the Best practices analyzer

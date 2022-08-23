@@ -1,14 +1,17 @@
-# Module 7: Implement advanced data visualization techniques by using Power BI
+# Module 07: Manage the analytics development lifecycle
 
-## Usefull links
+## Microsoft Learn Modules
 
-- Learning path: [Implement advanced data visualization techniques by using Power BI](https://docs.microsoft.com/en-us/learn/paths/implement-advanced-data-visualization-techniques/)
-- Lab: [Monitor data in real time](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/14-monitor-data-in-real-time.html) (30 min)
-- Lab: [Create a paginated report](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/15-create-a-paginated-report.html) (45 min)
+- [Design a Power BI application lifecycle management strategy](https://docs.microsoft.com/learn/modules/design-power-bi-application-lifecycle-management-strategy/)
+- [Create and manage a Power BI deployment pipeline](https://docs.microsoft.com/learn/modules/power-bi-deployment-pipelines/)
+- [Create and manage Power BI assets](https://docs.microsoft.com/learn/modules/create-manage-power-bi-assets/)
 
-## Topics covered
+## Labs
 
-- Understand advanced data visualization concepts
-- Customize core data models
-- Monitor data in real-time with Power BI
-- Create and distribute paginated reports in Power BI report builder
+- [Create reusable Power BI assets](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/16-create-reusable-power-bi-artifacts.html)
+
+## Demo
+
+- Demonstrate how to setup a deployment pipeline and deploy reports/datasets to test. Change the connection string
+- Explore the lineage view
+- Connect and manage datasets through XMLA endpoint

@@ -1,23 +1,24 @@
-# Module 01: Introduction to Data Analytics on Azure
+# Module 01: Govern data across an enterprise
 
-## Usefull links
+## Microsoft Learn Modules
 
-- Learning path: [Introduction to data analytics on Azure](https://docs.microsoft.com/en-us/learn/paths/introduction-data-analytics-azure/)
-- No labs
+- [Introduction to Microsoft Purview](https://docs.microsoft.com/learn/modules/intro-to-microsoft-purview/)
+- [Discover trusted data using Microsoft Purview](https://docs.microsoft.com/learn/modules/discover-trusted-data-use-azure-purview/)
+- [Catalog data artifacts by using Microsoft Purview](https://docs.microsoft.com/learn/modules/catalog-data-artifacts-use-microsoft-purview/)
+- [Manage Power BI assets by using Microsoft Purview](https://docs.microsoft.com/learn/modules/manage-power-bi-artifacts-use-microsoft-purview/)
+- ([Integrate Microsoft Purview and Azure Synapse Analytics](https://docs.microsoft.com/learn/modules/integrate-microsoft-purview-azure-synapse-analytics/))
 
-## Topics covered
+## Labs
 
-- Explore Azure data services for modern analytics 
-  - Understand a modern analytics solution architecture [[docs]](https://docs.microsoft.com/en-us/azure/architecture/example-scenario/dataplate2e/data-platform-end-to-end) -> [[diagram]](../images/azure-analytics-end-to-end.png)
-  - Explore Azure Synapse Analytics [[docs]](https://docs.microsoft.com/en-us/azure/synapse-analytics/overview-what-is) -> [[diagram]](../images/synapse-architecture.png)
-  - Explore Microsoft Power BI [[Power BI Enterprise Deployment Whitepaper]](https://docs.microsoft.com/en-us/power-bi/guidance/whitepaper-powerbi-enterprise-deployment) -> [[personal]](../images/powerbi_1_personal.png) -> [[small team]](../images/powerbi_2_smallteam.png) -> [[large team]](../images/powerbi_3_largeteam.png) -> [[enterprise]](../images/powerbi_4_enterprise.png)
+There are no labs in this module.
 
-- Understand concepts of data analytics
-  - Descriptive, diagnostic, predictive, prescriptive, and cognitive analytics [[docs]](https://docs.microsoft.com/en-us/learn/modules/understand-concepts-of-data-analytics/2-understand-data-analytics-types)
-  - Requirements gathering -> Data ingestion and processing -> Data exploration -> Data analysis -> Deploy analytics solution -> Request and process feedback -> Optimize solution [[docs]](https://docs.microsoft.com/en-us/learn/modules/understand-concepts-of-data-analytics/3-explore-data-analytics-process)
-  - Structured and unstructured data [[docs]](https://docs.microsoft.com/en-us/learn/modules/understand-concepts-of-data-analytics/4-understand-types-of-data-data-storage)
+## Demo
 
-- Explore data analytics at scale
-  - Roles: Data analyst, Database administrator, Data engineer, Data scientist, Data architect [[docs]](https://docs.microsoft.com/en-us/learn/modules/explore-data-analytics-scale/2-explore-data-team-roles-responsibilities)
-  - Data analyst tasks & tools [[docs]](https://docs.microsoft.com/en-us/learn/modules/explore-data-analytics-scale/3-review-tasks-tools-for-data-analysts)
-  - Strategies to scale analytics [[docs]](https://docs.microsoft.com/en-us/learn/modules/explore-data-analytics-scale/5-scale-analytics-center-excellence)
+- Show the Microsoft Purview Portal
+- Register a data source
+- Scan the data source
+- Classify some data
+- View and search the data map
+- Set up integration with Azure Synapse
+- Set up integration with Power BI
+- Have a look at the lineage

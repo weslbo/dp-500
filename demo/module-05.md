@@ -1,26 +1,23 @@
-# Module 5: Design and build scalable tabular models
+# Module 05: Implement advanced data visualization techniques by using Power BI
 
-## Usefull links
+## Microsoft Learn Modules
 
-- Learning path: [Design and build scalable tabular models](https://docs.microsoft.com/en-us/learn/paths/design-build-tabular-models/)
-- Lab: [Work with model relationships](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/06-work-with-model-relationships.html) (45 min)
-- Lab: [Create calculation groups](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/07-create-calculation-groups.html) (45 min)
-- Lab: [Create a composite model](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/08-create-a-composite-model.html) (45 min)
-- Lab: [Enforce model security](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/09-enforce-model-security.html) (45 min)
+- [Understand advanced data visualization concepts](https://docs.microsoft.com/learn/modules/understand-advanced-data-visualization-concepts/)
+- [Monitor data in real-time with Power BI](https://docs.microsoft.com/learn/modules/monitor-data-real-time-power-bi/)
+- ([Create paginated reports](https://docs.microsoft.com/learn/modules/create-paginated-reports-power-bi/))
 
-## Topics covered
+## Labs
 
-- Create Power BI model relationships
-  - Understand how model relationship work.
-  - Set up relationships.
-  - Use DAX relationship functions.
-  - Understand relationship evaluation.
-- Enforce model security
-  - Restrict access to Power BI model data with RLS.
-  - Restrict access to Power BI model objects with OLS.
-  - Apply good development practices to enforce Power BI model security.
-- Implement DirectQuery
-- Create calculation groups
-  - Explore how calculation groups work.
-  - Maintain calculation groups in a model.
-  - Use calculation groups in a Power BI report.
+- [Monitor data in real-time with Power BI](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/14-monitor-data-in-real-time.html)
+
+## Demo
+
+- Show where to use find report theme, and how to customize it. Save it as a template .PBIT
+- Demonstrate personaled visuals in Power BI Service
+- Show where to configure alt text, tab order and tooltips
+- Show performance analyzer
+- Demonstrate Power BI Service Dashboard realtime refresh
+- Demonstrate Power BI Desktop automatic page refresh
+- Show how to create a streaming dataset
+- Demonstrate paginated report autorefresh
+- Optional: Create paginated report
