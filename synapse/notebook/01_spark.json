@@ -1,0 +1,115 @@
+{
+	"name": "01_spark",
+	"properties": {
+		"folder": {
+			"name": "Module 02"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "synapsespark",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "6a330227-7244-4943-a20a-c7b3e01c768c"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+				"name": "synapsespark",
+				"type": "Spark",
+				"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Set up variable for later reference. Make sure the name of your datalake is correct"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"datalake = 'datalake3mstaeetovkk4'"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Just read in some data using CSV format (notice we do not have header information in the file)"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/2020.csv', format='csv', header=False)\r\n",
+					"display(df.limit(10))"
+				],
+				"execution_count": 7
+			}
+		]
+	}
+}
