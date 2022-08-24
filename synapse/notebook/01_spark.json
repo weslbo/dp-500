@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "14063d8a-8715-4d0f-a416-71c271844ac7"
+				"spark.autotune.trackingId": "ef57be85-18fb-420b-9af9-a3ae06231fee"
 			}
 		},
 		"metadata": {
@@ -92,7 +92,10 @@
 					}
 				},
 				"source": [
-					"Just read in some data using CSV format (notice we do not have header information in the file)"
+					"Just read in some data using CSV format \r\n",
+					"\r\n",
+					"- Notice we do not have header information in the file\r\n",
+					"- Notice we have specified to load in ALL csv files from this folder!"
 				]
 			},
 			{
@@ -105,10 +108,10 @@
 				},
 				"source": [
 					"%%pyspark\r\n",
-					"df = spark.read.load('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/2020.csv', format='csv', header=False)\r\n",
+					"df = spark.read.load('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', format='csv', header=False)\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 7
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
@@ -184,11 +187,260 @@
 					"])\r\n",
 					"\r\n",
 					"df = spark.read \\\r\n",
-					"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/2020.csv', schema=customSchema)\r\n",
+					"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
 					"\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 13
+				"execution_count": 15
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Now, let's filter this data using Spark SQL. First we register this table as a temporary view"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.createOrReplaceTempView(\"sales\")"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"And now we can apply the **%%sql** magic"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT * \r\n",
+					"FROM SALES \r\n",
+					"WHERE Customer LIKE 'E%'"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"We can also apply grouping and mathematical operations like SUM. Make sure to also test the built-in notebook CHARTS"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT \r\n",
+					"    OrderDate,\r\n",
+					"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+					"FROM Sales\r\n",
+					"GROUP BY OrderDate\r\n",
+					"ORDER BY OrderDate\r\n",
+					"LIMIT 50"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Create a new temporary view by using SQL:"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"CREATE OR REPLACE TEMPORARY VIEW TotalSalesByDate\r\n",
+					"AS\r\n",
+					"\r\n",
+					"SELECT \r\n",
+					"    OrderDate,\r\n",
+					"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+					"FROM Sales\r\n",
+					"GROUP BY OrderDate\r\n",
+					"ORDER BY OrderDate"
+				],
+				"execution_count": 23
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"... and then use the temporary view"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT * FROM TotalSalesByDate LIMIT 10"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Let's create some chart using MATPLOTLIB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from matplotlib import pyplot as plt\r\n",
+					"\r\n",
+					"totalOrdersByTerritory = sqlContext.sql(\"SELECT SalesTerritoryKey, COUNT(*) as TotalOrders \\\r\n",
+					"                                         FROM Sales \\\r\n",
+					"                                         GROUP BY SalesTerritoryKey\\\r\n",
+					"                                         ORDER BY SalesTerritoryKey\").toPandas()\r\n",
+					"\r\n",
+					"# clear the plot area\r\n",
+					"plt.clf()\r\n",
+					"\r\n",
+					"# create a figure\r\n",
+					"figure = plt.figure(figsize=(12, 8))\r\n",
+					"\r\n",
+					"# create a bar plot of total sales by datalake\r\n",
+					"plt.bar(x=totalOrdersByTerritory['SalesTerritoryKey'], height=totalOrdersByTerritory['TotalOrders'], color='magenta')\r\n",
+					"\r\n",
+					"# customize the chart\r\n",
+					"plt.title('Order count by sales territory')\r\n",
+					"plt.xlabel('Sales territory')\r\n",
+					"plt.ylabel('Total number of orders')\r\n",
+					"plt.grid(color='#95a5a6', linestyle='--')\r\n",
+					"\r\n",
+					"# show the plot area\r\n",
+					"plt.show()"
+				],
+				"execution_count": 39
 			}
 		]
 	}
