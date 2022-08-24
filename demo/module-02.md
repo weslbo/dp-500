@@ -17,19 +17,27 @@
 
 ### Demo: Explore the Azure Synapse Studio
 
-- [x] Go to the [https://web.azuresynapse.net](https://web.azuresynapse.net) and sign in to your workspace.
-- [x] Explore the home page
-- [x] Explore the **Data** section. In the **linked** section, you should be able to browse the datalake, and navigate inside the **landing** container
-- [x] Explore the **Develop** section. You should be able to see some pre-populated SQL Scripts and a Power BI section with nothing inside it.
-- [x] Explore the **Integrate** section and notice some pipelines are already there. The pipeline_00_setupdata is for example used to copy various files into the datalake
-- [x] Explore the **Monitor** section. If you did run a pipeline earlier, it should be visible. You can also look at the SQL requests that executed the last 24 hours
-- [x] Explore the **Manage** section. Here you can see we have a Serverless SQL Pool and we could create a Dedicated SQL Pool if we want. We have already setup some linked services to various data sources. Explorer them. Notice also that Git configuration has been setup. Point out that you should create a branch everytime you want to add something and create a pull request when finished. Lastly, you need to publish your changes.
+- [ ] Go to the [https://web.azuresynapse.net](https://web.azuresynapse.net) and sign in to your workspace.
+- [ ] Explore the home page
+- [ ] Explore the **Data** section. 
+  - In the **linked** section, you should be able to browse the datalake, and navigate inside the **landing** container
+- [ ] Explore the **Develop** section. 
+  - You should be able to see some pre-populated SQL Scripts and a Power BI section with nothing inside it.
+- [ ] Explore the **Integrate** section and notice some pipelines are already there. 
+  - The pipeline_00_setupdata is for example used to copy various files into the datalake
+- [ ] Explore the **Monitor** section. 
+  - If you did run a **pipeline** earlier, it should be visible. You can also look at the **SQL requests** that executed the last 24 hours
+- [ ] Explore the **Manage** section.
+  - Here you can see we have a **Serverless SQL Pool** and we could create a **Dedicated SQL Pool** if we want.
+  - We have already setup some **linked services** to various data sources. Explorer them.
+  - Notice also that **Git configuration** has been setup. Point out that you should create a branch everytime you want to add something and create a pull request when finished. Lastly, you need to publish your changes.
 
 ### Demo: Serverless
 
 Query a CSV file using the Serverless pool
-  - Go to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .csv file. Right-click, select TOP 100 records.
-  - Navigate to the **Develop** section and open the **sql_serverless_csv** SQL Script. Walk through the file and execute each SQL statement individually.
+
+- Go to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .csv file. Right-click, select TOP 100 records.
+- Navigate to the **Develop** section and open the **sql_serverless_csv** SQL Script. Walk through the file and execute each SQL statement individually.
 - Query a JSON file using the Serverless pool
   - Go back to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .json file. Right-click, select TOP 100 records. Notice all the data is one line.
   - Navigate to the **Develop** section and open the **sql_serverless_json** SQL Script. Walk through the file and execute each SQL statement individually.
