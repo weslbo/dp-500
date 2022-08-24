@@ -63,7 +63,7 @@ Use Spark SQL on the data just loaded and apply some filter on the data frame
 
 Create a chart on the resulting data
 
-- [*] Explore the **02_create_charts** notebook and execute each cell separately.
+- [x] Explore the **02_create_charts** notebook and execute each cell separately.
 
 ### Demo: Dedicated pool
 
