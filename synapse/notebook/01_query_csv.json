@@ -1,5 +1,5 @@
 {
-	"name": "01_spark",
+	"name": "01_query_csv",
 	"properties": {
 		"folder": {
 			"name": "Module 02"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ef57be85-18fb-420b-9af9-a3ae06231fee"
+				"spark.autotune.trackingId": "b71478df-4c0e-4c05-ae8a-fdec622cd226"
 			}
 		},
 		"metadata": {
@@ -61,6 +61,8 @@
 					}
 				},
 				"source": [
+					"# Module 02 - 01 query multiple files using Spark\r\n",
+					"\r\n",
 					"Set up variable for later reference. Make sure the name of your datalake is correct"
 				]
 			},
@@ -273,7 +275,7 @@
 					}
 				},
 				"source": [
-					"We can also apply grouping and mathematical operations like SUM. Make sure to also test the built-in notebook CHARTS"
+					"We can also apply grouping and mathematical operations like SUM. "
 				]
 			},
 			{
@@ -387,60 +389,6 @@
 					"SELECT * FROM TotalSalesByDate LIMIT 10"
 				],
 				"execution_count": 27
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"Let's create some chart using MATPLOTLIB"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"from matplotlib import pyplot as plt\r\n",
-					"\r\n",
-					"totalOrdersByTerritory = sqlContext.sql(\"SELECT SalesTerritoryKey, COUNT(*) as TotalOrders \\\r\n",
-					"                                         FROM Sales \\\r\n",
-					"                                         GROUP BY SalesTerritoryKey\\\r\n",
-					"                                         ORDER BY SalesTerritoryKey\").toPandas()\r\n",
-					"\r\n",
-					"# clear the plot area\r\n",
-					"plt.clf()\r\n",
-					"\r\n",
-					"# create a figure\r\n",
-					"figure = plt.figure(figsize=(12, 8))\r\n",
-					"\r\n",
-					"# create a bar plot of total sales by datalake\r\n",
-					"plt.bar(x=totalOrdersByTerritory['SalesTerritoryKey'], height=totalOrdersByTerritory['TotalOrders'], color='magenta')\r\n",
-					"\r\n",
-					"# customize the chart\r\n",
-					"plt.title('Order count by sales territory')\r\n",
-					"plt.xlabel('Sales territory')\r\n",
-					"plt.ylabel('Total number of orders')\r\n",
-					"plt.grid(color='#95a5a6', linestyle='--')\r\n",
-					"\r\n",
-					"# show the plot area\r\n",
-					"plt.show()"
-				],
-				"execution_count": 39
 			}
 		]
 	}

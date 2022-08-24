@@ -1,0 +1,204 @@
+{
+	"name": "02_create_charts",
+	"properties": {
+		"folder": {
+			"name": "Module 02"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "synapsespark",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2ae78d98-205f-444d-8ca8-4dbdf597b9a4"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+				"name": "synapsespark",
+				"type": "Spark",
+				"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Module 02 - 02 Create charts using Spark\r\n",
+					"\r\n",
+					"Set up variable for later reference. Make sure the name of your datalake is correct"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from pyspark.sql import types\r\n",
+					"\r\n",
+					"datalake = 'datalake3mstaeetovkk4'\r\n",
+					"\r\n",
+					"customSchema = types.StructType([\r\n",
+					"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
+					"    types.StructField(\"SalesTerritoryKey\", types.IntegerType(), True),\r\n",
+					"    types.StructField(\"OrderDate\", types.DateType(), True),\r\n",
+					"    types.StructField(\"Customer\", types.StringType(), True),\r\n",
+					"    types.StructField(\"Email\", types.StringType(), True),\r\n",
+					"    types.StructField(\"Adress\", types.StringType(), True),\r\n",
+					"    types.StructField(\"Quantity\", types.IntegerType(), True),\r\n",
+					"    types.StructField(\"UnitPrice\", types.DoubleType(), True),\r\n",
+					"    types.StructField(\"ShippingCost\", types.DoubleType(), True),\r\n",
+					"])\r\n",
+					"\r\n",
+					"df = spark.read \\\r\n",
+					"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
+					"df.createOrReplaceTempView(\"sales\")"
+				],
+				"execution_count": 41
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Execute the following Spark SQL And explore the **Chart** feature"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT \r\n",
+					"    OrderDate,\r\n",
+					"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+					"FROM Sales\r\n",
+					"GROUP BY OrderDate\r\n",
+					"ORDER BY OrderDate\r\n",
+					"LIMIT 50"
+				],
+				"execution_count": 42
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Let's create some chart using MATPLOTLIB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from matplotlib import pyplot as plt\r\n",
+					"\r\n",
+					"totalOrdersByTerritory = sqlContext.sql(\"SELECT SalesTerritoryKey, COUNT(*) as TotalOrders \\\r\n",
+					"                                         FROM Sales \\\r\n",
+					"                                         GROUP BY SalesTerritoryKey\\\r\n",
+					"                                         ORDER BY SalesTerritoryKey\").toPandas()\r\n",
+					"\r\n",
+					"# clear the plot area\r\n",
+					"plt.clf()\r\n",
+					"\r\n",
+					"# create a figure\r\n",
+					"figure = plt.figure(figsize=(12, 8))\r\n",
+					"\r\n",
+					"# create a bar plot of total sales by datalake\r\n",
+					"plt.bar(x=totalOrdersByTerritory['SalesTerritoryKey'], height=totalOrdersByTerritory['TotalOrders'], color='magenta')\r\n",
+					"\r\n",
+					"# customize the chart\r\n",
+					"plt.title('Order count by sales territory')\r\n",
+					"plt.xlabel('Sales territory')\r\n",
+					"plt.ylabel('Total number of orders')\r\n",
+					"plt.grid(color='#95a5a6', linestyle='--')\r\n",
+					"\r\n",
+					"# show the plot area\r\n",
+					"plt.show()"
+				],
+				"execution_count": 43
+			}
+		]
+	}
+}
