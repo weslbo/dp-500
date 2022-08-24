@@ -12,13 +12,24 @@
 
 There are no labs in this module.
 
-## Demo
+## Demos
+
+### Demo: Introduction to Purview
 
 - Show the Microsoft Purview Portal
+
+### Demo: discover data
+
 - Register a data source
 - Scan the data source
+
+### Demo: Catalog data artifacts
+
 - Classify some data
 - View and search the data map
+
+### Demo: Integrate Purview
+
 - Set up integration with Azure Synapse
 - Set up integration with Power BI
 - Have a look at the lineage

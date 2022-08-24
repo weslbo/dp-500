@@ -11,12 +11,20 @@
 - [Create a star schema model](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/04-create-a-star-schema-model.html)
 - [Create a dataflow](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/05-create-a-dataflow.html)
 
-## Demo
+## Demos
+
+### Demo: Power BI import/direct query/refresh
 
 - Show where to configure import/direct query in Power BI Desktop
 - Show where to configure data refresh in Power BI Service
 - Set up a user-defined aggregation table
 - Show where to configure automatic aggregations and adjust the query coverage
 - Configure incremental refresh on a fact table
+
+### Demo: Large datasets
+
 - Show where to configure Large dataset format storage (for a single dataset and for all datasets in the workspace)
+
+### Demo: Dataflows
+
 - Create a dataflow

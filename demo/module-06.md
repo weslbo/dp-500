@@ -15,31 +15,44 @@
 
 There are no labs in this module.
 
-## Demo
+## Demos
+
+### Demo: Governance
 
 - Show where to configure tenant settings
 - Deploy a custom organizational visual
 - Show embed codes
 - Show where to set up custom help and support menu in the Power BI tenant
 
+### Demo: collaboration
+
 - Demonstrate creation of a workspace
 - Show how to add a user/group and assign a role
 - Create an app and share it with some people
 - Show where to configure the data privacy isolation levels
+
+### Demo: monitor and audit usage
+
 - Have a look at the usage metrics in the Admin portal
 - View the metrics for a specific report
 - Consult the audit logs in the Admin portal/Purview
+
+### Demo: Premium
+
 - Show how to configure BYOK in Power BI/Azure Key Vault
+
+### Demo: Refresh
 
 - Show how to install/configure the on-premises gateway
 - Setup a dataset to refresh over the gateway
 - Consult the logs
 - Show who can use the gateway
 
+### Demo: Broaden the reach
+
 - Show how to setup a Power BI Embedded capacity
 - Create a dataflow
 - Install a template app
-
 - Show where to find the Power BI REST API in the docs
 - Show where to find the Power BI CmdLets in the docs
-- Install and login to the Power BI tenant
+- Install CmdLets and login to the Power BI tenant

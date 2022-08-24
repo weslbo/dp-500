@@ -10,6 +10,6 @@
 
 There are no labs in this module.
 
-## Demo
+## Demos
 
 There are no demo's for this module.

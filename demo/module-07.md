@@ -10,8 +10,16 @@
 
 - [Create reusable Power BI assets](https://microsoftlearning.github.io/DP-500-Azure-Data-Analyst/Instructions/labs/16-create-reusable-power-bi-artifacts.html)
 
-## Demo
+## Demos
+
+### Demo: deployment pipeline
 
 - Demonstrate how to setup a deployment pipeline and deploy reports/datasets to test. Change the connection string
+
+### Demo: Lineage
+
 - Explore the lineage view
+
+### Demo: XMLA
+
 - Connect and manage datasets through XMLA endpoint
