@@ -3,7 +3,8 @@
 	"properties": {
 		"parameters": {
 			"suffix": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "3mstaeetovkk4"
 			}
 		},
 		"annotations": [],
