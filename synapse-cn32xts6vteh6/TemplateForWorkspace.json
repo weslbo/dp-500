@@ -1,0 +1,1846 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Workspace name",
+			"defaultValue": "synapse-cn32xts6vteh6"
+		},
+		"adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adventureworksdw2022dp500_azuresqldatabase_linkedservice'"
+		},
+		"adventureworkslt_azuresqldatabase_linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'adventureworkslt_azuresqldatabase_linkedservice'"
+		},
+		"synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer'"
+		},
+		"datalake_linkedservice_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "@{concat('https://datalake', linkedService().suffix, '.dfs.core.windows.net')}"
+		},
+		"github_dp_500_http_linkedservice_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/"
+		},
+		"keyvault_linkedservice_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "@{concat('https://keyvault-', linkedService().suffix, '.vault.azure.net/')}"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/pipeline_00_setupdata')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This pipeline sets up some sample data in the data lake",
+				"activities": [
+					{
+						"name": "ForEachFileNameInParam",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('fileNames')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data from Github into ADLS",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "BinarySource",
+											"storeSettings": {
+												"type": "HttpReadSettings",
+												"requestMethod": "GET"
+											},
+											"formatSettings": {
+												"type": "BinaryReadSettings"
+											}
+										},
+										"sink": {
+											"type": "BinarySink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "dataset_github_dp_500",
+											"type": "DatasetReference",
+											"parameters": {
+												"fileName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dataset_adls_landingzone_binary",
+											"type": "DatasetReference",
+											"parameters": {
+												"fileName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					},
+					{
+						"name": "ForEachSqlTableName",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('sqlTableNames')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy data from SQL to Parquet",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dataset_azuresql_adventureworkslt",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dataset_adls_landingzone_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@replace(replace(item(), '[', ''), ']', '')",
+													"type": "Expression"
+												},
+												"sourceSystem": "adventureworkslt"
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy data from SQL to CSV",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".txt"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dataset_azuresql_adventureworkslt",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dataset_adls_landingzone_csv",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@replace(replace(item(), '[', ''), ']', '')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "Copy data from SQL to JSON",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "JsonSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "JsonWriteSettings"
+											}
+										},
+										"enableStaging": false
+									},
+									"inputs": [
+										{
+											"referenceName": "dataset_azuresql_adventureworkslt",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dataset_adls_landingzone_json",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@replace(replace(item(), '[', ''), ']', '')",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"fileNames": {
+						"type": "Array",
+						"defaultValue": [
+							"Allfiles/01/data/2019.csv",
+							"Allfiles/01/data/2019.snappy.parquet",
+							"Allfiles/01/data/2020.csv",
+							"Allfiles/01/data/2020.snappy.parquet",
+							"Allfiles/01/data/2021.csv",
+							"Allfiles/01/data/2021.snappy.parquet",
+							"Allfiles/01/data/SO43700.json",
+							"Allfiles/01/data/SO43701.json",
+							"Allfiles/01/data/SO43703.json",
+							"Allfiles/01/data/SO43704.json",
+							"Allfiles/01/data/SO43705.json",
+							"Allfiles/03/data/DimAccount.fmt",
+							"Allfiles/03/data/DimAccount.txt",
+							"Allfiles/03/data/DimCurrency.fmt",
+							"Allfiles/03/data/DimCurrency.txt",
+							"Allfiles/03/data/DimCustomer.fmt",
+							"Allfiles/03/data/DimCustomer.txt",
+							"Allfiles/03/data/DimDate.fmt",
+							"Allfiles/03/data/DimDate.txt",
+							"Allfiles/03/data/DimDepartmentGroup.fmt",
+							"Allfiles/03/data/DimDepartmentGroup.txt",
+							"Allfiles/03/data/DimEmployee.fmt",
+							"Allfiles/03/data/DimEmployee.txt",
+							"Allfiles/03/data/DimGeography.fmt",
+							"Allfiles/03/data/DimGeography.txt",
+							"Allfiles/03/data/DimOrganization.fmt",
+							"Allfiles/03/data/DimOrganization.txt",
+							"Allfiles/03/data/DimProduct.fmt",
+							"Allfiles/03/data/DimProduct.txt",
+							"Allfiles/03/data/DimProductCategory.fmt",
+							"Allfiles/03/data/DimProductCategory.txt",
+							"Allfiles/03/data/DimProductSubCategory.fmt",
+							"Allfiles/03/data/DimProductSubCategory.txt",
+							"Allfiles/03/data/DimPromotion.fmt",
+							"Allfiles/03/data/DimPromotion.txt",
+							"Allfiles/03/data/DimReseller.fmt",
+							"Allfiles/03/data/DimReseller.txt",
+							"Allfiles/03/data/DimSalesTerritory.fmt",
+							"Allfiles/03/data/DimSalesTerritory.txt",
+							"Allfiles/03/data/FactInternetSales.fmt",
+							"Allfiles/03/data/FactInternetSales.txt",
+							"Allfiles/03/data/FactResellerSales.fmt",
+							"Allfiles/03/data/FactResellerSales.txt",
+							"Allfiles/04/data/AdventureWorksDWBuildVersion.fmt",
+							"Allfiles/04/data/AdventureWorksDWBuildVersion.txt",
+							"Allfiles/04/data/DimAccount.fmt",
+							"Allfiles/04/data/DimAccount.txt",
+							"Allfiles/04/data/DimCurrency.fmt",
+							"Allfiles/04/data/DimCurrency.txt",
+							"Allfiles/04/data/DimCustomer.fmt",
+							"Allfiles/04/data/DimCustomer.txt",
+							"Allfiles/04/data/DimDate.fmt",
+							"Allfiles/04/data/DimDate.txt",
+							"Allfiles/04/data/DimDepartmentGroup.fmt",
+							"Allfiles/04/data/DimDepartmentGroup.txt",
+							"Allfiles/04/data/DimEmployee.fmt",
+							"Allfiles/04/data/DimEmployee.txt",
+							"Allfiles/04/data/DimGeography.fmt",
+							"Allfiles/04/data/DimGeography.txt",
+							"Allfiles/04/data/DimOrganization.fmt",
+							"Allfiles/04/data/DimOrganization.txt",
+							"Allfiles/04/data/DimProduct.fmt",
+							"Allfiles/04/data/DimProduct.txt",
+							"Allfiles/04/data/DimProductCategory.fmt",
+							"Allfiles/04/data/DimProductCategory.txt",
+							"Allfiles/04/data/DimProductSubCategory.fmt",
+							"Allfiles/04/data/DimProductSubCategory.txt",
+							"Allfiles/04/data/DimPromotion.fmt",
+							"Allfiles/04/data/DimPromotion.txt",
+							"Allfiles/04/data/DimReseller.fmt",
+							"Allfiles/04/data/DimReseller.txt",
+							"Allfiles/04/data/DimSalesReason.fmt",
+							"Allfiles/04/data/DimSalesReason.txt",
+							"Allfiles/04/data/DimSalesTerritory.fmt",
+							"Allfiles/04/data/DimSalesTerritory.txt",
+							"Allfiles/04/data/DimScenario.fmt",
+							"Allfiles/04/data/DimScenario.txt",
+							"Allfiles/04/data/FactCallCenter.fmt",
+							"Allfiles/04/data/FactCallCenter.txt",
+							"Allfiles/04/data/FactCurrencyRate.fmt",
+							"Allfiles/04/data/FactCurrencyRate.txt",
+							"Allfiles/04/data/FactFinance.fmt",
+							"Allfiles/04/data/FactFinance.txt",
+							"Allfiles/04/data/FactInternetSales.fmt",
+							"Allfiles/04/data/FactInternetSales.txt",
+							"Allfiles/04/data/FactInternetSalesReason.fmt",
+							"Allfiles/04/data/FactInternetSalesReason.txt",
+							"Allfiles/04/data/FactProductInventory.fmt",
+							"Allfiles/04/data/FactProductInventory.txt",
+							"Allfiles/04/data/FactResellerSales.fmt",
+							"Allfiles/04/data/FactResellerSales.txt",
+							"Allfiles/04/data/FactSalesQuota.fmt",
+							"Allfiles/04/data/FactSalesQuota.txt",
+							"Allfiles/00-Setup/DatabaseBackup/AdventureWorksDW2022-DP500.bacpac"
+						]
+					},
+					"sqlTableNames": {
+						"type": "Array",
+						"defaultValue": [
+							"[SalesLT].[Customer]",
+							"[SalesLT].[ProductModel]",
+							"[SalesLT].[ProductDescription]",
+							"[SalesLT].[Product]",
+							"[SalesLT].[ProductModelProductDescription]",
+							"[SalesLT].[ProductCategory]",
+							"[SalesLT].[Address]",
+							"[SalesLT].[CustomerAddress]",
+							"[SalesLT].[SalesOrderDetail]",
+							"[SalesLT].[SalesOrderHeader]"
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/dataset_github_dp_500')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_adls_landingzone_binary')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_azuresql_adventureworkslt')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_adls_landingzone_parquet')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_adls_landingzone_csv')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_adls_landingzone_json')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/pipeline_01_dwh')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEachSqlTable",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('sqlTableNames')",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Copy sql Table",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "AzureSqlSource",
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "ParquetSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings"
+											},
+											"formatSettings": {
+												"type": "ParquetWriteSettings"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "dataset_azuresql_adventureworks_dwh",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "dataset_adls_landingzone_parquet",
+											"type": "DatasetReference",
+											"parameters": {
+												"tableName": {
+													"value": "@replace(replace(item(), '[', ''), ']', '')",
+													"type": "Expression"
+												},
+												"sourceSystem": "adventureworksdwh"
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"sqlTableNames": {
+						"type": "Array",
+						"defaultValue": [
+							"DimAccount",
+							"DimCurrency",
+							"DimCustomer",
+							"DimDate",
+							"DimDepartmentGroup",
+							"DimEmployee",
+							"DimGeography",
+							"DimOrganization",
+							"DimProduct",
+							"DimProductCategory",
+							"DimProductSubcategory",
+							"DimPromotion",
+							"DimReseller",
+							"DimSalesReason",
+							"DimSalesTerritory",
+							"DimScenario",
+							"FactCallCenter",
+							"FactCurrencyRate",
+							"FactFinance",
+							"FactInternetSales",
+							"FactInternetSalesReason",
+							"FactProductInventory",
+							"FactResellerSales",
+							"FactSalesQuota"
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/dataset_azuresql_adventureworks_dwh')]",
+				"[concat(variables('workspaceId'), '/datasets/dataset_adls_landingzone_parquet')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_adls_landingzone_binary')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": {
+							"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_adls_landingzone_csv')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": {
+							"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat('adventureworkslt/tables/csv/', dataset().tableName, '.csv')",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_adls_landingzone_json')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": {
+							"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat('adventureworkslt/tables/json/', dataset().tableName, '.json')",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_adls_landingzone_parquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": {
+							"value": "@replace(pipeline().DataFactory, 'synapse-', '')",
+							"type": "Expression"
+						}
+					}
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					},
+					"sourceSystem": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().sourceSystem, '/tables/parquet/', dataset().tableName, '.parquet')",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_azuresql_adventureworks_dwh')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "@replace(pipeline().DataFactory, 'synapse-', '')"
+					}
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adventureworksdw2022dp500_azuresqldatabase_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_azuresql_adventureworkslt')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adventureworkslt_azuresqldatabase_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "@replace(pipeline().DataFactory, 'synapse-', '')"
+					}
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adventureworkslt_azuresqldatabase_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/dataset_github_dp_500')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "github_dp_500_http_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"fileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": {
+							"value": "@dataset().fileName",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/github_dp_500_http_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/adventureworksdw2022dp500_azuresqldatabase_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"suffix": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "keyvault_linkedservice",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"suffix": "@linkedService().suffix"
+							}
+						},
+						"secretName": "sqlpassword"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/keyvault_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/adventureworkslt_azuresqldatabase_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"suffix": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('adventureworkslt_azuresqldatabase_linkedservice_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "keyvault_linkedservice",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"suffix": {
+									"value": "@linkedService().suffix",
+									"type": "Expression"
+								}
+							}
+						},
+						"secretName": "sqlpassword"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/keyvault_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/datalake_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"suffix": {
+						"type": "string",
+						"defaultValue": "3mstaeetovkk4"
+					}
+				},
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('datalake_linkedservice_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/github_dp_500_http_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('github_dp_500_http_linkedservice_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/keyvault_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"suffix": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('keyvault_linkedservice_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/power_bi_workspace_linkedservice')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "PowerBIWorkspace",
+				"typeProperties": {
+					"workspaceID": "4ecb39c8-65f1-4cf9-afa3-e7847cb2f14c",
+					"tenantID": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapse-selfhosted-integrationruntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/01_sql_serverless_csv')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This example shows how to query data from the datalake with CSV format. ",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- REMEMBER to replace the datalake account url\n\n\n-- Example: auto generated code (by right-click on a file name)\n-- Notice 1) column headers are not promoted\n-- Notice 2) have a look at the messages: \"Potential conversion error while reading VARCHAR column 'C1' from UTF8 encoded text. Change database collation to a UTF8 collation or specify explicit column schema in WITH clause and assign UTF8 collation to VARCHAR columns.\"\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0'\n    ) AS [result]\n\n\n-- Example: Column headers promoted\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0', \n        HEADER_ROW=TRUE\n    ) AS [result]\n\n-- Example: We can specify our own column names and data types\n-- Notice 1): External data type 'MONEY' is currently not supported. (need to replace to decimal)\n-- Notice 2): External data type 'DATETIME' is currently not supported. (need to replace to DATETIME2)\n-- Notice 3): External data type 'VARBINARY(MAX)' is currently not supported.\nSELECT TOP 100 \n    ProductID\n    , Name\n    , ProductNumber\n    , Color\n    , StandardCost\n    , ListPrice\n    , Size\n    , Weight\n    , ProductCategoryID\n    , ProductModelID\n    , SellStartDate\n    , SellEndDate\n    , DiscontinuedDate\n    --, ThumbNailPhoto\n    , ThumbnailPhotoFileName\n    , rowguid\n    , ModifiedDate\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0', \n        HEADER_ROW=TRUE\n    )\n    WITH \n    (\n        ProductID INT,\n        Name NVARCHAR(50),\n        ProductNumber NVARCHAR(25),\n        Color NVARCHAR(15),\n        StandardCost DECIMAL, --not supported MONEY\n        ListPrice DECIMAL, --not supported MONEY\n        Size NVARCHAR(5),\n        Weight DECIMAL,\n        ProductCategoryID INT,\n        ProductModelID INT,\n        SellStartDate DATETIME2,\n        SellEndDate DATETIME2,\n        DiscontinuedDate DATETIME2,\n        --ThumbNailPhoto VARBINARY(max), --not supported VARBINARY\n        ThumbnailPhotoFileName NVARCHAR(50),\n        rowguid UNIQUEIDENTIFIER,\n        ModifiedDate DATETIME2\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/02_sql_serverless_json')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This example shows how to query data from the datalake with JSON format. ",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- REMEMBER to replace the datalake account url\n\n-- EXAMPLE: select from JSON file. Here, we have explicitly defined the JSON_VALUE elements\nSELECT TOP 100\n      JSON_VALUE(jsonContent, '$.ProductID') as ProductId\n    , JSON_VALUE(jsonContent, '$.Name') as Name\n    , JSON_VALUE(jsonContent, '$.ProductNumber') as ProductNumber\n    , JSON_VALUE(jsonContent, '$.Color') as Color\n    , JSON_VALUE(jsonContent, '$.StandardCost') as StandardCost\n    , JSON_VALUE(jsonContent, '$.ListPrice') as ListPrice\n    , JSON_VALUE(jsonContent, '$.Size') as Size\n    , JSON_VALUE(jsonContent, '$.Weight') as Weight\n    , JSON_VALUE(jsonContent, '$.ProductCategoryID') as ProductCategoryID\n    , JSON_VALUE(jsonContent, '$.ProductModelID') as ProductModelID\n    , JSON_VALUE(jsonContent, '$.SellStartDate') as SellStartDate\n    , JSON_VALUE(jsonContent, '$.SellEndDate') as SellEndDate\n    , JSON_VALUE(jsonContent, '$.DiscontinuedDate') as DiscontinuedDate\n    , JSON_VALUE(jsonContent, '$.ThumbNailPhoto') as ThumbNailPhoto\n    , JSON_VALUE(jsonContent, '$.ThumbnailPhotoFileName') as ThumbnailPhotoFileName\n    , JSON_VALUE(jsonContent, '$.rowguid') as rowguid\n    , JSON_VALUE(jsonContent, '$.ModifiedDate') as ModifiedDate\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/json/SalesLT.Product.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n        --ROWTERMINATOR = '0x0b' -- Doesn't work here as lines are separated by a newline (no comma)\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n\n\n\n-- EXAMPLE: We can specify our own column names and data types\nSELECT TOP 100 *\nFROM \n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/json/SalesLT.Product.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH \n    (\n        jsonContent varchar(MAX)\n    ) AS [result]\n    CROSS APPLY openjson(jsonContent)\n        WITH \n        (\n            ProductID INT,\n            Name NVARCHAR(50),\n            ProductNumber NVARCHAR(25),\n            Color NVARCHAR(15),\n            StandardCost MONEY,\n            ListPrice MONEY,\n            Size NVARCHAR(5),\n            Weight DECIMAL,\n            ProductCategoryID INT,\n            ProductModelID INT,\n            SellStartDate DATETIME2,\n            SellEndDate DATETIME2,\n            DiscontinuedDate DATETIME2,\n            ThumbNailPhoto VARBINARY(max), \n            ThumbnailPhotoFileName NVARCHAR(50),\n            RowGuid UNIQUEIDENTIFIER '$.rowguid',   -- notice that we can override the name of the column\n            ModifiedDate DATETIME2\n        )",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/03_sql_serverless_parquet')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This example shows how to query data from the datalake with PARQUET format. ",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- REMEMBER to replace the datalake account url\n\n-- EXAMPLE: This is auto-generated code\n-- NOTICE: we do not need to specify data types (inferred from parquet file)\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n-- EXAMPLE: We can specify our own column names and data types\n-- NOTICE this will read only the column name we specify (improve performance)\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n        FORMAT = 'PARQUET'\n    )\n    WITH \n    (\n        ProductID INT,\n        Name NVARCHAR(50),\n        ProductNumber NVARCHAR(25),\n        Color NVARCHAR(15)\n    ) AS [result]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/04_sql_serverless_views')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This example shows how we can create views for all of the tables (based on PARQUET format)",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- Do this only once!\nCREATE DATABASE AdventureWorksLTServerless\n\n-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA SalesLT\nGO\n\n-- Create views for every tables, based on PARQUET format\nCREATE VIEW SalesLT.Address AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Address.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Customer AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Customer.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.CustomerAddress AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Product AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductCategory AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModel AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModelProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderDetail AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderHeader AS SELECT * FROM OPENROWSET(BULK 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet', FORMAT = 'PARQUET') AS [result]\nGO\n\n-- PLAYGROUND: Confirm data can be retrieved\nSELECT TOP 100 * FROM SalesLT.Address\nSELECT TOP 100 * FROM SalesLT.Customer\nSELECT TOP 100 * FROM SalesLT.CustomerAddress\nSELECT TOP 100 * FROM SalesLT.Product\nSELECT TOP 100 * FROM SalesLT.ProductCategory\nSELECT TOP 100 * FROM SalesLT.ProductDescription\nSELECT TOP 100 * FROM SalesLT.ProductModel\nSELECT TOP 100 * FROM SalesLT.ProductModelProductDescription\nSELECT TOP 100 * FROM SalesLT.SalesOrderDetail\nSELECT TOP 100 * FROM SalesLT.SalesOrderHeader\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "AdventureWorksLTServerless",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/05_sql_serverless_external_tables')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "This example shows how we can create external tables for all of the tables (based on PARQUET format)",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA Ext\nGO\n\n-- Create external file format\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\n-- Create external data source, pointing to the data lake\n-- Remember to change datalake url\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'DataLakeLandingZone') \n\tCREATE EXTERNAL DATA SOURCE [DataLakeLandingZone] \n\tWITH (\n\t\tLOCATION = 'abfss://landing@datalake3mstaeetovkk4.dfs.core.windows.net' \n\t)\nGO\n\n-- Note: updated the data types to match the orginal (instead of relying on nvarchar(4000) all the time)\nCREATE EXTERNAL TABLE [Ext].[Address] (\n\t[AddressID] int,\n\t[AddressLine1] nvarchar(60),\n\t[AddressLine2] nvarchar(60),\n\t[City] nvarchar(30),\n\t[StateProvince] nvarchar(50),\n\t[CountryRegion] nvarchar(50),\n\t[PostalCode] nvarchar(15),\n\t[rowguid] UNIQUEIDENTIFIER,\n\t[ModifiedDate] datetime2(7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Address.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Customer] (\n\t[CustomerID] [int],\n\t[NameStyle] bit,\n\t[Title] [nvarchar](8),\n\t[FirstName] NVARCHAR(50),\n\t[MiddleName] nvarchar(50),\n\t[LastName] nvarchar(50),\n\t[Suffix] [nvarchar](10),\n\t[CompanyName] [nvarchar](128),\n\t[SalesPerson] [nvarchar](256),\n\t[EmailAddress] [nvarchar](50),\n\t[Phone] nvarchar(25),\n\t[PasswordHash] [varchar](128),\n\t[PasswordSalt] [varchar](10),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Customer.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[CustomerAddress] (\n\t[CustomerID] [int],\n\t[AddressID] [int],\n\t[AddressType] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Product] (\n\t[ProductID] [int],\n\t[Name] nvarchar(50),\n\t[ProductNumber] [nvarchar](25),\n\t[Color] [nvarchar](15),\n\t[StandardCost] [money],\n\t[ListPrice] [money],\n\t[Size] [nvarchar](5),\n\t[Weight] [decimal](8, 2),\n\t[ProductCategoryID] [int],\n\t[ProductModelID] [int],\n\t[SellStartDate] [datetime2](7),\n\t[SellEndDate] [datetime2](7),\n\t[DiscontinuedDate] [datetime2](7),\n\t[ThumbNailPhoto] [varbinary](max),\n\t[ThumbnailPhotoFileName] [nvarchar](50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductCategory] (\n\t[ProductCategoryID] [int],\n\t[ParentProductCategoryID] [int],\n\t[Name] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductDescription] (\n\t[ProductDescriptionID] [int],\n\t[Description] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Note xml data type is not supported (column CatalogDescription)\nCREATE EXTERNAL TABLE [Ext].[ProductModel] (\n\t[ProductModelID] [int],\n\t[Name] nvarchar(50),\n\t[CatalogDescription] nvarchar(4000),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductModelProductDescription] (\n\t[ProductModelID] [int],\n\t[ProductDescriptionID] [int],\n\t[Culture] [nchar](6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Notice linetotal is a calculated field (isnull(([UnitPrice]*((1.0)-[UnitPriceDiscount]))*[OrderQty],(0.0)))\n-- Replaced with numeric(38,6)\nCREATE EXTERNAL TABLE [Ext].[SalesOrderDetail] (\n\t[SalesOrderID] [int],\n\t[SalesOrderDetailID] [int],\n\t[OrderQty] [smallint],\n\t[ProductID] [int],\n\t[UnitPrice] [money],\n\t[UnitPriceDiscount] [money],\n\t[LineTotal] numeric(38,6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[SalesOrderHeader] (\n\t[SalesOrderID] [int],\n\t[RevisionNumber] [tinyint],\n\t[OrderDate] [datetime2](7),\n\t[DueDate] [datetime2](7),\n\t[ShipDate] [datetime2](7),\n\t[Status] [tinyint],\n\t[OnlineOrderFlag] bit ,\n\t[SalesOrderNumber]  nvarchar(23),\n\t[PurchaseOrderNumber] nvarchar(25),\n\t[AccountNumber] nvarchar(15),\n\t[CustomerID] [int],\n\t[ShipToAddressID] [int],\n\t[BillToAddressID] [int],\n\t[ShipMethod] [nvarchar](50),\n\t[CreditCardApprovalCode] [varchar](15),\n\t[SubTotal] [money],\n\t[TaxAmt] [money],\n\t[Freight] [money],\n\t[TotalDue] numeric(19,4),\n\t[Comment] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7) \n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM [Ext].[Address]\nSELECT TOP 100 * FROM [Ext].[Customer]\nSELECT TOP 100 * FROM [Ext].[CustomerAddress]\nSELECT TOP 100 * FROM [Ext].[Product]\nSELECT TOP 100 * FROM [Ext].[ProductCategory]\nSELECT TOP 100 * FROM [Ext].[ProductDescription]\nSELECT TOP 100 * FROM [Ext].[ProductModel]\nSELECT TOP 100 * FROM [Ext].[ProductModelProductDescription]\nSELECT TOP 100 * FROM [Ext].[SalesOrderDetail]\nSELECT TOP 100 * FROM [Ext].[SalesOrderHeader]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "AdventureWorksLTServerless",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/06_sql_dedicated_create_tables')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Make sure to run this against the DP500DWH database!",
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- !! Make sure to run this against the DP500DWH database!\n\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\nCREATE TABLE [dbo].[FactInternetSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[CustomerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [float] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH(SalesOrderNumber),\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimCustomer](\n\t[CustomerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[CustomerAlternateKey] [nvarchar](15) NOT NULL,\n\t[Title] [nvarchar](8) NULL,\n\t[FirstName] [nvarchar](50) NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[LastName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NULL,\n\t[BirthDate] [date] NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[Suffix] [nvarchar](10) NULL,\n\t[Gender] [nvarchar](1) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[YearlyIncome] [money] NULL,\n\t[TotalChildren] [tinyint] NULL,\n\t[NumberChildrenAtHome] [tinyint] NULL,\n\t[EnglishEducation] [nvarchar](40) NULL,\n\t[SpanishEducation] [nvarchar](40) NULL,\n\t[FrenchEducation] [nvarchar](40) NULL,\n\t[EnglishOccupation] [nvarchar](100) NULL,\n\t[SpanishOccupation] [nvarchar](100) NULL,\n\t[FrenchOccupation] [nvarchar](100) NULL,\n\t[HouseOwnerFlag] [nchar](1) NULL,\n\t[NumberCarsOwned] [tinyint] NULL,\n\t[AddressLine1] [nvarchar](120) NULL,\n\t[AddressLine2] [nvarchar](120) NULL,\n\t[Phone] [nvarchar](20) NULL,\n\t[DateFirstPurchase] [date] NULL,\n\t[CommuteDistance] [nvarchar](15) NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimDate](\n\t[DateKey] [int] NOT NULL,\n\t[FullDateAlternateKey] [date] NOT NULL,\n\t[DayNumberOfWeek] [tinyint] NOT NULL,\n\t[EnglishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[SpanishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[FrenchDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[DayNumberOfMonth] [tinyint] NOT NULL,\n\t[DayNumberOfYear] [smallint] NOT NULL,\n\t[WeekNumberOfYear] [tinyint] NOT NULL,\n\t[EnglishMonthName] [nvarchar](10) NOT NULL,\n\t[SpanishMonthName] [nvarchar](10) NOT NULL,\n\t[FrenchMonthName] [nvarchar](10) NOT NULL,\n\t[MonthNumberOfYear] [tinyint] NOT NULL,\n\t[CalendarQuarter] [tinyint] NOT NULL,\n\t[CalendarYear] [smallint] NOT NULL,\n\t[CalendarSemester] [tinyint] NOT NULL,\n\t[FiscalQuarter] [tinyint] NOT NULL,\n\t[FiscalYear] [smallint] NOT NULL,\n\t[FiscalSemester] [tinyint] NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimGeography](\n\t[GeographyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[City] [nvarchar](30) NULL,\n\t[StateProvinceCode] [nvarchar](3) NULL,\n\t[StateProvinceName] [nvarchar](50) NULL,\n\t[CountryRegionCode] [nvarchar](3) NULL,\n\t[EnglishCountryRegionName] [nvarchar](50) NULL,\n\t[SpanishCountryRegionName] [nvarchar](50) NULL,\n\t[FrenchCountryRegionName] [nvarchar](50) NULL,\n\t[PostalCode] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[IpAddressLocator] [nvarchar](15) NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimProduct](\n\t[ProductKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductAlternateKey] [nvarchar](25) NULL,\n\t[ProductSubcategoryKey] [int] NULL,\n\t[WeightUnitMeasureCode] [nchar](3) NULL,\n\t[SizeUnitMeasureCode] [nchar](3) NULL,\n\t[EnglishProductName] [nvarchar](50) NOT NULL,\n\t[SpanishProductName] [nvarchar](50) NOT NULL,\n\t[FrenchProductName] [nvarchar](50) NOT NULL,\n\t[StandardCost] [money] NULL,\n\t[FinishedGoodsFlag] [bit] NOT NULL,\n\t[Color] [nvarchar](15) NOT NULL,\n\t[SafetyStockLevel] [smallint] NULL,\n\t[ReorderPoint] [smallint] NULL,\n\t[ListPrice] [money] NULL,\n\t[Size] [nvarchar](50) NULL,\n\t[SizeRange] [nvarchar](50) NULL,\n\t[Weight] [float] NULL,\n\t[DaysToManufacture] [int] NULL,\n\t[ProductLine] [nchar](2) NULL,\n\t[DealerPrice] [money] NULL,\n\t[Class] [nchar](2) NULL,\n\t[Style] [nchar](2) NULL,\n\t[ModelName] [nvarchar](50) NULL,\n\t[LargePhoto] [varbinary](max) NULL,\n\t[EnglishDescription] [nvarchar](400) NULL,\n\t[FrenchDescription] [nvarchar](400) NULL,\n\t[ChineseDescription] [nvarchar](400) NULL,\n\t[ArabicDescription] [nvarchar](400) NULL,\n\t[HebrewDescription] [nvarchar](400) NULL,\n\t[ThaiDescription] [nvarchar](400) NULL,\n\t[GermanDescription] [nvarchar](400) NULL,\n\t[JapaneseDescription] [nvarchar](400) NULL,\n\t[TurkishDescription] [nvarchar](400) NULL,\n\t[StartDate] [datetime] NULL,\n\t[EndDate] [datetime] NULL,\n\t[Status] [nvarchar](7) NULL\n)\nWITH  \n  (   \n\t  DISTRIBUTION = REPLICATE,\n    CLUSTERED INDEX (ProductKey)  \n); \nGO\n\nCREATE TABLE [dbo].[DimProductCategory](\n\t[ProductCategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductCategoryAlternateKey] [int] NULL,\n\t[EnglishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductCategoryName] [nvarchar](50) NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimProductSubcategory](\n\t[ProductSubcategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductSubcategoryAlternateKey] [int] NULL,\n\t[EnglishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[ProductCategoryKey] [int] NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimSalesTerritory](\n\t[SalesTerritoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[SalesTerritoryAlternateKey] [int] NULL,\n\t[SalesTerritoryRegion] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryCountry] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryGroup] [nvarchar](50) NULL,\n\t[SalesTerritoryImage] [varbinary](max) NULL)\nWITH  \n(  \n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED INDEX (SalesTerritoryKey)  \n)\nGO\n\nCREATE TABLE [dbo].[FactResellerSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[ResellerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[EmployeeKey] [int] NOT NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [money] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n)\nWITH\n(\n    DISTRIBUTION = HASH(SalesOrderNumber),\n    CLUSTERED COLUMNSTORE INDEX\n);\nGO\n\nCREATE VIEW [dbo].[vFactSales]\nAS\n\tSELECT\n\t\tCAST(N'Reseller' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,[ResellerKey]\n\t\t,CAST(-1 AS INT) AS [CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,[EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactResellerSales]\n\tUNION ALL\n\tSELECT\n\t\tCAST(N'Internet' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,CAST(-1 AS INT) AS [ResellerKey]\n\t\t,[CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,CAST(-1 AS INT) AS [EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactInternetSales];\nGO\n\n\nCREATE TABLE [dbo].[DimAccount](\n\t[AccountKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentAccountKey] [int] NULL,\n\t[AccountCodeAlternateKey] [int] NULL,\n\t[ParentAccountCodeAlternateKey] [int] NULL,\n\t[AccountDescription] [nvarchar](50) NULL,\n\t[AccountType] [nvarchar](50) NULL,\n\t[Operator] [nvarchar](50) NULL,\n\t[CustomMembers] [nvarchar](300) NULL,\n\t[ValueType] [nvarchar](50) NULL,\n\t[CustomMemberOptions] [nvarchar](200) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimCurrency](\n\t[CurrencyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3) NOT NULL,\n\t[CurrencyName] [nvarchar](50) NOT NULL,\n\t[FormatString] [nvarchar](20) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimDepartmentGroup](\n\t[DepartmentGroupKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentDepartmentGroupKey] [int] NULL,\n\t[DepartmentGroupName] [nvarchar](50) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimEmployee](\n\t[EmployeeKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentEmployeeKey] [int] NULL,\n\t[EmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[ParentEmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[FirstName] [nvarchar](50) NOT NULL,\n\t[LastName] [nvarchar](50) NOT NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NOT NULL,\n\t[Title] [nvarchar](50) NULL,\n\t[HireDate] [date] NULL,\n\t[BirthDate] [date] NULL,\n\t[LoginID] [nvarchar](256) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[EmergencyContactName] [nvarchar](50) NULL,\n\t[EmergencyContactPhone] [nvarchar](25) NULL,\n\t[SalariedFlag] [bit] NULL,\n\t[Gender] [nchar](1) NULL,\n\t[PayFrequency] [tinyint] NULL,\n\t[BaseRate] [money] NULL,\n\t[VacationHours] [smallint] NULL,\n\t[SickLeaveHours] [smallint] NULL,\n\t[CurrentFlag] [bit] NOT NULL,\n\t[SalespersonFlag] [bit] NOT NULL,\n\t[DepartmentName] [nvarchar](50) NULL,\n\t[StartDate] [date] NULL,\n\t[EndDate] [date] NULL,\n\t[Status] [nvarchar](50) NULL,\n\t[EmployeePhoto] [varbinary](max) NULL)\nWITH  \n(   \n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED INDEX (EmployeeKey)  \n) \nGO\n\nCREATE TABLE [dbo].[DimOrganization](\n\t[OrganizationKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentOrganizationKey] [int] NULL,\n\t[PercentageOfOwnership] [nvarchar](16) NULL,\n\t[OrganizationName] [nvarchar](50) NULL,\n\t[CurrencyKey] [int] NULL\n)\t\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\nCREATE TABLE [dbo].[DimPromotion](\n\t[PromotionKey] [int] IDENTITY(1,1) NOT NULL,\n\t[PromotionAlternateKey] [int] NULL,\n\t[EnglishPromotionName] [nvarchar](255) NULL,\n\t[SpanishPromotionName] [nvarchar](255) NULL,\n\t[FrenchPromotionName] [nvarchar](255) NULL,\n\t[DiscountPct] [float] NULL,\n\t[EnglishPromotionType] [nvarchar](50) NULL,\n\t[SpanishPromotionType] [nvarchar](50) NULL,\n\t[FrenchPromotionType] [nvarchar](50) NULL,\n\t[EnglishPromotionCategory] [nvarchar](50) NULL,\n\t[SpanishPromotionCategory] [nvarchar](50) NULL,\n\t[FrenchPromotionCategory] [nvarchar](50) NULL,\n\t[StartDate] [datetime] NOT NULL,\n\t[EndDate] [datetime] NULL,\n\t[MinQty] [int] NULL,\n\t[MaxQty] [int] NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimReseller](\n\t[ResellerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[ResellerAlternateKey] [nvarchar](15) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[BusinessType] [varchar](20) NOT NULL,\n\t[ResellerName] [nvarchar](50) NOT NULL,\n\t[NumberEmployees] [int] NULL,\n\t[OrderFrequency] [char](1) NULL,\n\t[OrderMonth] [tinyint] NULL,\n\t[FirstOrderYear] [int] NULL,\n\t[LastOrderYear] [int] NULL,\n\t[ProductLine] [nvarchar](50) NULL,\n\t[AddressLine1] [nvarchar](60) NULL,\n\t[AddressLine2] [nvarchar](60) NULL,\n\t[AnnualSales] [money] NULL,\n\t[BankName] [nvarchar](50) NULL,\n\t[MinPaymentType] [tinyint] NULL,\n\t[MinPaymentAmount] [money] NULL,\n\t[AnnualRevenue] [money] NULL,\n\t[YearOpened] [int] NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "DP500DWH",
+						"poolName": "DP500DWH"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/07_sql_dedicated_load_data')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 02"
+				},
+				"content": {
+					"query": "-- !! Make sure to run this against the DP500DWH database!\n\nCREATE SCHEMA [Staging]\nGO\n\nCREATE TABLE [Staging].[FactInternetSales]\n(\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[CustomerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [float] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n\t)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[FactInternetSales]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/FactInternetSales.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\n\n\n\nCREATE TABLE [Staging].[DimAccount]\n( \n\t[AccountKey] [int]  NOT NULL,\n\t[ParentAccountKey] [int]  NULL,\n\t[AccountCodeAlternateKey] [int]  NULL,\n\t[ParentAccountCodeAlternateKey] [int]  NULL,\n\t[AccountDescription] [nvarchar](50)  NULL,\n\t[AccountType] [nvarchar](50)  NULL,\n\t[Operator] [nvarchar](50)  NULL,\n\t[CustomMembers] [nvarchar](300)  NULL,\n\t[ValueType] [nvarchar](50)  NULL,\n\t[CustomMemberOptions] [nvarchar](200)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimAccount]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimAccount.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\nDROP TABLE [Staging].[DimCurrency]\nCREATE TABLE [Staging].[DimCurrency]\n( \n\t[CurrencyKey] [int]  NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3)  NOT NULL,\n\t[CurrencyName] [nvarchar](50)  NOT NULL,\n\t[FormatString] [nvarchar](20)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimCurrency]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimCurrency.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\n\n\nCREATE TABLE [Staging].[DimCustomer]\n( \n\t[CustomerKey] [int]  NOT NULL,\n\t[GeographyKey] [int]  NULL,\n\t[CustomerAlternateKey] [nvarchar](15)  NOT NULL,\n\t[Title] [nvarchar](8)  NULL,\n\t[FirstName] [nvarchar](50)  NULL,\n\t[MiddleName] [nvarchar](50)  NULL,\n\t[LastName] [nvarchar](50)  NULL,\n\t[NameStyle] [bit]  NULL,\n\t[BirthDate] [date]  NULL,\n\t[MaritalStatus] [nchar](1)  NULL,\n\t[Suffix] [nvarchar](10)  NULL,\n\t[Gender] [nvarchar](1)  NULL,\n\t[EmailAddress] [nvarchar](50)  NULL,\n\t[YearlyIncome] [money]  NULL,\n\t[TotalChildren] [tinyint]  NULL,\n\t[NumberChildrenAtHome] [tinyint]  NULL,\n\t[EnglishEducation] [nvarchar](40)  NULL,\n\t[SpanishEducation] [nvarchar](40)  NULL,\n\t[FrenchEducation] [nvarchar](40)  NULL,\n\t[EnglishOccupation] [nvarchar](100)  NULL,\n\t[SpanishOccupation] [nvarchar](100)  NULL,\n\t[FrenchOccupation] [nvarchar](100)  NULL,\n\t[HouseOwnerFlag] [nchar](1)  NULL,\n\t[NumberCarsOwned] [tinyint]  NULL,\n\t[AddressLine1] [nvarchar](120)  NULL,\n\t[AddressLine2] [nvarchar](120)  NULL,\n\t[Phone] [nvarchar](20)  NULL,\n\t[DateFirstPurchase] [date]  NULL,\n\t[CommuteDistance] [nvarchar](15)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimCustomer]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimCustomer.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "DP500DWH",
+						"poolName": "DP500DWH"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/01_query_csv')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 02"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "synapsespark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "b71478df-4c0e-4c05-ae8a-fdec622cd226"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+						"name": "synapsespark",
+						"type": "Spark",
+						"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Module 02 - 01 query multiple files using Spark\r\n",
+							"\r\n",
+							"Set up variable for later reference. Make sure the name of your datalake is correct"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"datalake = 'datalake3mstaeetovkk4'"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Just read in some data using CSV format \r\n",
+							"\r\n",
+							"- Notice we do not have header information in the file\r\n",
+							"- Notice we have specified to load in ALL csv files from this folder!"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"df = spark.read.load('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', format='csv', header=False)\r\n",
+							"display(df.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 14
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Notice that the file does not contain any field names in the header. Let's print the schema"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df.printSchema()"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Let's define our own schema on read"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"from pyspark.sql import types\r\n",
+							"\r\n",
+							"customSchema = types.StructType([\r\n",
+							"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
+							"    types.StructField(\"SalesTerritoryKey\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"OrderDate\", types.DateType(), True),\r\n",
+							"    types.StructField(\"Customer\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Email\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Adress\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Quantity\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"UnitPrice\", types.DoubleType(), True),\r\n",
+							"    types.StructField(\"ShippingCost\", types.DoubleType(), True),\r\n",
+							"])\r\n",
+							"\r\n",
+							"df = spark.read \\\r\n",
+							"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
+							"\r\n",
+							"display(df.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Now, let's filter this data using Spark SQL. First we register this table as a temporary view"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df.createOrReplaceTempView(\"sales\")"
+						],
+						"outputs": [],
+						"execution_count": 16
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"And now we can apply the **%%sql** magic"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"SELECT * \r\n",
+							"FROM SALES \r\n",
+							"WHERE Customer LIKE 'E%'"
+						],
+						"outputs": [],
+						"execution_count": 17
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"We can also apply grouping and mathematical operations like SUM. "
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"SELECT \r\n",
+							"    OrderDate,\r\n",
+							"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+							"FROM Sales\r\n",
+							"GROUP BY OrderDate\r\n",
+							"ORDER BY OrderDate\r\n",
+							"LIMIT 50"
+						],
+						"outputs": [],
+						"execution_count": 22
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Create a new temporary view by using SQL:"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"CREATE OR REPLACE TEMPORARY VIEW TotalSalesByDate\r\n",
+							"AS\r\n",
+							"\r\n",
+							"SELECT \r\n",
+							"    OrderDate,\r\n",
+							"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+							"FROM Sales\r\n",
+							"GROUP BY OrderDate\r\n",
+							"ORDER BY OrderDate"
+						],
+						"outputs": [],
+						"execution_count": 23
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"... and then use the temporary view"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"SELECT * FROM TotalSalesByDate LIMIT 10"
+						],
+						"outputs": [],
+						"execution_count": 27
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/02_create_charts')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 02"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "synapsespark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "2ae78d98-205f-444d-8ca8-4dbdf597b9a4"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+						"name": "synapsespark",
+						"type": "Spark",
+						"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Module 02 - 02 Create charts using Spark\r\n",
+							"\r\n",
+							"Set up variable for later reference. Make sure the name of your datalake is correct"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql import types\r\n",
+							"\r\n",
+							"datalake = 'datalake3mstaeetovkk4'\r\n",
+							"\r\n",
+							"customSchema = types.StructType([\r\n",
+							"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
+							"    types.StructField(\"SalesTerritoryKey\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"OrderDate\", types.DateType(), True),\r\n",
+							"    types.StructField(\"Customer\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Email\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Adress\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Quantity\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"UnitPrice\", types.DoubleType(), True),\r\n",
+							"    types.StructField(\"ShippingCost\", types.DoubleType(), True),\r\n",
+							"])\r\n",
+							"\r\n",
+							"df = spark.read \\\r\n",
+							"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
+							"df.createOrReplaceTempView(\"sales\")"
+						],
+						"outputs": [],
+						"execution_count": 41
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Execute the following Spark SQL And explore the **Chart** feature"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "sparksql"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%sql\r\n",
+							"\r\n",
+							"SELECT \r\n",
+							"    OrderDate,\r\n",
+							"    SUM( (Quantity * UnitPrice) + ShippingCost ) AS TotalSales\r\n",
+							"FROM Sales\r\n",
+							"GROUP BY OrderDate\r\n",
+							"ORDER BY OrderDate\r\n",
+							"LIMIT 50"
+						],
+						"outputs": [],
+						"execution_count": 42
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Let's create some chart using MATPLOTLIB"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from matplotlib import pyplot as plt\r\n",
+							"\r\n",
+							"totalOrdersByTerritory = sqlContext.sql(\"SELECT SalesTerritoryKey, COUNT(*) as TotalOrders \\\r\n",
+							"                                         FROM Sales \\\r\n",
+							"                                         GROUP BY SalesTerritoryKey\\\r\n",
+							"                                         ORDER BY SalesTerritoryKey\").toPandas()\r\n",
+							"\r\n",
+							"# clear the plot area\r\n",
+							"plt.clf()\r\n",
+							"\r\n",
+							"# create a figure\r\n",
+							"figure = plt.figure(figsize=(12, 8))\r\n",
+							"\r\n",
+							"# create a bar plot of total sales by datalake\r\n",
+							"plt.bar(x=totalOrdersByTerritory['SalesTerritoryKey'], height=totalOrdersByTerritory['TotalOrders'], color='magenta')\r\n",
+							"\r\n",
+							"# customize the chart\r\n",
+							"plt.title('Order count by sales territory')\r\n",
+							"plt.xlabel('Sales territory')\r\n",
+							"plt.ylabel('Total number of orders')\r\n",
+							"plt.grid(color='#95a5a6', linestyle='--')\r\n",
+							"\r\n",
+							"# show the plot area\r\n",
+							"plt.show()"
+						],
+						"outputs": [],
+						"execution_count": 43
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/synapsespark')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "uksouth"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DP500DWH')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "uksouth"
+		}
+	]
+}

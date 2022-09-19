@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "synapse-cn32xts6vteh6"
+		},
+		"adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString": {
+			"value": ""
+		},
+		"adventureworkslt_azuresqldatabase_linkedservice_connectionString": {
+			"value": ""
+		},
+		"synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"datalake_linkedservice_properties_typeProperties_url": {
+			"value": "@{concat('https://datalake', linkedService().suffix, '.dfs.core.windows.net')}"
+		},
+		"github_dp_500_http_linkedservice_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/MicrosoftLearning/DP-500-Azure-Data-Analyst/main/"
+		},
+		"keyvault_linkedservice_properties_typeProperties_baseUrl": {
+			"value": "@{concat('https://keyvault-', linkedService().suffix, '.vault.azure.net/')}"
+		}
+	}
+}
