@@ -30,7 +30,7 @@ This will deploy the following resources:
 Permissions (automatically configured):
 
 - Synapse managed identity becomes a Storage Blob Data Contributor
-- Current user becomes a Storage Blob Data Contributor 
+- Current user becomes a Storage Blob Data Contributor
 - Purview managed identity becomes a Storage Blob Data Reader
 
 Manual steps:
