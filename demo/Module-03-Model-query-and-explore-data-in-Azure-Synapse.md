@@ -1,21 +1,6 @@
-# Module 02: Model, query, and explore data in Azure Synapse
+# Module 3: Model, query, and explore data in Azure Synapse
 
-## Microsoft Learn Modules
-
-- [Introduction to Azure Synapse Analytics](https://docs.microsoft.com/learn/modules/introduction-azure-synapse-analytics/)
-- [Use Azure Synapse serverless SQL pool to query files in a data lake](https://docs.microsoft.com/learn/modules/query-data-lake-using-azure-synapse-serverless-sql-pools/)
-- [Analyze data with Apache Spark in Azure Synapse Analytics](https://docs.microsoft.com/learn/modules/understand-big-data-engineering-with-apache-spark-azure-synapse-analytics/)
-- [Analyze data in a relational data warehouse](https://docs.microsoft.com/learn/modules/design-multidimensional-schema-to-optimize-analytical-workloads/)
-
-## Labs
-
-- [Query files using a serverless SQL pool](https://aka.ms/mslearn-synapse-sql)
-- [Analyze data with Spark](https://aka.ms/mslearn-synapse-spark)
-- [Explore a relational data warehouse](https://aka.ms/mslearn-synapse-dw)
-
-## Demos
-
-### Demo: Explore the Azure Synapse Studio
+## Introduction to Azure Synapse Analytics [[learn module]](https://learn.microsoft.com/training/modules/introduction-azure-synapse-analytics)
 
 - [x] Go to the [https://web.azuresynapse.net](https://web.azuresynapse.net) and sign in to your workspace.
 - [x] Explore the home page
@@ -28,7 +13,7 @@
   - We have already setup some **linked services** to various data sources. Explorer them.
   - Notice also that **Git configuration** has been setup. Point out that you should create a branch everytime you want to add something and create a pull request when finished. Lastly, you need to publish your changes.
 
-### Demo: Serverless
+## Use Azure Synapse serverless SQL pool to query files in a data lake  [[learn module]](https://learn.microsoft.com/training/modules/query-data-lake-using-azure-synapse-serverless-sql-pools)
 
 Query a CSV file using the Serverless pool
 
@@ -50,7 +35,7 @@ Create views and external tables
 - [x] Open the **04_sql_serverless_views** SQL Script. Walk through the file and execute each SQL statement individually.
 - [x] Open the **05_sql_serverless_external_tables** SQL Script. Walk through the file and execute each SQL statement individually.
 
-### Demo: Spark
+## Analyze data with Apache Spark in Azure Synapse Analytics [[learn module]](https://learn.microsoft.com/training/modules/understand-big-data-engineering-with-apache-spark-azure-synapse-analytics)
 
 Query a file using an Spark Notebook
 
@@ -65,7 +50,7 @@ Create a chart on the resulting data
 
 - [x] Explore the **02_create_charts** notebook and execute each cell separately.
 
-### Demo: Dedicated pool
+## Analyze data in a relational data warehouse [[learn module]](https://learn.microsoft.com/training/modules/design-multidimensional-schema-to-optimize-analytical-workloads)
 
 - [x] Create a dedicated pool (named DP500DWH) with a performance level of DW100c (watch out for cost $1,102.30/Average per month). Notice this can take a few minutes...
 - Create some dimension, fact and staging tables

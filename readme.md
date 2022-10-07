@@ -16,11 +16,11 @@ In order to deploy this environment, check out [this page](/automation/readme.md
 
 Next, there is a set of [demo's and usefull resources](/demo/readme.md) for each module.
 
-- [Module 00: Introduction to data analytics on Azure](/demo/module-00.md)
-- [Module 01: Govern data across an enterprise](/demo/module-01.md)
-- [Module 02: Model, query, and explore data in Azure Synapse](/demo/module-02.md)
-- [Module 03: Prepare data for tabular models in Power BI](/demo/module-03.md)
-- [Module 04: Design and build tabular models](/demo/module-04.md)
-- [Module 05: Implement advanced data visualization techniques by using Power BI](/demo/module-05.md)
-- [Module 06: Implement and manage an analytics environment](/demo/module-06.md)
-- [Module 07: Manage the analytics development lifecycle](/demo/module-07.md)
+- [Module 01: Introduction to data analytics on Azure](/demo/Module-01-Introduction.md)
+- [Module 02: Govern data across an enterprise](/demo/Module-02-Govern-data-accross-an-enterprise.md)
+- [Module 03: Model, query, and explore data in Azure Synapse](/demo/Module-03-Model-query-and-explore-data-in-Azure-Synapse)
+- [Module 04: Prepare data for tabular models in Power BI](/demo/Module-04-Prepare-data-for-tabular-models-in-Power-BI.md)
+- [Module 05: Design and build tabular models](/demo/Module-05-Design-and-build-tabular-models.md)
+- [Module 06: Implement advanced data visualization techniques by using Power BI](/demo/Module-06-Implement-advanced-data-visualization-techniques-by-using-Power-BI.md)
+- [Module 07: Implement and manage an analytics environment](/demo/Module-07-Implement-and-manage-an-analytics-environment.md)
+- [Module 08: Manage the analytics development lifecycle](/demo/Module-08-Manage-the-analytics-development-lifecycle.md)
