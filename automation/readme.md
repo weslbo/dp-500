@@ -3,6 +3,10 @@
 In order to deploy the demo environment, execute the following commands:
 
 ```bash
+az provider register --namespace 'Microsoft.Purview'
+az provider register --namespace 'Microsoft.Storage'
+az provider register --namespace 'Microsoft.EventHub'
+
 read -s "password?Password for SQL Admin:?"
 
 USEROBJECTID=$(az ad signed-in-user show --query id -o tsv)

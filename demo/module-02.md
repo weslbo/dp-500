@@ -59,7 +59,7 @@ Query a file using an Spark Notebook
 
 Use Spark SQL on the data just loaded and apply some filter on the data frame
 
-- [x] Navigate to the **Develop** section and open the **\Module 02\01_query_csv** notebook. Explorer the notebook and execute each cell separately. 
+- [x] Navigate to the **Develop** section and open the **\Module 02\01_query_csv** notebook. Explorer the notebook and execute each cell separately.
 
 Create a chart on the resulting data
 
@@ -67,7 +67,7 @@ Create a chart on the resulting data
 
 ### Demo: Dedicated pool
 
-- Create a dedicated pool
+- [x] Create a dedicated pool (named DP500DWH) with a performance level of DW100c (watch out for cost $1,102.30/Average per month). Notice this can take a few minutes...
 - Create some dimension, fact and staging tables
 - Load some data using the COPY statement
 - Query the data using GROUP BY and/or RANK

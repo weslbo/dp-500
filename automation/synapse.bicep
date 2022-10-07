@@ -89,5 +89,18 @@ resource synapse_sparkpool 'Microsoft.Synapse/workspaces/bigDataPools@2021-06-01
   }
 }
 
+resource synapse_sqlpool 'Microsoft.Synapse/workspaces/sqlPools@2021-06-01' = {
+  parent: synapse_workspace
+  name: 'DP500DWH'
+  location: location
+  sku: {
+    name: 'DW100c'
+  }
+  properties: {
+    collation: 'SQL_Latin1_General_CP1_CI_AS'
+    createMode: 'Default'
+  }
+}
+
 output synapse_name string = synapse_workspace.name
 output synapse_managed_identity string = synapse_workspace.identity.principalId

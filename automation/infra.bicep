@@ -309,11 +309,11 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
   }
 }
 
-resource networkwatcher 'Microsoft.Network/networkWatchers@2020-11-01' = {
-  name: 'NetworkWatcher_${location}'
-  location: location
-  properties: {}
-}
+// resource networkwatcher 'Microsoft.Network/networkWatchers@2020-11-01' = {
+//   name: 'NetworkWatcher_${location}'
+//   location: location
+//   properties: {}
+// }
 
 resource vm_sqlserver 'Microsoft.Compute/virtualMachines@2020-06-01' = {
   name: 'vm-sqlserver'
