@@ -18,7 +18,7 @@ Next, there is a set of [demo's and usefull resources](/demo/readme.md) for each
 
 - [Module 01: Introduction to data analytics on Azure](/demo/Module-01-Introduction.md)
 - [Module 02: Govern data across an enterprise](/demo/Module-02-Govern-data-accross-an-enterprise.md)
-- [Module 03: Model, query, and explore data in Azure Synapse](/demo/Module-03-Model-query-and-explore-data-in-Azure-Synapse)
+- [Module 03: Model, query, and explore data in Azure Synapse](/demo/Module-03-Model-query-and-explore-data-in-Azure-Synapse.md)
 - [Module 04: Prepare data for tabular models in Power BI](/demo/Module-04-Prepare-data-for-tabular-models-in-Power-BI.md)
 - [Module 05: Design and build tabular models](/demo/Module-05-Design-and-build-tabular-models.md)
 - [Module 06: Implement advanced data visualization techniques by using Power BI](/demo/Module-06-Implement-advanced-data-visualization-techniques-by-using-Power-BI.md)
