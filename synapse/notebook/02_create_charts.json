@@ -2,7 +2,7 @@
 	"name": "02_create_charts",
 	"properties": {
 		"folder": {
-			"name": "Module 02"
+			"name": "Module 03"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -45,8 +45,7 @@
 				"sparkVersion": "3.1",
 				"nodeCount": 3,
 				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
+				"memory": 28
 			},
 			"sessionKeepAliveTimeout": 30
 		},

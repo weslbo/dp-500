@@ -2,7 +2,7 @@
 	"name": "01_query_csv",
 	"properties": {
 		"folder": {
-			"name": "Module 02"
+			"name": "Module 03"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b71478df-4c0e-4c05-ae8a-fdec622cd226"
+				"spark.autotune.trackingId": "a95413fa-22b1-419f-92fe-2b1c84c8fcad"
 			}
 		},
 		"metadata": {
@@ -36,17 +36,10 @@
 			"a365ComputeOptions": {
 				"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
 				"name": "synapsespark",
-				"type": "Spark",
-				"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
-				},
-				"sparkVersion": "3.1",
-				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
+				}
 			},
 			"sessionKeepAliveTimeout": 30
 		},
