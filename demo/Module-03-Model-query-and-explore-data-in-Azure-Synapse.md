@@ -17,17 +17,24 @@
 
 Query a CSV file using the Serverless pool
 
-- [x] Go to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .csv file. Right-click, select TOP 100 records.
+- [x] Go to the **Data** section, navigate to the data lake \landing\adventureworks\tables\csv\ and choose any .csv file. Right-click, select TOP 100 records.
 - [x] Navigate to the **Develop** section and open the **01_sql_serverless_csv** SQL Script. Walk through the file and execute each SQL statement individually.
+  - Makes sure the datalake URL is correct
+  - The first example just is a copy of the auto generated code. It has 2 issues:
+    - Notice 1) column headers are not promoted
+    - Notice 2) have a look at the messages: "Potential conversion error while reading VARCHAR column 'C1' from UTF8 encoded text. Change database collation to a UTF8 collation or specify explicit column schema in WITH clause and assign UTF8 collation to VARCHAR columns."
+  - You will fix this by running the other scripts
 
 Query a JSON file using the Serverless pool
 
-- [x] Go back to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .json file. Right-click, select TOP 100 records. Notice all the data is one line.
+- [x] Go back to the **Data** section, navigate to the data lake \landing\adventureworks\tables]\json\ and choose any .json file. Right-click, select TOP 100 records. Notice all the data is one line.
 - [x] Navigate to the **Develop** section and open the **02_sql_serverless_json** SQL Script. Walk through the file and execute each SQL statement individually.
 
 Query a Parquet file using the Serverless pool
 
+- [x] Go back to the **Data** section, navigate to the data lake \landing\adventureworks\tables\parquet\ and choose any .parquet file. Right-click, select TOP 100 records.
 - [x] Open the **03_sql_serverless_parquet** SQL Script. Walk through the file and execute each SQL statement individually.
+  - Notice: We can specify our own column names to select and replace data types, this will improve performance
 
 Create views and external tables
 
@@ -39,7 +46,7 @@ Create views and external tables
 
 Query a file using an Spark Notebook
 
-- [x] Go to the **Data** section, navigate to the data lake \landing\allfiles\01\data\ and choose any .csv file. Right-click, select New Notebook > Load to dataframe.
+- [x] Go to the **Data** section, navigate to the data lake \landing\adventureworks\tables\ and choose any .csv file. Right-click, select New Notebook > Load to dataframe.
 - [x] Attach to Spark Pool and start when necessary
 
 Use Spark SQL on the data just loaded and apply some filter on the data frame
@@ -53,6 +60,7 @@ Create a chart on the resulting data
 ## Analyze data in a relational data warehouse [[learn module]](https://learn.microsoft.com/training/modules/design-multidimensional-schema-to-optimize-analytical-workloads)
 
 - [x] Create a dedicated pool (named DP500DWH) with a performance level of DW100c (watch out for cost $1,102.30/Average per month). Notice this can take a few minutes...
-- Create some dimension, fact and staging tables
-- Load some data using the COPY statement
-- Query the data using GROUP BY and/or RANK
+- [x] Explore 06_sql_dedicated_create_tables.sql to create some dimension, fact and staging tables.
+- [x] Explore 07_sql_dedicated_load_data.sql to load some data using the COPY statement.
+- [x] Explore 08_sql_date_dimension.sql to create a date dimension.
+- [x] Query the data using GROUP BY and/or RANK

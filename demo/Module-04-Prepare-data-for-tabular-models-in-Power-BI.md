@@ -8,7 +8,6 @@
 - Show where to configure automatic aggregations and adjust the query coverage
 - Configure incremental refresh on a fact table
 
-
 ## Understand scalability in Power BI [[learn module]](https://learn.microsoft.com/training/modules/understand-scalability-power-bi)
 
 - Show where to configure Large dataset format storage (for a single dataset and for all datasets in the workspace)
