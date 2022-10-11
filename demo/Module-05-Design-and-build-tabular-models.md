@@ -19,6 +19,8 @@
 - Setup and test row level security (static and dynamic)
 - Setup OLS rules to a Power BI Desktop model by using an XML for Analysis (XMLA) endpoint
 
+- [RLS and OLS.pbix](/demo/Module-05-assets/RLS%20and%20OLS.pbix) (demo on RLS and OLS)
+
 ## Use tools to optimize Power BI performance [[learn module]](https://learn.microsoft.com/training/modules/use-tools-optimize-power-bi-performance)
 
 - Show performance studio, while connected to a direct query model
