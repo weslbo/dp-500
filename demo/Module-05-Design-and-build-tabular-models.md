@@ -16,13 +16,9 @@
 
 ## Enforce Power BI model security [[learn module]](https://learn.microsoft.com/training/modules/enforce-power-bi-model-security)
 
-- Setup and test row level security (static and dynamic)
-- Setup OLS rules to a Power BI Desktop model by using an XML for Analysis (XMLA) endpoint
-
 - [RLS and OLS.pbix](/demo/Module-05-assets/RLS%20and%20OLS.pbix) (demo on RLS and OLS)
 
 ## Use tools to optimize Power BI performance [[learn module]](https://learn.microsoft.com/training/modules/use-tools-optimize-power-bi-performance)
 
-- Show performance studio, while connected to a direct query model
-- Show DAX Studio and look for some model metrics
-- Use the Best practices analyzer
+- [Aggregations.pbix](/demo/Module-05-assets/Aggregations.pbix): Demo on User-Defined Aggregations
+- [Incremental Refresh.pbix](/demo/Module-05-assets/Incremental%20Refresh.pbix): Demo on Incremental Refresh
