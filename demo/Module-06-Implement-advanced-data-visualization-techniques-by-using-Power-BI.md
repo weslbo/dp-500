@@ -14,6 +14,28 @@
 - Show how to create a streaming dataset
 - Demonstrate paginated report autorefresh
 
+- Provision IoT Central app: https://apps.azureiotcentral.com/build/new/solar-panel-monitoring
+- Create an Azure Event Hub namespace + event hub in your subscription. iotcentralsolarpanels
+- Copy the connection string (RootManageSharedAccessKey), go back to IoT Central app and configure a data export.
+- Wait a few minutes for it to become healthy.
+- Create stream analytics job connecting to a Power BI workspace/dataset with following query
+- Start the job and wait until started
+- Create a dashboard in Power BI Service, consuming the telemetry data.
+
+```sql
+SELECT deviceId,
+       EventProcessedUtcTime,
+       telemetry.Efficiency,
+       telemetry.EnergyAmountkWh,
+       telemetry.NominalVoltage,
+       telemetry.PanelStatus,
+       telemetry.PowerAmountKW,
+       telemetry.Temperature 
+INTO [powerbi]
+FROM [solarpanels]
+```
+
+
 ## Create paginated reports [[learn module]](https://learn.microsoft.com/training/modules/create-paginated-reports-power-bi)
 
 - Create paginated report
