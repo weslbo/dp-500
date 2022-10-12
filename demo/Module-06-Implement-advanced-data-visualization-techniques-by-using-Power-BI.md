@@ -33,7 +33,7 @@ FROM [solarpanels]
 
 ### Demonstrate Power BI Desktop automatic page refresh
 
-- [Demo on Automatic Page refresh](/demo/Module-06-assets/Auto%20Page%20Refresh.pbix)
+- [Auto page refresh.pbix](/demo/Module-06-assets/Auto%20Page%20Refresh.pbix): Demo on Automatic Page refresh
 - [Configure Power BI Service Automatic page refresh](https://app.powerbi.com/admin-portal/ppuTenantSettings)
 
 ### Show how to create a streaming dataset
@@ -46,4 +46,4 @@ TODO
 
 ## Create paginated reports [[learn module]](https://learn.microsoft.com/training/modules/create-paginated-reports-power-bi)
 
-- Create paginated report
+- [Paginated Report.rdl](/demo/Module-06-assets/Paginated%20Report.rdl): demo on paginated report against Azure SQL Database. This can be published to a PPU workspace in Power BI
