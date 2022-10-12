@@ -8,12 +8,8 @@
 
 ## Monitor data in real-time with Power BI [[learn module]](https://learn.microsoft.com/training/modules/monitor-data-real-time-power-bi)
 
-- Show performance analyzer
-- Demonstrate Power BI Service Dashboard realtime refresh
-- Demonstrate Power BI Desktop automatic page refresh
-- Show how to create a streaming dataset
-- Demonstrate paginated report autorefresh
 
+### Demonstrate Power BI Service Dashboard realtime refresh
 - Provision IoT Central app: https://apps.azureiotcentral.com/build/new/solar-panel-monitoring
 - Create an Azure Event Hub namespace + event hub in your subscription. iotcentralsolarpanels
 - Copy the connection string (RootManageSharedAccessKey), go back to IoT Central app and configure a data export.
@@ -35,6 +31,18 @@ INTO [powerbi]
 FROM [solarpanels]
 ```
 
+### Demonstrate Power BI Desktop automatic page refresh
+
+- [Demo on Automatic Page refresh](/demo/Module-06-assets/Auto%20Page%20Refresh.pbix)
+- [Configure Power BI Service Automatic page refresh](https://app.powerbi.com/admin-portal/ppuTenantSettings)
+
+### Show how to create a streaming dataset
+
+TODO
+
+### Demonstrate paginated report autorefresh
+
+TODO
 
 ## Create paginated reports [[learn module]](https://learn.microsoft.com/training/modules/create-paginated-reports-power-bi)
 
