@@ -3,7 +3,7 @@
 ## Understand advanced data visualization concepts [[learn module]](https://learn.microsoft.com/training/modules/understand-advanced-data-visualization-concepts)
 
 - Show where to use find report theme, and how to customize it. Save it as a template .PBIT
-- Demonstrate personaled visuals in Power BI Service
+- Demonstrate personalized visuals in Power BI Service (remember to configure the power bi Current file options because personalization is not enabled by default)
 - Show where to configure alt text, tab order and tooltips
 
 ## Monitor data in real-time with Power BI [[learn module]](https://learn.microsoft.com/training/modules/monitor-data-real-time-power-bi)

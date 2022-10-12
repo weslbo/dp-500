@@ -12,4 +12,9 @@
 
 ## Create and manage Power BI assets [[learn module]](https://learn.microsoft.com/training/modules/create-manage-power-bi-assets)
 
-- Connect and manage datasets through XMLA endpoint
+- Enable read-write connectivity for a PPU workspace: [here](https://app.powerbi.com/admin-portal/ppuTenantSettings)
+- Grab the workspace connection URL: powerbi://api.powerbi.com/v1.0/myorg/DP-500%20ppu
+- Open SQL Server Management Studio and connect to the workspace
+- Unlike configuring refresh in the POwer BI service, refresh operations throught the XMLA endpoint are not limited to 45 refreshes per day, and the scheduled refresh timeout is not imposed!
+
+![image](/demo/Module-08-assets/xmla.png)

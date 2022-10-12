@@ -10,6 +10,7 @@
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
         <ConnectString>Data Source=sqlserver-cn32xts6vteh6.database.windows.net;Initial Catalog=AdventureWorksDW2022-DP-500</ConnectString>
+        <Prompt>Specify a user name and password for data source Database:</Prompt>
       </ConnectionProperties>
       <rd:DataSourceID>4ad6716f-4c0e-432d-acdc-e19abd54b37e</rd:DataSourceID>
     </DataSource>
@@ -603,7 +604,7 @@ FROM
                                 <Style>
                                   <FontSize>11pt</FontSize>
                                   <FontWeight>Bold</FontWeight>
-                                  <Color>#666666</Color>
+                                  <Color>Tomato</Color>
                                 </Style>
                               </TextRun>
                             </TextRuns>
@@ -748,7 +749,7 @@ FROM
             <DataSetName>SalesOrdersByCustomer</DataSetName>
             <Top>0.99306in</Top>
             <Height>1in</Height>
-            <Width>5.77778in</Width>
+            <Width>5.77776in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
