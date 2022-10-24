@@ -6,7 +6,7 @@
 
 ## Discover trusted data using Microsoft Purview [[learn module]](https://learn.microsoft.com/training/modules/discover-trusted-data-use-azure-purview)
 
-- Register a data source
+- [[Register a data source]](https://www.youtube.com/watch?v=xQ6mLaMiSm8)
 - Scan the data source
 
 ## Catalog data artifacts by using Microsoft Purview [[learn module]](https://learn.microsoft.com/training/modules/catalog-data-artifacts-use-microsoft-purview)
