@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f3a8e088-0f87-4cfb-b6c6-4314bf3c972a"
+				"spark.autotune.trackingId": "db9e7afe-f497-4038-bd8c-0823fc79b2fb"
 			}
 		},
 		"metadata": {
@@ -143,7 +143,7 @@
 					"ORDER BY OrderDate\r\n",
 					"LIMIT 50"
 				],
-				"execution_count": 42
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -197,7 +197,7 @@
 					"# show the plot area\r\n",
 					"plt.show()"
 				],
-				"execution_count": 43
+				"execution_count": 4
 			}
 		]
 	}
