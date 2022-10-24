@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "994044cf-7a93-4208-bc95-84f26581a92e"
+				"spark.autotune.trackingId": "94b27b87-731e-4f3b-9e14-7ec6e60e0f61"
 			}
 		},
 		"metadata": {
@@ -144,7 +144,7 @@
 				"source": [
 					"df.printSchema()"
 				],
-				"execution_count": 9
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -193,7 +193,7 @@
 					"\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 15
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -224,7 +224,7 @@
 				"source": [
 					"df.createOrReplaceTempView(\"sales\")"
 				],
-				"execution_count": 16
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -263,7 +263,7 @@
 					"FROM SALES \r\n",
 					"WHERE Customer LIKE 'E%'"
 				],
-				"execution_count": 17
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -306,7 +306,7 @@
 					"ORDER BY OrderDate\r\n",
 					"LIMIT 50"
 				],
-				"execution_count": 22
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -351,7 +351,7 @@
 					"GROUP BY OrderDate\r\n",
 					"ORDER BY OrderDate"
 				],
-				"execution_count": 23
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -388,7 +388,7 @@
 					"\r\n",
 					"SELECT * FROM TotalSalesByDate LIMIT 10"
 				],
-				"execution_count": 27
+				"execution_count": 11
 			}
 		]
 	}
