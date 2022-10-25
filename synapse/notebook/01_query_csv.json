@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a95413fa-22b1-419f-92fe-2b1c84c8fcad"
+				"spark.autotune.trackingId": "94b27b87-731e-4f3b-9e14-7ec6e60e0f61"
 			}
 		},
 		"metadata": {
@@ -34,12 +34,19 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+				"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
 				"name": "synapsespark",
+				"type": "Spark",
+				"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
-				}
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -73,9 +80,9 @@
 					}
 				},
 				"source": [
-					"datalake = 'datalake3mstaeetovkk4'"
+					"datalake = 'datalakecn32xts6vteh6'"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -106,7 +113,7 @@
 					"df = spark.read.load('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', format='csv', header=False)\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 14
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -137,7 +144,7 @@
 				"source": [
 					"df.printSchema()"
 				],
-				"execution_count": 9
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -186,7 +193,7 @@
 					"\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 15
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -217,7 +224,7 @@
 				"source": [
 					"df.createOrReplaceTempView(\"sales\")"
 				],
-				"execution_count": 16
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -256,7 +263,7 @@
 					"FROM SALES \r\n",
 					"WHERE Customer LIKE 'E%'"
 				],
-				"execution_count": 17
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -299,7 +306,7 @@
 					"ORDER BY OrderDate\r\n",
 					"LIMIT 50"
 				],
-				"execution_count": 22
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -344,7 +351,7 @@
 					"GROUP BY OrderDate\r\n",
 					"ORDER BY OrderDate"
 				],
-				"execution_count": 23
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -381,7 +388,7 @@
 					"\r\n",
 					"SELECT * FROM TotalSalesByDate LIMIT 10"
 				],
-				"execution_count": 27
+				"execution_count": 11
 			}
 		]
 	}

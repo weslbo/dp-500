@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ae78d98-205f-444d-8ca8-4dbdf597b9a4"
+				"spark.autotune.trackingId": "db9e7afe-f497-4038-bd8c-0823fc79b2fb"
 			}
 		},
 		"metadata": {
@@ -34,10 +34,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+				"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
 				"name": "synapsespark",
 				"type": "Spark",
-				"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+				"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -45,7 +45,8 @@
 				"sparkVersion": "3.1",
 				"nodeCount": 3,
 				"cores": 4,
-				"memory": 28
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -81,7 +82,7 @@
 				"source": [
 					"from pyspark.sql import types\r\n",
 					"\r\n",
-					"datalake = 'datalake3mstaeetovkk4'\r\n",
+					"datalake = 'datalakecn32xts6vteh6'\r\n",
 					"\r\n",
 					"customSchema = types.StructType([\r\n",
 					"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
@@ -99,7 +100,7 @@
 					"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
 					"df.createOrReplaceTempView(\"sales\")"
 				],
-				"execution_count": 41
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -142,7 +143,7 @@
 					"ORDER BY OrderDate\r\n",
 					"LIMIT 50"
 				],
-				"execution_count": 42
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -196,7 +197,7 @@
 					"# show the plot area\r\n",
 					"plt.show()"
 				],
-				"execution_count": 43
+				"execution_count": 4
 			}
 		]
 	}
