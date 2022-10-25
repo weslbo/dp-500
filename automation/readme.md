@@ -10,8 +10,11 @@ az provider register --namespace 'Microsoft.EventHub'
 read -s "password?Password for SQL Admin:?"
 
 USEROBJECTID=$(az ad signed-in-user show --query id -o tsv)
+EMAIL=$(az ad signed-in-user show --query mail -o tsv)
 
 az deployment sub create --name dp-500-demo-deployment-uksouth --location uksouth --template-file main.bicep --parameters sqlAdministratorLoginPassword=$password userObjectId=$USEROBJECTID
+
+az deployment group create --name dp-500-powerbiembedded  --resource-group rg-dp-500-platform --template-file powerbiembedded.bicep --parameters admin=$EMAIL
 ```
 
 This will deploy the following resources:
