@@ -1,0 +1,1628 @@
+﻿{
+    "id": "077c8d8a-a48f-473e-b614-8eb7ff3b8b87",
+    "title": "Power BI Model Framework",
+    "mindmap": {
+        "root": {
+            "id": "51874563-b471-4d5d-9cdb-6935ae5e209d",
+            "parentId": null,
+            "text": {
+                "caption": "Power BI Model Framework"
+            },
+            "children": [
+                {
+                    "id": "a2e4f041-ff92-4679-b5eb-161f8dcfda2d",
+                    "parentId": "51874563-b471-4d5d-9cdb-6935ae5e209d",
+                    "text": {
+                        "caption": "Import Model"
+                    },
+                    "children": [
+                        {
+                            "id": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                            "parentId": "a2e4f041-ff92-4679-b5eb-161f8dcfda2d",
+                            "text": {
+                                "caption": "Benefits"
+                            },
+                            "children": [
+                                {
+                                    "id": "99f2b868-ff56-474b-a365-2888e7d49e48",
+                                    "parentId": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                                    "text": {
+                                        "caption": "Supports all data sources"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad",
+                                    "parentId": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                                    "text": {
+                                        "caption": "Integrate all table"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "0186ffff-e7f8-4faa-97b4-a1b220e15d19",
+                                    "parentId": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                                    "text": {
+                                        "caption": "Supports all DAX and Power Query M"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "6ee5b6c0-cebc-4946-9689-a2665c527aff",
+                                    "parentId": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                                    "text": {
+                                        "caption": "Supports calculated tables"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "899d4fa2-79cd-4808-89d7-5a10890a1766",
+                                    "parentId": "fa429863-307c-4cd7-abfe-3f25a7be8c56",
+                                    "text": {
+                                        "caption": "Delivers best query performance"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "afb8809f-7b4f-4516-b344-3ac7f18b8a13",
+                            "parentId": "a2e4f041-ff92-4679-b5eb-161f8dcfda2d",
+                            "text": {
+                                "caption": "Limitations"
+                            },
+                            "children": [
+                                {
+                                    "id": "b9edaa43-1482-48f8-a9d2-1857177b5ad6",
+                                    "parentId": "afb8809f-7b4f-4516-b344-3ac7f18b8a13",
+                                    "text": {
+                                        "caption": "Model Size"
+                                    },
+                                    "children": [
+                                        {
+                                            "id": "8e3a7260-f37f-4877-b173-ccd3a38ef0fd",
+                                            "parentId": "b9edaa43-1482-48f8-a9d2-1857177b5ad6",
+                                            "text": {
+                                                "caption": "1-GB limit per dataset"
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "id": "16d91635-d299-4bc1-81d7-351fb4d81a21",
+                                            "parentId": "b9edaa43-1482-48f8-a9d2-1857177b5ad6",
+                                            "text": {
+                                                "caption": "> 10 GB for Premium"
+                                            },
+                                            "children": [
+                                                {
+                                                    "id": "a6188bff-e1d9-4f51-8505-b6e07aad5c46",
+                                                    "parentId": "16d91635-d299-4bc1-81d7-351fb4d81a21",
+                                                    "text": {
+                                                        "caption": "Large dataset storage format setting"
+                                                    },
+                                                    "children": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "8dbd0e19-33e2-46cc-9830-0ec69629eb3a",
+                                    "parentId": "afb8809f-7b4f-4516-b344-3ac7f18b8a13",
+                                    "text": {
+                                        "caption": "Data refresh"
+                                    },
+                                    "children": [
+                                        {
+                                            "id": "ec36e8a9-50f5-4435-9c2c-7daf90226a55",
+                                            "parentId": "8dbd0e19-33e2-46cc-9830-0ec69629eb3a",
+                                            "text": {
+                                                "caption": "up to 8 times per day (shared capacity)"
+                                            },
+                                            "children": []
+                                        },
+                                        {
+                                            "id": "db291382-b317-4dae-adf0-8a15ecde340b",
+                                            "parentId": "8dbd0e19-33e2-46cc-9830-0ec69629eb3a",
+                                            "text": {
+                                                "caption": "up to 48 times per day (premium)"
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "4b75041f-3bb2-425a-9099-916017af24e8",
+                    "parentId": "51874563-b471-4d5d-9cdb-6935ae5e209d",
+                    "text": {
+                        "caption": "DirectQuery Model"
+                    },
+                    "children": [
+                        {
+                            "id": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                            "parentId": "4b75041f-3bb2-425a-9099-916017af24e8",
+                            "text": {
+                                "caption": "Benefits"
+                            },
+                            "children": [
+                                {
+                                    "id": "872c5409-4615-42a5-8a1c-5bfc9a332628",
+                                    "parentId": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                                    "text": {
+                                        "caption": "Large model support"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "453a296e-45cc-4db1-b4b1-5d7a38ecca19",
+                                    "parentId": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                                    "text": {
+                                        "caption": "Fast-changing data sources"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "2ef9347f-5f22-4bb9-b779-20a086925e5b",
+                                    "parentId": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                                    "text": {
+                                        "caption": "Enfore source RLS"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "d1a96062-928c-41d5-9123-af4f27151208",
+                                    "parentId": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                                    "text": {
+                                        "caption": "Data sovereignty restrictions"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "8f529d45-453b-49ab-8472-99d62d097bc8",
+                                    "parentId": "a0a9bd42-0e9d-4388-a7a6-f30bad877351",
+                                    "text": {
+                                        "caption": "Create specialized datasets"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "c6dbc575-7bb2-4859-8482-6468f39a5fba",
+                            "parentId": "4b75041f-3bb2-425a-9099-916017af24e8",
+                            "text": {
+                                "caption": "Limitations"
+                            },
+                            "children": [
+                                {
+                                    "id": "3b722f08-a4e7-4cb4-ae53-42e1980d3595",
+                                    "parentId": "c6dbc575-7bb2-4859-8482-6468f39a5fba",
+                                    "text": {
+                                        "caption": "Not all datasources supported"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "03d3f795-e820-4b67-b8ef-bbf81ef0f89a",
+                                    "parentId": "c6dbc575-7bb2-4859-8482-6468f39a5fba",
+                                    "text": {
+                                        "caption": "Not all Power Query M functionality supported"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "b28d2458-58bb-4123-a017-b5c7f1fd530f",
+                                    "parentId": "c6dbc575-7bb2-4859-8482-6468f39a5fba",
+                                    "text": {
+                                        "caption": "Query performance can be slow (at source)"
+                                    },
+                                    "children": [
+                                        {
+                                            "id": "1a773cfe-6962-462e-8518-6b5575a85be2",
+                                            "parentId": "b28d2458-58bb-4123-a017-b5c7f1fd530f",
+                                            "text": {
+                                                "caption": "Optimize indexes, statistics, resources"
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "3868e7cc-3c85-4b79-8042-c7a5f2098e5d",
+                                    "parentId": "c6dbc575-7bb2-4859-8482-6468f39a5fba",
+                                    "text": {
+                                        "caption": "Impact on data source (performance)"
+                                    },
+                                    "children": [
+                                        {
+                                            "id": "2452c601-351b-441d-a771-18a913c5d4d8",
+                                            "parentId": "3868e7cc-3c85-4b79-8042-c7a5f2098e5d",
+                                            "text": {
+                                                "caption": "User-defined aggregation tables"
+                                            },
+                                            "children": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "635ff762-8d7f-4567-a019-0ace3dfdb11e",
+                    "parentId": "51874563-b471-4d5d-9cdb-6935ae5e209d",
+                    "text": {
+                        "caption": "Composite Model"
+                    },
+                    "children": [
+                        {
+                            "id": "6b45fb54-e4a5-4ab4-97ae-798756c59ede",
+                            "parentId": "635ff762-8d7f-4567-a019-0ace3dfdb11e",
+                            "text": {
+                                "caption": "Benefits"
+                            },
+                            "children": [
+                                {
+                                    "id": "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc",
+                                    "parentId": "6b45fb54-e4a5-4ab4-97ae-798756c59ede",
+                                    "text": {
+                                        "caption": "Integrate direct query + import"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "89070e05-6ffb-45e3-a38a-2aece824a8a7",
+                                    "parentId": "6b45fb54-e4a5-4ab4-97ae-798756c59ede",
+                                    "text": {
+                                        "caption": "Boost query performance for large data models"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "6ca2bbe2-e114-4c44-98e6-494755629b73",
+                                    "parentId": "6b45fb54-e4a5-4ab4-97ae-798756c59ede",
+                                    "text": {
+                                        "caption": "Extend an existing Power BI dataset (chaining)"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "5aa45303-d054-464e-82e4-821dfcee3469",
+                            "parentId": "635ff762-8d7f-4567-a019-0ace3dfdb11e",
+                            "text": {
+                                "caption": "Limitations"
+                            },
+                            "children": [
+                                {
+                                    "id": "6a9d9abc-79b2-440e-9e05-d1f97674d035",
+                                    "parentId": "5aa45303-d054-464e-82e4-821dfcee3469",
+                                    "text": {
+                                        "caption": "Still requires periodic refresh"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "5add810a-a755-4480-8e00-bfb7dc129332",
+                                    "parentId": "5aa45303-d054-464e-82e4-821dfcee3469",
+                                    "text": {
+                                        "caption": "Combining direct query + import requires Power BI to consolidate query results, impacting performance"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "948549f1-fcf4-4622-b6da-bc6f3c129dac",
+                                    "parentId": "5aa45303-d054-464e-82e4-821dfcee3469",
+                                    "text": {
+                                        "caption": "Chaining can break when modifying upstream model"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "f8176bdc-0195-4a83-869b-d565ead332b3",
+                                    "parentId": "5aa45303-d054-464e-82e4-821dfcee3469",
+                                    "text": {
+                                        "caption": "Limited relationships may result in different evaluations"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": "120d66c4-30e6-49b0-a070-5fa32852c3fc",
+                            "parentId": "635ff762-8d7f-4567-a019-0ace3dfdb11e",
+                            "text": {
+                                "caption": "Optimizations"
+                            },
+                            "children": [
+                                {
+                                    "id": "df16cd0c-0bac-43a2-b8af-0953c1b42472",
+                                    "parentId": "120d66c4-30e6-49b0-a070-5fa32852c3fc",
+                                    "text": {
+                                        "caption": "Import aggregation tables"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "188755a1-5c7f-4da1-90c0-ed7c7158576f",
+                                    "parentId": "120d66c4-30e6-49b0-a070-5fa32852c3fc",
+                                    "text": {
+                                        "caption": "Dual storage mode"
+                                    },
+                                    "children": []
+                                },
+                                {
+                                    "id": "4dbf9c76-df1d-425b-b1f5-cfc568ff294a",
+                                    "parentId": "120d66c4-30e6-49b0-a070-5fa32852c3fc",
+                                    "text": {
+                                        "caption": "Incremental refresh: deliver real-time data from an import model"
+                                    },
+                                    "children": []
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "dates": {
+        "created": 1666791154573,
+        "modified": 1666793137363
+    },
+    "dimensions": {
+        "x": 16000,
+        "y": 8000
+    },
+    "autosave": false,
+    "pluginData": {
+        "style": {
+            "51874563-b471-4d5d-9cdb-6935ae5e209d": {
+                "font": {
+                    "style": "normal",
+                    "weight": "bold",
+                    "fontfamily": "sans-serif",
+                    "decoration": "none",
+                    "size": 20,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffa500",
+                    "background": "#ffffff"
+                },
+                "lineWidthOffset": -8,
+                "branchColor": "#000000"
+            },
+            "a2e4f041-ff92-4679-b5eb-161f8dcfda2d": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": false,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "fa429863-307c-4cd7-abfe-3f25a7be8c56": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "99f2b868-ff56-474b-a365-2888e7d49e48": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "0186ffff-e7f8-4faa-97b4-a1b220e15d19": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "6ee5b6c0-cebc-4946-9689-a2665c527aff": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "899d4fa2-79cd-4808-89d7-5a10890a1766": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "afb8809f-7b4f-4516-b344-3ac7f18b8a13": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "b9edaa43-1482-48f8-a9d2-1857177b5ad6": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "8e3a7260-f37f-4877-b173-ccd3a38ef0fd": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "16d91635-d299-4bc1-81d7-351fb4d81a21": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -2,
+                "branchColor": "#ffcc00"
+            },
+            "a6188bff-e1d9-4f51-8505-b6e07aad5c46": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#ffcc00"
+            },
+            "8dbd0e19-33e2-46cc-9830-0ec69629eb3a": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#ffcc00"
+            },
+            "ec36e8a9-50f5-4435-9c2c-7daf90226a55": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -2,
+                "branchColor": "#ffcc00"
+            },
+            "db291382-b317-4dae-adf0-8a15ecde340b": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#000000"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#ffcc00",
+                    "background": "#ffcc00"
+                },
+                "lineWidthOffset": -2,
+                "branchColor": "#ffcc00"
+            },
+            "4b75041f-3bb2-425a-9099-916017af24e8": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": false,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "a0a9bd42-0e9d-4388-a7a6-f30bad877351": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "872c5409-4615-42a5-8a1c-5bfc9a332628": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "453a296e-45cc-4db1-b4b1-5d7a38ecca19": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "2ef9347f-5f22-4bb9-b779-20a086925e5b": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -6,
+                "branchColor": "#00ccff"
+            },
+            "d1a96062-928c-41d5-9123-af4f27151208": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "8f529d45-453b-49ab-8472-99d62d097bc8": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "c6dbc575-7bb2-4859-8482-6468f39a5fba": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "3b722f08-a4e7-4cb4-ae53-42e1980d3595": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "03d3f795-e820-4b67-b8ef-bbf81ef0f89a": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "b28d2458-58bb-4123-a017-b5c7f1fd530f": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "1a773cfe-6962-462e-8518-6b5575a85be2": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": false,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "3868e7cc-3c85-4b79-8042-c7a5f2098e5d": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "2452c601-351b-441d-a771-18a913c5d4d8": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#00ccff",
+                    "background": "#00ccff"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#00ccff"
+            },
+            "635ff762-8d7f-4567-a019-0ace3dfdb11e": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": -4,
+                "branchColor": "#666699"
+            },
+            "6b45fb54-e4a5-4ab4-97ae-798756c59ede": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "89070e05-6ffb-45e3-a38a-2aece824a8a7": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "6ca2bbe2-e114-4c44-98e6-494755629b73": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "5aa45303-d054-464e-82e4-821dfcee3469": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "6a9d9abc-79b2-440e-9e05-d1f97674d035": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "5add810a-a755-4480-8e00-bfb7dc129332": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "948549f1-fcf4-4622-b6da-bc6f3c129dac": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "f8176bdc-0195-4a83-869b-d565ead332b3": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "120d66c4-30e6-49b0-a070-5fa32852c3fc": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "df16cd0c-0bac-43a2-b8af-0953c1b42472": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "188755a1-5c7f-4da1-90c0-ed7c7158576f": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            },
+            "4dbf9c76-df1d-425b-b1f5-cfc568ff294a": {
+                "font": {
+                    "style": "normal",
+                    "weight": "normal",
+                    "decoration": "none",
+                    "fontfamily": "sans-serif",
+                    "size": 15,
+                    "color": "#ffffff"
+                },
+                "border": {
+                    "visible": true,
+                    "style": "solid",
+                    "color": "#666699",
+                    "background": "#666699"
+                },
+                "lineWidthOffset": 0,
+                "branchColor": "#666699"
+            }
+        },
+        "layout": {
+            "51874563-b471-4d5d-9cdb-6935ae5e209d": {
+                "offset": {
+                    "x": 0,
+                    "y": 0
+                },
+                "foldChildren": false
+            },
+            "a2e4f041-ff92-4679-b5eb-161f8dcfda2d": {
+                "offset": {
+                    "x": -284.4166259765625,
+                    "y": -214.47918701171875
+                },
+                "foldChildren": false
+            },
+            "fa429863-307c-4cd7-abfe-3f25a7be8c56": {
+                "offset": {
+                    "x": -148,
+                    "y": -97
+                },
+                "foldChildren": false
+            },
+            "99f2b868-ff56-474b-a365-2888e7d49e48": {
+                "offset": {
+                    "x": -246.00003051757812,
+                    "y": -61
+                },
+                "foldChildren": false
+            },
+            "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad": {
+                "offset": {
+                    "x": -192.00003051757812,
+                    "y": -6
+                },
+                "foldChildren": false
+            },
+            "0186ffff-e7f8-4faa-97b4-a1b220e15d19": {
+                "offset": {
+                    "x": -329.0000305175781,
+                    "y": 42
+                },
+                "foldChildren": false
+            },
+            "6ee5b6c0-cebc-4946-9689-a2665c527aff": {
+                "offset": {
+                    "x": -255.00003051757812,
+                    "y": 91
+                },
+                "foldChildren": false
+            },
+            "899d4fa2-79cd-4808-89d7-5a10890a1766": {
+                "offset": {
+                    "x": -293.0000305175781,
+                    "y": 149
+                },
+                "foldChildren": false
+            },
+            "afb8809f-7b4f-4516-b344-3ac7f18b8a13": {
+                "offset": {
+                    "x": -147,
+                    "y": 241
+                },
+                "foldChildren": false
+            },
+            "b9edaa43-1482-48f8-a9d2-1857177b5ad6": {
+                "offset": {
+                    "x": -149,
+                    "y": -43
+                },
+                "foldChildren": false
+            },
+            "8e3a7260-f37f-4877-b173-ccd3a38ef0fd": {
+                "offset": {
+                    "x": -228.00003051757812,
+                    "y": -44
+                },
+                "foldChildren": false
+            },
+            "16d91635-d299-4bc1-81d7-351fb4d81a21": {
+                "offset": {
+                    "x": -228.00003051757812,
+                    "y": 6
+                },
+                "foldChildren": false
+            },
+            "a6188bff-e1d9-4f51-8505-b6e07aad5c46": {
+                "offset": {
+                    "x": -294.00001525878906,
+                    "y": -19
+                },
+                "foldChildren": false
+            },
+            "8dbd0e19-33e2-46cc-9830-0ec69629eb3a": {
+                "offset": {
+                    "x": -164,
+                    "y": 74
+                },
+                "foldChildren": false
+            },
+            "ec36e8a9-50f5-4435-9c2c-7daf90226a55": {
+                "offset": {
+                    "x": -333.00001525878906,
+                    "y": -38
+                },
+                "foldChildren": false
+            },
+            "db291382-b317-4dae-adf0-8a15ecde340b": {
+                "offset": {
+                    "x": -295.00001525878906,
+                    "y": 25
+                },
+                "foldChildren": false
+            },
+            "4b75041f-3bb2-425a-9099-916017af24e8": {
+                "offset": {
+                    "x": 228.58510335286454,
+                    "y": -216.63197835286456
+                },
+                "foldChildren": false
+            },
+            "a0a9bd42-0e9d-4388-a7a6-f30bad877351": {
+                "offset": {
+                    "x": 167.35795454545453,
+                    "y": -93.63636363636363
+                },
+                "foldChildren": false
+            },
+            "872c5409-4615-42a5-8a1c-5bfc9a332628": {
+                "offset": {
+                    "x": 138.18181818181816,
+                    "y": -91.81818181818181
+                },
+                "foldChildren": false
+            },
+            "453a296e-45cc-4db1-b4b1-5d7a38ecca19": {
+                "offset": {
+                    "x": 137.4431818181818,
+                    "y": -49.99999999999999
+                },
+                "foldChildren": false
+            },
+            "2ef9347f-5f22-4bb9-b779-20a086925e5b": {
+                "offset": {
+                    "x": 134.6306818181818,
+                    "y": -2.727272727272727
+                },
+                "foldChildren": false
+            },
+            "d1a96062-928c-41d5-9123-af4f27151208": {
+                "offset": {
+                    "x": 136.44886363636363,
+                    "y": 40.90909090909091
+                },
+                "foldChildren": false
+            },
+            "8f529d45-453b-49ab-8472-99d62d097bc8": {
+                "offset": {
+                    "x": 133.7215909090909,
+                    "y": 90.9090909090909
+                },
+                "foldChildren": false
+            },
+            "c6dbc575-7bb2-4859-8482-6468f39a5fba": {
+                "offset": {
+                    "x": 170,
+                    "y": 103.18181818181817
+                },
+                "foldChildren": false
+            },
+            "3b722f08-a4e7-4cb4-ae53-42e1980d3595": {
+                "offset": {
+                    "x": 130.9090909090909,
+                    "y": -52.72727272727272
+                },
+                "foldChildren": false
+            },
+            "03d3f795-e820-4b67-b8ef-bbf81ef0f89a": {
+                "offset": {
+                    "x": 132.27272727272725,
+                    "y": -10.454545454545453
+                },
+                "foldChildren": false
+            },
+            "b28d2458-58bb-4123-a017-b5c7f1fd530f": {
+                "offset": {
+                    "x": 132.32954545454544,
+                    "y": 34.49812455610795
+                },
+                "foldChildren": false
+            },
+            "1a773cfe-6962-462e-8518-6b5575a85be2": {
+                "offset": {
+                    "x": 316.66666666666663,
+                    "y": 29.99997456868489
+                },
+                "foldChildren": false
+            },
+            "3868e7cc-3c85-4b79-8042-c7a5f2098e5d": {
+                "offset": {
+                    "x": 132.64204545454544,
+                    "y": 84.39397638494317
+                },
+                "foldChildren": false
+            },
+            "2452c601-351b-441d-a771-18a913c5d4d8": {
+                "offset": {
+                    "x": 314.16666666666663,
+                    "y": 34.166666666666664
+                },
+                "foldChildren": false
+            },
+            "635ff762-8d7f-4567-a019-0ace3dfdb11e": {
+                "offset": {
+                    "x": 28.354248046875,
+                    "y": 158.35418701171875
+                },
+                "foldChildren": false
+            },
+            "6b45fb54-e4a5-4ab4-97ae-798756c59ede": {
+                "offset": {
+                    "x": 222.1666259765625,
+                    "y": -70.16668701171875
+                },
+                "foldChildren": false
+            },
+            "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc": {
+                "offset": {
+                    "x": 113.33333333333331,
+                    "y": -49.99999999999999
+                },
+                "foldChildren": false
+            },
+            "89070e05-6ffb-45e3-a38a-2aece824a8a7": {
+                "offset": {
+                    "x": 111.66666666666666,
+                    "y": 0.8333333333333333
+                },
+                "foldChildren": false
+            },
+            "6ca2bbe2-e114-4c44-98e6-494755629b73": {
+                "offset": {
+                    "x": 111.99645996093749,
+                    "y": 50.16489664713541
+                },
+                "foldChildren": false
+            },
+            "5aa45303-d054-464e-82e4-821dfcee3469": {
+                "offset": {
+                    "x": 512.9166259765625,
+                    "y": 64.77081298828125
+                },
+                "foldChildren": false
+            },
+            "6a9d9abc-79b2-440e-9e05-d1f97674d035": {
+                "offset": {
+                    "x": 150,
+                    "y": -50
+                },
+                "foldChildren": false
+            },
+            "5add810a-a755-4480-8e00-bfb7dc129332": {
+                "offset": {
+                    "x": 151.15384615384613,
+                    "y": -7.307692307692307
+                },
+                "foldChildren": false
+            },
+            "948549f1-fcf4-4622-b6da-bc6f3c129dac": {
+                "offset": {
+                    "x": 154.24682617187497,
+                    "y": 35.88144155649038
+                },
+                "foldChildren": false
+            },
+            "f8176bdc-0195-4a83-869b-d565ead332b3": {
+                "offset": {
+                    "x": 154.3589430588942,
+                    "y": 77.33173076923076
+                },
+                "foldChildren": false
+            },
+            "120d66c4-30e6-49b0-a070-5fa32852c3fc": {
+                "offset": {
+                    "x": 193.8228759765625,
+                    "y": 142.23956298828125
+                },
+                "foldChildren": false
+            },
+            "df16cd0c-0bac-43a2-b8af-0953c1b42472": {
+                "offset": {
+                    "x": 173.5416259765625,
+                    "y": 1.2708740234375
+                },
+                "foldChildren": false
+            },
+            "188755a1-5c7f-4da1-90c0-ed7c7158576f": {
+                "offset": {
+                    "x": 173.53125,
+                    "y": 51.2708740234375
+                },
+                "foldChildren": false
+            },
+            "4dbf9c76-df1d-425b-b1f5-cfc568ff294a": {
+                "offset": {
+                    "x": 173.53125,
+                    "y": 101.2708740234375
+                },
+                "foldChildren": false
+            }
+        },
+        "image": {
+            "51874563-b471-4d5d-9cdb-6935ae5e209d": {},
+            "a2e4f041-ff92-4679-b5eb-161f8dcfda2d": {},
+            "fa429863-307c-4cd7-abfe-3f25a7be8c56": {},
+            "99f2b868-ff56-474b-a365-2888e7d49e48": {},
+            "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad": {},
+            "0186ffff-e7f8-4faa-97b4-a1b220e15d19": {},
+            "6ee5b6c0-cebc-4946-9689-a2665c527aff": {},
+            "899d4fa2-79cd-4808-89d7-5a10890a1766": {},
+            "afb8809f-7b4f-4516-b344-3ac7f18b8a13": {},
+            "b9edaa43-1482-48f8-a9d2-1857177b5ad6": {},
+            "8e3a7260-f37f-4877-b173-ccd3a38ef0fd": {},
+            "16d91635-d299-4bc1-81d7-351fb4d81a21": {},
+            "a6188bff-e1d9-4f51-8505-b6e07aad5c46": {},
+            "8dbd0e19-33e2-46cc-9830-0ec69629eb3a": {},
+            "ec36e8a9-50f5-4435-9c2c-7daf90226a55": {},
+            "db291382-b317-4dae-adf0-8a15ecde340b": {},
+            "4b75041f-3bb2-425a-9099-916017af24e8": {},
+            "a0a9bd42-0e9d-4388-a7a6-f30bad877351": {},
+            "872c5409-4615-42a5-8a1c-5bfc9a332628": {},
+            "453a296e-45cc-4db1-b4b1-5d7a38ecca19": {},
+            "2ef9347f-5f22-4bb9-b779-20a086925e5b": {},
+            "d1a96062-928c-41d5-9123-af4f27151208": {},
+            "8f529d45-453b-49ab-8472-99d62d097bc8": {},
+            "c6dbc575-7bb2-4859-8482-6468f39a5fba": {},
+            "3b722f08-a4e7-4cb4-ae53-42e1980d3595": {},
+            "03d3f795-e820-4b67-b8ef-bbf81ef0f89a": {},
+            "b28d2458-58bb-4123-a017-b5c7f1fd530f": {},
+            "1a773cfe-6962-462e-8518-6b5575a85be2": {},
+            "3868e7cc-3c85-4b79-8042-c7a5f2098e5d": {},
+            "2452c601-351b-441d-a771-18a913c5d4d8": {},
+            "635ff762-8d7f-4567-a019-0ace3dfdb11e": {},
+            "6b45fb54-e4a5-4ab4-97ae-798756c59ede": {},
+            "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc": {},
+            "89070e05-6ffb-45e3-a38a-2aece824a8a7": {},
+            "6ca2bbe2-e114-4c44-98e6-494755629b73": {},
+            "5aa45303-d054-464e-82e4-821dfcee3469": {},
+            "6a9d9abc-79b2-440e-9e05-d1f97674d035": {},
+            "5add810a-a755-4480-8e00-bfb7dc129332": {},
+            "948549f1-fcf4-4622-b6da-bc6f3c129dac": {},
+            "f8176bdc-0195-4a83-869b-d565ead332b3": {},
+            "120d66c4-30e6-49b0-a070-5fa32852c3fc": {},
+            "df16cd0c-0bac-43a2-b8af-0953c1b42472": {},
+            "188755a1-5c7f-4da1-90c0-ed7c7158576f": {},
+            "4dbf9c76-df1d-425b-b1f5-cfc568ff294a": {}
+        },
+        "attachment": {
+            "51874563-b471-4d5d-9cdb-6935ae5e209d": {},
+            "a2e4f041-ff92-4679-b5eb-161f8dcfda2d": {},
+            "fa429863-307c-4cd7-abfe-3f25a7be8c56": {},
+            "99f2b868-ff56-474b-a365-2888e7d49e48": {},
+            "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad": {},
+            "0186ffff-e7f8-4faa-97b4-a1b220e15d19": {},
+            "6ee5b6c0-cebc-4946-9689-a2665c527aff": {},
+            "899d4fa2-79cd-4808-89d7-5a10890a1766": {},
+            "afb8809f-7b4f-4516-b344-3ac7f18b8a13": {},
+            "b9edaa43-1482-48f8-a9d2-1857177b5ad6": {},
+            "8e3a7260-f37f-4877-b173-ccd3a38ef0fd": {},
+            "16d91635-d299-4bc1-81d7-351fb4d81a21": {},
+            "a6188bff-e1d9-4f51-8505-b6e07aad5c46": {},
+            "8dbd0e19-33e2-46cc-9830-0ec69629eb3a": {},
+            "ec36e8a9-50f5-4435-9c2c-7daf90226a55": {},
+            "db291382-b317-4dae-adf0-8a15ecde340b": {},
+            "4b75041f-3bb2-425a-9099-916017af24e8": {},
+            "a0a9bd42-0e9d-4388-a7a6-f30bad877351": {},
+            "872c5409-4615-42a5-8a1c-5bfc9a332628": {},
+            "453a296e-45cc-4db1-b4b1-5d7a38ecca19": {},
+            "2ef9347f-5f22-4bb9-b779-20a086925e5b": {},
+            "d1a96062-928c-41d5-9123-af4f27151208": {},
+            "8f529d45-453b-49ab-8472-99d62d097bc8": {},
+            "c6dbc575-7bb2-4859-8482-6468f39a5fba": {},
+            "3b722f08-a4e7-4cb4-ae53-42e1980d3595": {},
+            "03d3f795-e820-4b67-b8ef-bbf81ef0f89a": {},
+            "b28d2458-58bb-4123-a017-b5c7f1fd530f": {},
+            "1a773cfe-6962-462e-8518-6b5575a85be2": {},
+            "3868e7cc-3c85-4b79-8042-c7a5f2098e5d": {},
+            "2452c601-351b-441d-a771-18a913c5d4d8": {},
+            "635ff762-8d7f-4567-a019-0ace3dfdb11e": {},
+            "6b45fb54-e4a5-4ab4-97ae-798756c59ede": {},
+            "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc": {},
+            "89070e05-6ffb-45e3-a38a-2aece824a8a7": {},
+            "6ca2bbe2-e114-4c44-98e6-494755629b73": {},
+            "5aa45303-d054-464e-82e4-821dfcee3469": {},
+            "6a9d9abc-79b2-440e-9e05-d1f97674d035": {},
+            "5add810a-a755-4480-8e00-bfb7dc129332": {},
+            "948549f1-fcf4-4622-b6da-bc6f3c129dac": {},
+            "f8176bdc-0195-4a83-869b-d565ead332b3": {},
+            "120d66c4-30e6-49b0-a070-5fa32852c3fc": {},
+            "df16cd0c-0bac-43a2-b8af-0953c1b42472": {},
+            "188755a1-5c7f-4da1-90c0-ed7c7158576f": {},
+            "4dbf9c76-df1d-425b-b1f5-cfc568ff294a": {}
+        },
+        "url": {
+            "51874563-b471-4d5d-9cdb-6935ae5e209d": {},
+            "a2e4f041-ff92-4679-b5eb-161f8dcfda2d": {},
+            "fa429863-307c-4cd7-abfe-3f25a7be8c56": {},
+            "99f2b868-ff56-474b-a365-2888e7d49e48": {},
+            "48851bcd-85b5-4ed7-9ccc-e9f6fc1422ad": {},
+            "0186ffff-e7f8-4faa-97b4-a1b220e15d19": {},
+            "6ee5b6c0-cebc-4946-9689-a2665c527aff": {},
+            "899d4fa2-79cd-4808-89d7-5a10890a1766": {},
+            "afb8809f-7b4f-4516-b344-3ac7f18b8a13": {},
+            "b9edaa43-1482-48f8-a9d2-1857177b5ad6": {},
+            "8e3a7260-f37f-4877-b173-ccd3a38ef0fd": {},
+            "16d91635-d299-4bc1-81d7-351fb4d81a21": {},
+            "a6188bff-e1d9-4f51-8505-b6e07aad5c46": {},
+            "8dbd0e19-33e2-46cc-9830-0ec69629eb3a": {},
+            "ec36e8a9-50f5-4435-9c2c-7daf90226a55": {},
+            "db291382-b317-4dae-adf0-8a15ecde340b": {},
+            "4b75041f-3bb2-425a-9099-916017af24e8": {},
+            "a0a9bd42-0e9d-4388-a7a6-f30bad877351": {},
+            "872c5409-4615-42a5-8a1c-5bfc9a332628": {},
+            "453a296e-45cc-4db1-b4b1-5d7a38ecca19": {},
+            "2ef9347f-5f22-4bb9-b779-20a086925e5b": {},
+            "d1a96062-928c-41d5-9123-af4f27151208": {},
+            "8f529d45-453b-49ab-8472-99d62d097bc8": {},
+            "c6dbc575-7bb2-4859-8482-6468f39a5fba": {},
+            "3b722f08-a4e7-4cb4-ae53-42e1980d3595": {},
+            "03d3f795-e820-4b67-b8ef-bbf81ef0f89a": {},
+            "b28d2458-58bb-4123-a017-b5c7f1fd530f": {},
+            "1a773cfe-6962-462e-8518-6b5575a85be2": {},
+            "3868e7cc-3c85-4b79-8042-c7a5f2098e5d": {},
+            "2452c601-351b-441d-a771-18a913c5d4d8": {},
+            "635ff762-8d7f-4567-a019-0ace3dfdb11e": {},
+            "6b45fb54-e4a5-4ab4-97ae-798756c59ede": {},
+            "3bae986a-6d7e-4b5b-ae9f-d7c7b214fecc": {},
+            "89070e05-6ffb-45e3-a38a-2aece824a8a7": {},
+            "6ca2bbe2-e114-4c44-98e6-494755629b73": {},
+            "5aa45303-d054-464e-82e4-821dfcee3469": {},
+            "6a9d9abc-79b2-440e-9e05-d1f97674d035": {},
+            "5add810a-a755-4480-8e00-bfb7dc129332": {},
+            "948549f1-fcf4-4622-b6da-bc6f3c129dac": {},
+            "f8176bdc-0195-4a83-869b-d565ead332b3": {},
+            "120d66c4-30e6-49b0-a070-5fa32852c3fc": {},
+            "df16cd0c-0bac-43a2-b8af-0953c1b42472": {},
+            "188755a1-5c7f-4da1-90c0-ed7c7158576f": {},
+            "4dbf9c76-df1d-425b-b1f5-cfc568ff294a": {}
+        }
+    },
+    "cnodes": []
+}

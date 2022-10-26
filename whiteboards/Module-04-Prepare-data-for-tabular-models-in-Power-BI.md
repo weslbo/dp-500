@@ -2,7 +2,9 @@
 
 ## Choose a Power BI model framework [[learn module]](https://learn.microsoft.com/training/modules/choose-power-bi-model-framework)
 
-tbd
+Diagram in mindmapmaker: https://app.mindmapmaker.org/#m:mmb838ff302af7447d8378caa774052a59
+
+![mindmap](/whiteboards/Module-04/Power%20BI%20Model%20Framework.png)
 
 ## Understand scalability in Power BI [[learn module]](https://learn.microsoft.com/training/modules/understand-scalability-power-bi)
 

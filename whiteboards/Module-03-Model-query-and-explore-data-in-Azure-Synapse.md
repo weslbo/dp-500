@@ -10,6 +10,6 @@
 
 ## Whiteboard / Diagram
 
-Diagram: https://app.mindmapmaker.org/#m:mm051760c05ffa4d5d8f1380a219db4f94
+Diagram in mindmapmaker: https://app.mindmapmaker.org/#m:mm9b87bcfc8c6842ec8a27b14e23d4f501
 
-![mindmap](/whiteboards/Module-03/Mindmap.png)
+![mindmap](/whiteboards/Module-03/Azure%20Synapse%20Analytics.png)
