@@ -1,0 +1,8 @@
+POST https://login.microsoftonline.com/******/oauth2/token HTTP/1.1
+
+grant_type=client_credentials&client_id=******&client_secret=******&resource=https://purview.azure.net
+
+###
+
+DELETE https://purview-cn32xts6vteh6.purview.azure.com/catalog/api/atlas/v2/entity/bulk?guid=5bae36b5-bae1-4804-8696-07090463b315&guid=70577528-4c70-4b2c-8560-5b6f2282d95a&guid=baf44a9a-e79d-4811-ae76-5744fec8e1a6&guid=ead8dc99-c353-4570-9f9d-1b750125d562&guid=2316a2ce-655f-4584-95ed-fb59b3e7bc9e&guid=fc124979-0c40-45cf-a456-0cd758bdf319&guid=b9d83e36-0103-40de-bf75-f7c6f9ba4680&guid=2058ced9-fd1b-4cc1-aea6-ea56eb377d6f&guid=a8217d2e-d729-4ae0-bf5a-794b66a80ac5&guid=d2142745-47e6-4aa7-a422-2c834fe0e176&guid=a5c4a034-5d19-46c2-984d-d6acbe8d0da7&guid=3b33ece8-446a-4da5-a320-a8b521e37369&guid=c8c2564d-5a2f-431a-b154-3b32a7f4258f&guid=6f81b71f-ce38-4356-9e64-96f412848586&guid=cbb6fc00-5e90-4c3e-a7f9-4a0f1c636ec2&guid=4f9053f2-00ad-4b45-adfb-712f8b1e231c&guid=d8492b38-e882-4259-9b1c-70b61649ed16 HTTP/1.1
+Authorization: Bearer ******
