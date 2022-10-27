@@ -9,8 +9,11 @@ First of all, there is a [set of Bicep templates](/automation/readme.md), allowi
 - An [Azure Synapse Analytics](/automation/synapse.bicep) environment, configured with a number of pipelines (copy data) and scripts (to demo)
 - A few Azure [SQL Databases](/automation/sql.bicep) on the serverless tier (AdventureWorksLT and AdventureWorksDW2022-DP-500)
 - An Azure [Data Lake](/automation/datalake.bicep) with some containers
-- A Microsoft [Purview account](/automation/purview.bicep), with some [scripts](/scripts/purview.ps1) to register the above datasources and start a scan
+- A Microsoft [Purview account](/automation/purview.bicep), with some [scripts](/scripts/purview.ps1) to register the above datasources and start a scan. 
 - Supporting resources like [KeyVault](/automation/keyvault.bicep), a VNET and various [role assignments](/automation/permissions.bicep)
+- A [Power BI Embedded](/automation/powerbiembedded.bicep) environment, with A4 capacity, which corresponds to P1 (Premium P1). You can attach this in Power BI Service to create workspaces with Premium Capacity. Check out https://learn.microsoft.com/en-us/power-bi/enterprise/service-admin-premium-testing
+- A [Logic App](/automation/logicapp-pause-resources.bicep) to suspend the Power BI Embedded every 2 hours between 10:00 and 20:00 (cost saving!)
+- A [Logic App](/automation/logicapp-pause-resources.bicep) to pause the Synapse SQL Dedicated pool at 18:00 and 20:00 (cost saving!)
 
 In order to deploy this environment, check out [this page](/automation/readme.md).
 
