@@ -14,4 +14,4 @@ Diagram in mindmapmaker: https://app.mindmapmaker.org/#m:mm29b8cbaf8fa54e98af400
 
 ## Create and manage scalable Power BI dataflows [[learn module]](https://learn.microsoft.com/training/modules/create-manage-scalable-power-bi-dataflows)
 
-tbd
+![whiteboard](/whiteboards/Module-04/DataFlows%20Whiteboard.png)
