@@ -36,7 +36,7 @@
 
 ## Use DAX time intelligence functions in Power BI Desktop models [[learn module]](https://learn.microsoft.com/training/modules/dax-power-bi-time-intelligence)
 
-tbd
+https://app.mindmapmaker.org/#m:mmc97301e49b8b4a3ea2ad444736bd7ba1
 
 ## Create calculation groups [[learn module]](https://learn.microsoft.com/training/modules/create-calculation-groups)
 
