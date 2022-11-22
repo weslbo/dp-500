@@ -1666,7 +1666,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "db9e7afe-f497-4038-bd8c-0823fc79b2fb"
+						"spark.autotune.trackingId": "fba216f5-bf67-448b-8a5f-6470c609ddaa"
 					}
 				},
 				"metadata": {
@@ -1691,7 +1691,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1746,7 +1747,7 @@
 							"df.createOrReplaceTempView(\"sales\")"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 1
 					},
 					{
 						"cell_type": "markdown",
@@ -1846,6 +1847,49 @@
 						],
 						"outputs": [],
 						"execution_count": 4
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from urllib.request import urlopen\r\n",
+							"import json\r\n",
+							"with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:\r\n",
+							"    counties = json.load(response)\r\n",
+							"\r\n",
+							"import pandas as pd\r\n",
+							"df = pd.read_csv(\"https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv\",\r\n",
+							"                   dtype={\"fips\": str})\r\n",
+							"\r\n",
+							"import plotly\r\n",
+							"import plotly.express as px\r\n",
+							"\r\n",
+							"fig = px.choropleth(df, geojson=counties, locations='fips', color='unemp',\r\n",
+							"                           color_continuous_scale=\"Viridis\",\r\n",
+							"                           range_color=(0, 12),\r\n",
+							"                           scope=\"usa\",\r\n",
+							"                           labels={'unemp':'unemployment rate'}\r\n",
+							"                          )\r\n",
+							"fig.update_layout(margin={\"r\":0,\"t\":0,\"l\":0,\"b\":0})\r\n",
+							"\r\n",
+							"# create an html document that embeds the Plotly plot\r\n",
+							"h = plotly.offline.plot(fig, output_type='div')\r\n",
+							"\r\n",
+							"# display this html\r\n",
+							"displayHTML(h)"
+						],
+						"outputs": [],
+						"execution_count": null
 					}
 				]
 			},
@@ -1941,7 +1985,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "e4b175fb-8435-4966-8e58-86557573731b"
+						"spark.autotune.trackingId": "b12acfbe-1601-458c-a54c-86c6e2e9214c"
 					}
 				},
 				"metadata": {
@@ -2224,6 +2268,489 @@
 				]
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/04_dedicatedpool')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 03"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "synapsespark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "c31d5818-88f2-4fb8-8694-e9bc0f779e25"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
+						"name": "synapsespark",
+						"type": "Spark",
+						"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Read or Write data from Apache Spark pools to a dedicated SQL pool\r\n",
+							"\r\n",
+							"Article: https://learn.microsoft.com/en-us/training/modules/integrate-sql-apache-spark-pools-azure-synapse-analytics/7-exercise-integrate-sql"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql import types\r\n",
+							"\r\n",
+							"datalake = 'datalakecn32xts6vteh6'\r\n",
+							"\r\n",
+							"customSchema = types.StructType([\r\n",
+							"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
+							"    types.StructField(\"SalesTerritoryKey\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"OrderDate\", types.DateType(), True),\r\n",
+							"    types.StructField(\"Customer\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Email\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Adress\", types.StringType(), True),\r\n",
+							"    types.StructField(\"Quantity\", types.IntegerType(), True),\r\n",
+							"    types.StructField(\"UnitPrice\", types.DoubleType(), True),\r\n",
+							"    types.StructField(\"ShippingCost\", types.DoubleType(), True),\r\n",
+							"])\r\n",
+							"\r\n",
+							"df = spark.read \\\r\n",
+							"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
+							"df.createOrReplaceTempView(\"sales\")"
+						],
+						"outputs": [],
+						"execution_count": 12
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"We must run code that uses the Apache Spark pool to Synapse SQL connector in Scala. To do this, we add the %%spark magic to the cell. Run the following in a new code cell to read from the top_purchases view:"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {
+								"language": "scala"
+							}
+						},
+						"source": [
+							"%%spark\r\n",
+							"\r\n",
+							"// Make sure the name of the dedcated SQL pool (SQLPool01 below) matches the name of your SQL pool.\r\n",
+							"val df = spark.sqlContext.sql(\"select * from sales\")\r\n",
+							"df.write.synapsesql(\"DP500DWH.dbo.TopPurchases\", Constants.INTERNAL)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 14
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Notebook DP-203')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 03"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "synapsespark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "c6ba31e2-7924-4150-817f-0f13063ae64d"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
+						"name": "synapsespark",
+						"type": "Spark",
+						"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Title\r\n",
+							"\r\n",
+							"## Subtitle\r\n",
+							"\r\n",
+							"Here's some **text**"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"df = spark.read.load('abfss://landing@datalakecn32xts6vteh6.dfs.core.windows.net/adventureworkslt/tables/csv/SalesLT.Customer.csv', format='csv'\r\n",
+							"## If header exists uncomment line below\r\n",
+							"    , header=True\r\n",
+							")\r\n",
+							"display(df.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 16
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline_02_dataflow')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "01_dataflow_sample",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Movies": {},
+									"MoviesSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/dataflows/01_dataflow_sample')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/01_dataflow_sample')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "MoviesCSVfile",
+								"type": "DatasetReference"
+							},
+							"name": "Movies"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ComedyMoviesRating",
+								"type": "DatasetReference"
+							},
+							"name": "MoviesSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as string,",
+						"          {Rotton Tomato} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Movies",
+						"Movies filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> filter1",
+						"filter1 aggregate(groupBy(year),",
+						"     AverageComedyRating = avg(toInteger(Rating))) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Column_1 as string,",
+						"          Column_2 as string,",
+						"          Column_3 as string,",
+						"          Column_4 as string,",
+						"          Column_5 as string,",
+						"          Column_6 as string,",
+						"          Column_7 as string,",
+						"          Column_8 as string,",
+						"          Column_9 as string",
+						"     ),",
+						"     partitionFileNames:['ComedyMoviesRating.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> MoviesSink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/MoviesCSVfile')]",
+				"[concat(variables('workspaceId'), '/datasets/ComedyMoviesRating')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MoviesCSVfile')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesDB.csv",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ComedyMoviesRating')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "3mstaeetovkk4"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
 		}
 	]
 }
