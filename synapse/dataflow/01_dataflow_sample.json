@@ -57,7 +57,7 @@
 				"          Column_8 as string,",
 				"          Column_9 as string",
 				"     ),",
-				"     partitionFileNames:[''],",
+				"     partitionFileNames:['ComedyMoviesRating.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",

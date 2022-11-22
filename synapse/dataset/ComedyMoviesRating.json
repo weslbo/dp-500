@@ -3,7 +3,10 @@
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "datalake_linkedservice",
-			"type": "LinkedServiceReference"
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"suffix": "3mstaeetovkk4"
+			}
 		},
 		"annotations": [],
 		"type": "DelimitedText",
