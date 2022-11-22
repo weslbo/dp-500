@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "db9e7afe-f497-4038-bd8c-0823fc79b2fb"
+				"spark.autotune.trackingId": "fba216f5-bf67-448b-8a5f-6470c609ddaa"
 			}
 		},
 		"metadata": {
@@ -100,7 +100,7 @@
 					"    .csv('abfss://landing@' + datalake + '.dfs.core.windows.net/Allfiles/01/data/*.csv', schema=customSchema)\r\n",
 					"df.createOrReplaceTempView(\"sales\")"
 				],
-				"execution_count": 2
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -198,6 +198,48 @@
 					"plt.show()"
 				],
 				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from urllib.request import urlopen\r\n",
+					"import json\r\n",
+					"with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:\r\n",
+					"    counties = json.load(response)\r\n",
+					"\r\n",
+					"import pandas as pd\r\n",
+					"df = pd.read_csv(\"https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv\",\r\n",
+					"                   dtype={\"fips\": str})\r\n",
+					"\r\n",
+					"import plotly\r\n",
+					"import plotly.express as px\r\n",
+					"\r\n",
+					"fig = px.choropleth(df, geojson=counties, locations='fips', color='unemp',\r\n",
+					"                           color_continuous_scale=\"Viridis\",\r\n",
+					"                           range_color=(0, 12),\r\n",
+					"                           scope=\"usa\",\r\n",
+					"                           labels={'unemp':'unemployment rate'}\r\n",
+					"                          )\r\n",
+					"fig.update_layout(margin={\"r\":0,\"t\":0,\"l\":0,\"b\":0})\r\n",
+					"\r\n",
+					"# create an html document that embeds the Plotly plot\r\n",
+					"h = plotly.offline.plot(fig, output_type='div')\r\n",
+					"\r\n",
+					"# display this html\r\n",
+					"displayHTML(h)"
+				],
+				"execution_count": null
 			}
 		]
 	}
