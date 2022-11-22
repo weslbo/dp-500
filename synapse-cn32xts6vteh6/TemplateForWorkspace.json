@@ -1030,7 +1030,7 @@
 			"properties": {
 				"description": "This example shows how to query data from the datalake with CSV format. ",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- REMEMBER to replace the datalake account url\n\n\n-- Example: auto generated code (by right-click on a file name)\n-- Notice 1) column headers are not promoted\n-- Notice 2) have a look at the messages: \"Potential conversion error while reading VARCHAR column 'C1' from UTF8 encoded text. Change database collation to a UTF8 collation or specify explicit column schema in WITH clause and assign UTF8 collation to VARCHAR columns.\"\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0'\n    ) AS [result]\n\n\n-- Example: Column headers promoted\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0', \n        HEADER_ROW=TRUE\n    ) AS [result]\n\n-- Example: We can specify our own column names and data types\n-- Notice 1): External data type 'MONEY' is currently not supported. (need to replace to decimal)\n-- Notice 2): External data type 'DATETIME' is currently not supported. (need to replace to DATETIME2)\n-- Notice 3): External data type 'VARBINARY(MAX)' is currently not supported.\nSELECT TOP 100 \n    ProductID\n    , Name\n    , ProductNumber\n    , Color\n    , StandardCost\n    , ListPrice\n    , Size\n    , Weight\n    , ProductCategoryID\n    , ProductModelID\n    , SellStartDate\n    , SellEndDate\n    , DiscontinuedDate\n    --, ThumbNailPhoto\n    , ThumbnailPhotoFileName\n    , rowguid\n    , ModifiedDate\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/csv/SalesLT.Product.csv',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0', \n        HEADER_ROW=TRUE\n    )\n    WITH \n    (\n        ProductID INT,\n        Name NVARCHAR(50),\n        ProductNumber NVARCHAR(25),\n        Color NVARCHAR(15),\n        StandardCost DECIMAL, --not supported MONEY\n        ListPrice DECIMAL, --not supported MONEY\n        Size NVARCHAR(5),\n        Weight DECIMAL,\n        ProductCategoryID INT,\n        ProductModelID INT,\n        SellStartDate DATETIME2,\n        SellEndDate DATETIME2,\n        DiscontinuedDate DATETIME2,\n        --ThumbNailPhoto VARBINARY(max), --not supported VARBINARY\n        ThumbnailPhotoFileName NVARCHAR(50),\n        rowguid UNIQUEIDENTIFIER,\n        ModifiedDate DATETIME2\n    ) AS [result]\n",
@@ -1054,7 +1054,7 @@
 			"properties": {
 				"description": "This example shows how to query data from the datalake with JSON format. ",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- REMEMBER to replace the datalake account url\n\n-- EXAMPLE: select from JSON file. Here, we have explicitly defined the JSON_VALUE elements\nSELECT TOP 100\n      JSON_VALUE(jsonContent, '$.ProductID') as ProductId\n    , JSON_VALUE(jsonContent, '$.Name') as Name\n    , JSON_VALUE(jsonContent, '$.ProductNumber') as ProductNumber\n    , JSON_VALUE(jsonContent, '$.Color') as Color\n    , JSON_VALUE(jsonContent, '$.StandardCost') as StandardCost\n    , JSON_VALUE(jsonContent, '$.ListPrice') as ListPrice\n    , JSON_VALUE(jsonContent, '$.Size') as Size\n    , JSON_VALUE(jsonContent, '$.Weight') as Weight\n    , JSON_VALUE(jsonContent, '$.ProductCategoryID') as ProductCategoryID\n    , JSON_VALUE(jsonContent, '$.ProductModelID') as ProductModelID\n    , JSON_VALUE(jsonContent, '$.SellStartDate') as SellStartDate\n    , JSON_VALUE(jsonContent, '$.SellEndDate') as SellEndDate\n    , JSON_VALUE(jsonContent, '$.DiscontinuedDate') as DiscontinuedDate\n    , JSON_VALUE(jsonContent, '$.ThumbNailPhoto') as ThumbNailPhoto\n    , JSON_VALUE(jsonContent, '$.ThumbnailPhotoFileName') as ThumbnailPhotoFileName\n    , JSON_VALUE(jsonContent, '$.rowguid') as rowguid\n    , JSON_VALUE(jsonContent, '$.ModifiedDate') as ModifiedDate\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/json/SalesLT.Product.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n        --ROWTERMINATOR = '0x0b' -- Doesn't work here as lines are separated by a newline (no comma)\n    )\n    WITH (\n        jsonContent varchar(MAX)\n    ) AS [result]\n\n\n\n-- EXAMPLE: We can specify our own column names and data types\nSELECT TOP 100 *\nFROM \n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/json/SalesLT.Product.json',\n        FORMAT = 'CSV',\n        FIELDQUOTE = '0x0b',\n        FIELDTERMINATOR ='0x0b'\n    )\n    WITH \n    (\n        jsonContent varchar(MAX)\n    ) AS [result]\n    CROSS APPLY openjson(jsonContent)\n        WITH \n        (\n            ProductID INT,\n            Name NVARCHAR(50),\n            ProductNumber NVARCHAR(25),\n            Color NVARCHAR(15),\n            StandardCost MONEY,\n            ListPrice MONEY,\n            Size NVARCHAR(5),\n            Weight DECIMAL,\n            ProductCategoryID INT,\n            ProductModelID INT,\n            SellStartDate DATETIME2,\n            SellEndDate DATETIME2,\n            DiscontinuedDate DATETIME2,\n            ThumbNailPhoto VARBINARY(max), \n            ThumbnailPhotoFileName NVARCHAR(50),\n            RowGuid UNIQUEIDENTIFIER '$.rowguid',   -- notice that we can override the name of the column\n            ModifiedDate DATETIME2\n        )",
@@ -1078,7 +1078,7 @@
 			"properties": {
 				"description": "This example shows how to query data from the datalake with PARQUET format. ",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- REMEMBER to replace the datalake account url\n\n-- EXAMPLE: This is auto-generated code\n-- NOTICE: we do not need to specify data types (inferred from parquet file)\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n\n-- EXAMPLE: We can specify our own column names and data types\n-- NOTICE this will read only the column name we specify (improve performance)\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n        FORMAT = 'PARQUET'\n    )\n    WITH \n    (\n        ProductID INT,\n        Name NVARCHAR(50),\n        ProductNumber NVARCHAR(25),\n        Color NVARCHAR(15)\n    ) AS [result]",
@@ -1102,7 +1102,7 @@
 			"properties": {
 				"description": "This example shows how we can create views for all of the tables (based on PARQUET format)",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- Do this only once!\nCREATE DATABASE AdventureWorksLTServerless\n\n-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA SalesLT\nGO\n\n-- Create views for every tables, based on PARQUET format\nCREATE VIEW SalesLT.Address AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Address.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Customer AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Customer.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.CustomerAddress AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.Product AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.Product.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductCategory AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModel AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.ProductModelProductDescription AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderDetail AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet', FORMAT = 'PARQUET') AS [result]\nGO\nCREATE VIEW SalesLT.SalesOrderHeader AS SELECT * FROM OPENROWSET(BULK 'https://datalakecn32xts6vteh6.dfs.core.windows.net/landing/adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet', FORMAT = 'PARQUET') AS [result]\nGO\n\n-- PLAYGROUND: Confirm data can be retrieved\nSELECT TOP 100 * FROM SalesLT.Address\nSELECT TOP 100 * FROM SalesLT.Customer\nSELECT TOP 100 * FROM SalesLT.CustomerAddress\nSELECT TOP 100 * FROM SalesLT.Product\nSELECT TOP 100 * FROM SalesLT.ProductCategory\nSELECT TOP 100 * FROM SalesLT.ProductDescription\nSELECT TOP 100 * FROM SalesLT.ProductModel\nSELECT TOP 100 * FROM SalesLT.ProductModelProductDescription\nSELECT TOP 100 * FROM SalesLT.SalesOrderDetail\nSELECT TOP 100 * FROM SalesLT.SalesOrderHeader\n",
@@ -1126,10 +1126,10 @@
 			"properties": {
 				"description": "This example shows how we can create external tables for all of the tables (based on PARQUET format)",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
-					"query": "-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA Ext\nGO\n\n-- Create external file format\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\n-- Create external data source, pointing to the data lake\n-- Remember to change datalake url\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'DataLakeLandingZone') \n\tCREATE EXTERNAL DATA SOURCE [DataLakeLandingZone] \n\tWITH (\n\t\tLOCATION = 'abfss://landing@datalakecn32xts6vteh6.dfs.core.windows.net' \n\t)\nGO\n\n-- Note: updated the data types to match the orginal (instead of relying on nvarchar(4000) all the time)\nCREATE EXTERNAL TABLE [Ext].[Address] (\n\t[AddressID] int,\n\t[AddressLine1] nvarchar(60),\n\t[AddressLine2] nvarchar(60),\n\t[City] nvarchar(30),\n\t[StateProvince] nvarchar(50),\n\t[CountryRegion] nvarchar(50),\n\t[PostalCode] nvarchar(15),\n\t[rowguid] UNIQUEIDENTIFIER,\n\t[ModifiedDate] datetime2(7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Address.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Customer] (\n\t[CustomerID] [int],\n\t[NameStyle] bit,\n\t[Title] [nvarchar](8),\n\t[FirstName] NVARCHAR(50),\n\t[MiddleName] nvarchar(50),\n\t[LastName] nvarchar(50),\n\t[Suffix] [nvarchar](10),\n\t[CompanyName] [nvarchar](128),\n\t[SalesPerson] [nvarchar](256),\n\t[EmailAddress] [nvarchar](50),\n\t[Phone] nvarchar(25),\n\t[PasswordHash] [varchar](128),\n\t[PasswordSalt] [varchar](10),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Customer.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[CustomerAddress] (\n\t[CustomerID] [int],\n\t[AddressID] [int],\n\t[AddressType] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Product] (\n\t[ProductID] [int],\n\t[Name] nvarchar(50),\n\t[ProductNumber] [nvarchar](25),\n\t[Color] [nvarchar](15),\n\t[StandardCost] [money],\n\t[ListPrice] [money],\n\t[Size] [nvarchar](5),\n\t[Weight] [decimal](8, 2),\n\t[ProductCategoryID] [int],\n\t[ProductModelID] [int],\n\t[SellStartDate] [datetime2](7),\n\t[SellEndDate] [datetime2](7),\n\t[DiscontinuedDate] [datetime2](7),\n\t[ThumbNailPhoto] [varbinary](max),\n\t[ThumbnailPhotoFileName] [nvarchar](50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductCategory] (\n\t[ProductCategoryID] [int],\n\t[ParentProductCategoryID] [int],\n\t[Name] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductDescription] (\n\t[ProductDescriptionID] [int],\n\t[Description] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Note xml data type is not supported (column CatalogDescription)\nCREATE EXTERNAL TABLE [Ext].[ProductModel] (\n\t[ProductModelID] [int],\n\t[Name] nvarchar(50),\n\t[CatalogDescription] nvarchar(4000),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductModelProductDescription] (\n\t[ProductModelID] [int],\n\t[ProductDescriptionID] [int],\n\t[Culture] [nchar](6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Notice linetotal is a calculated field (isnull(([UnitPrice]*((1.0)-[UnitPriceDiscount]))*[OrderQty],(0.0)))\n-- Replaced with numeric(38,6)\nCREATE EXTERNAL TABLE [Ext].[SalesOrderDetail] (\n\t[SalesOrderID] [int],\n\t[SalesOrderDetailID] [int],\n\t[OrderQty] [smallint],\n\t[ProductID] [int],\n\t[UnitPrice] [money],\n\t[UnitPriceDiscount] [money],\n\t[LineTotal] numeric(38,6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[SalesOrderHeader] (\n\t[SalesOrderID] [int],\n\t[RevisionNumber] [tinyint],\n\t[OrderDate] [datetime2](7),\n\t[DueDate] [datetime2](7),\n\t[ShipDate] [datetime2](7),\n\t[Status] [tinyint],\n\t[OnlineOrderFlag] bit ,\n\t[SalesOrderNumber]  nvarchar(23),\n\t[PurchaseOrderNumber] nvarchar(25),\n\t[AccountNumber] nvarchar(15),\n\t[CustomerID] [int],\n\t[ShipToAddressID] [int],\n\t[BillToAddressID] [int],\n\t[ShipMethod] [nvarchar](50),\n\t[CreditCardApprovalCode] [varchar](15),\n\t[SubTotal] [money],\n\t[TaxAmt] [money],\n\t[Freight] [money],\n\t[TotalDue] numeric(19,4),\n\t[Comment] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7) \n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM [Ext].[Address]\nSELECT TOP 100 * FROM [Ext].[Customer]\nSELECT TOP 100 * FROM [Ext].[CustomerAddress]\nSELECT TOP 100 * FROM [Ext].[Product]\nSELECT TOP 100 * FROM [Ext].[ProductCategory]\nSELECT TOP 100 * FROM [Ext].[ProductDescription]\nSELECT TOP 100 * FROM [Ext].[ProductModel]\nSELECT TOP 100 * FROM [Ext].[ProductModelProductDescription]\nSELECT TOP 100 * FROM [Ext].[SalesOrderDetail]\nSELECT TOP 100 * FROM [Ext].[SalesOrderHeader]\n",
+					"query": "-- Do this only once!\nCREATE DATABASE AdventureWorksLTServerless\n\n-- Change database\nUSE AdventureWorksLTServerless\nGO\n\n-- Create a separate schema (optional)\nCREATE SCHEMA Ext\nGO\n\n-- Create external file format\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\n\n-- Create external data source, pointing to the data lake\n-- Remember to change datalake url\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'DataLakeLandingZone') \n\tCREATE EXTERNAL DATA SOURCE [DataLakeLandingZone] \n\tWITH (\n\t\tLOCATION = 'abfss://landing@datalakecn32xts6vteh6.dfs.core.windows.net' \n\t)\nGO\n\n-- Note: updated the data types to match the orginal (instead of relying on nvarchar(4000) all the time)\nCREATE EXTERNAL TABLE [Ext].[Address] (\n\t[AddressID] int,\n\t[AddressLine1] nvarchar(60),\n\t[AddressLine2] nvarchar(60),\n\t[City] nvarchar(30),\n\t[StateProvince] nvarchar(50),\n\t[CountryRegion] nvarchar(50),\n\t[PostalCode] nvarchar(15),\n\t[rowguid] UNIQUEIDENTIFIER,\n\t[ModifiedDate] datetime2(7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Address.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Customer] (\n\t[CustomerID] [int],\n\t[NameStyle] bit,\n\t[Title] [nvarchar](8),\n\t[FirstName] NVARCHAR(50),\n\t[MiddleName] nvarchar(50),\n\t[LastName] nvarchar(50),\n\t[Suffix] [nvarchar](10),\n\t[CompanyName] [nvarchar](128),\n\t[SalesPerson] [nvarchar](256),\n\t[EmailAddress] [nvarchar](50),\n\t[Phone] nvarchar(25),\n\t[PasswordHash] [varchar](128),\n\t[PasswordSalt] [varchar](10),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Customer.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[CustomerAddress] (\n\t[CustomerID] [int],\n\t[AddressID] [int],\n\t[AddressType] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.CustomerAddress.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[Product] (\n\t[ProductID] [int],\n\t[Name] nvarchar(50),\n\t[ProductNumber] [nvarchar](25),\n\t[Color] [nvarchar](15),\n\t[StandardCost] [money],\n\t[ListPrice] [money],\n\t[Size] [nvarchar](5),\n\t[Weight] [decimal](8, 2),\n\t[ProductCategoryID] [int],\n\t[ProductModelID] [int],\n\t[SellStartDate] [datetime2](7),\n\t[SellEndDate] [datetime2](7),\n\t[DiscontinuedDate] [datetime2](7),\n\t[ThumbNailPhoto] [varbinary](max),\n\t[ThumbnailPhotoFileName] [nvarchar](50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.Product.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductCategory] (\n\t[ProductCategoryID] [int],\n\t[ParentProductCategoryID] [int],\n\t[Name] nvarchar(50),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductCategory.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductDescription] (\n\t[ProductDescriptionID] [int],\n\t[Description] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Note xml data type is not supported (column CatalogDescription)\nCREATE EXTERNAL TABLE [Ext].[ProductModel] (\n\t[ProductModelID] [int],\n\t[Name] nvarchar(50),\n\t[CatalogDescription] nvarchar(4000),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModel.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[ProductModelProductDescription] (\n\t[ProductModelID] [int],\n\t[ProductDescriptionID] [int],\n\t[Culture] [nchar](6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.ProductModelProductDescription.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n-- Notice linetotal is a calculated field (isnull(([UnitPrice]*((1.0)-[UnitPriceDiscount]))*[OrderQty],(0.0)))\n-- Replaced with numeric(38,6)\nCREATE EXTERNAL TABLE [Ext].[SalesOrderDetail] (\n\t[SalesOrderID] [int],\n\t[SalesOrderDetailID] [int],\n\t[OrderQty] [smallint],\n\t[ProductID] [int],\n\t[UnitPrice] [money],\n\t[UnitPriceDiscount] [money],\n\t[LineTotal] numeric(38,6),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7)\n\n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderDetail.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE EXTERNAL TABLE [Ext].[SalesOrderHeader] (\n\t[SalesOrderID] [int],\n\t[RevisionNumber] [tinyint],\n\t[OrderDate] [datetime2](7),\n\t[DueDate] [datetime2](7),\n\t[ShipDate] [datetime2](7),\n\t[Status] [tinyint],\n\t[OnlineOrderFlag] bit ,\n\t[SalesOrderNumber]  nvarchar(23),\n\t[PurchaseOrderNumber] nvarchar(25),\n\t[AccountNumber] nvarchar(15),\n\t[CustomerID] [int],\n\t[ShipToAddressID] [int],\n\t[BillToAddressID] [int],\n\t[ShipMethod] [nvarchar](50),\n\t[CreditCardApprovalCode] [varchar](15),\n\t[SubTotal] [money],\n\t[TaxAmt] [money],\n\t[Freight] [money],\n\t[TotalDue] numeric(19,4),\n\t[Comment] [nvarchar](400),\n\t[rowguid] [uniqueidentifier],\n\t[ModifiedDate] [datetime2](7) \n\t)\n\tWITH (\n\tLOCATION = 'adventureworkslt/tables/parquet/SalesLT.SalesOrderHeader.parquet',\n\tDATA_SOURCE = [DataLakeLandingZone],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM [Ext].[Address]\nSELECT TOP 100 * FROM [Ext].[Customer]\nSELECT TOP 100 * FROM [Ext].[CustomerAddress]\nSELECT TOP 100 * FROM [Ext].[Product]\nSELECT TOP 100 * FROM [Ext].[ProductCategory]\nSELECT TOP 100 * FROM [Ext].[ProductDescription]\nSELECT TOP 100 * FROM [Ext].[ProductModel]\nSELECT TOP 100 * FROM [Ext].[ProductModelProductDescription]\nSELECT TOP 100 * FROM [Ext].[SalesOrderDetail]\nSELECT TOP 100 * FROM [Ext].[SalesOrderHeader]\n",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1150,7 +1150,7 @@
 			"properties": {
 				"description": "Make sure to run this against the DP500DWH database!",
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- !! Make sure to run this against the DP500DWH database!\n\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\nCREATE TABLE [dbo].[FactInternetSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[CustomerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [float] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH(SalesOrderNumber),\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimCustomer](\n\t[CustomerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[CustomerAlternateKey] [nvarchar](15) NOT NULL,\n\t[Title] [nvarchar](8) NULL,\n\t[FirstName] [nvarchar](50) NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[LastName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NULL,\n\t[BirthDate] [date] NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[Suffix] [nvarchar](10) NULL,\n\t[Gender] [nvarchar](1) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[YearlyIncome] [money] NULL,\n\t[TotalChildren] [tinyint] NULL,\n\t[NumberChildrenAtHome] [tinyint] NULL,\n\t[EnglishEducation] [nvarchar](40) NULL,\n\t[SpanishEducation] [nvarchar](40) NULL,\n\t[FrenchEducation] [nvarchar](40) NULL,\n\t[EnglishOccupation] [nvarchar](100) NULL,\n\t[SpanishOccupation] [nvarchar](100) NULL,\n\t[FrenchOccupation] [nvarchar](100) NULL,\n\t[HouseOwnerFlag] [nchar](1) NULL,\n\t[NumberCarsOwned] [tinyint] NULL,\n\t[AddressLine1] [nvarchar](120) NULL,\n\t[AddressLine2] [nvarchar](120) NULL,\n\t[Phone] [nvarchar](20) NULL,\n\t[DateFirstPurchase] [date] NULL,\n\t[CommuteDistance] [nvarchar](15) NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimDate](\n\t[DateKey] [int] NOT NULL,\n\t[FullDateAlternateKey] [date] NOT NULL,\n\t[DayNumberOfWeek] [tinyint] NOT NULL,\n\t[EnglishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[SpanishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[FrenchDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[DayNumberOfMonth] [tinyint] NOT NULL,\n\t[DayNumberOfYear] [smallint] NOT NULL,\n\t[WeekNumberOfYear] [tinyint] NOT NULL,\n\t[EnglishMonthName] [nvarchar](10) NOT NULL,\n\t[SpanishMonthName] [nvarchar](10) NOT NULL,\n\t[FrenchMonthName] [nvarchar](10) NOT NULL,\n\t[MonthNumberOfYear] [tinyint] NOT NULL,\n\t[CalendarQuarter] [tinyint] NOT NULL,\n\t[CalendarYear] [smallint] NOT NULL,\n\t[CalendarSemester] [tinyint] NOT NULL,\n\t[FiscalQuarter] [tinyint] NOT NULL,\n\t[FiscalYear] [smallint] NOT NULL,\n\t[FiscalSemester] [tinyint] NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimGeography](\n\t[GeographyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[City] [nvarchar](30) NULL,\n\t[StateProvinceCode] [nvarchar](3) NULL,\n\t[StateProvinceName] [nvarchar](50) NULL,\n\t[CountryRegionCode] [nvarchar](3) NULL,\n\t[EnglishCountryRegionName] [nvarchar](50) NULL,\n\t[SpanishCountryRegionName] [nvarchar](50) NULL,\n\t[FrenchCountryRegionName] [nvarchar](50) NULL,\n\t[PostalCode] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[IpAddressLocator] [nvarchar](15) NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimProduct](\n\t[ProductKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductAlternateKey] [nvarchar](25) NULL,\n\t[ProductSubcategoryKey] [int] NULL,\n\t[WeightUnitMeasureCode] [nchar](3) NULL,\n\t[SizeUnitMeasureCode] [nchar](3) NULL,\n\t[EnglishProductName] [nvarchar](50) NOT NULL,\n\t[SpanishProductName] [nvarchar](50) NOT NULL,\n\t[FrenchProductName] [nvarchar](50) NOT NULL,\n\t[StandardCost] [money] NULL,\n\t[FinishedGoodsFlag] [bit] NOT NULL,\n\t[Color] [nvarchar](15) NOT NULL,\n\t[SafetyStockLevel] [smallint] NULL,\n\t[ReorderPoint] [smallint] NULL,\n\t[ListPrice] [money] NULL,\n\t[Size] [nvarchar](50) NULL,\n\t[SizeRange] [nvarchar](50) NULL,\n\t[Weight] [float] NULL,\n\t[DaysToManufacture] [int] NULL,\n\t[ProductLine] [nchar](2) NULL,\n\t[DealerPrice] [money] NULL,\n\t[Class] [nchar](2) NULL,\n\t[Style] [nchar](2) NULL,\n\t[ModelName] [nvarchar](50) NULL,\n\t[LargePhoto] [varbinary](max) NULL,\n\t[EnglishDescription] [nvarchar](400) NULL,\n\t[FrenchDescription] [nvarchar](400) NULL,\n\t[ChineseDescription] [nvarchar](400) NULL,\n\t[ArabicDescription] [nvarchar](400) NULL,\n\t[HebrewDescription] [nvarchar](400) NULL,\n\t[ThaiDescription] [nvarchar](400) NULL,\n\t[GermanDescription] [nvarchar](400) NULL,\n\t[JapaneseDescription] [nvarchar](400) NULL,\n\t[TurkishDescription] [nvarchar](400) NULL,\n\t[StartDate] [datetime] NULL,\n\t[EndDate] [datetime] NULL,\n\t[Status] [nvarchar](7) NULL\n)\nWITH  \n  (   \n\t  DISTRIBUTION = REPLICATE,\n    CLUSTERED INDEX (ProductKey)  \n); \nGO\n\nCREATE TABLE [dbo].[DimProductCategory](\n\t[ProductCategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductCategoryAlternateKey] [int] NULL,\n\t[EnglishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductCategoryName] [nvarchar](50) NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nGO\nCREATE TABLE [dbo].[DimProductSubcategory](\n\t[ProductSubcategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductSubcategoryAlternateKey] [int] NULL,\n\t[EnglishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[ProductCategoryKey] [int] NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimSalesTerritory](\n\t[SalesTerritoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[SalesTerritoryAlternateKey] [int] NULL,\n\t[SalesTerritoryRegion] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryCountry] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryGroup] [nvarchar](50) NULL,\n\t[SalesTerritoryImage] [varbinary](max) NULL)\nWITH  \n(  \n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED INDEX (SalesTerritoryKey)  \n)\nGO\n\nCREATE TABLE [dbo].[FactResellerSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[ResellerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[EmployeeKey] [int] NOT NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [money] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n)\nWITH\n(\n    DISTRIBUTION = HASH(SalesOrderNumber),\n    CLUSTERED COLUMNSTORE INDEX\n);\nGO\n\nCREATE VIEW [dbo].[vFactSales]\nAS\n\tSELECT\n\t\tCAST(N'Reseller' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,[ResellerKey]\n\t\t,CAST(-1 AS INT) AS [CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,[EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactResellerSales]\n\tUNION ALL\n\tSELECT\n\t\tCAST(N'Internet' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,CAST(-1 AS INT) AS [ResellerKey]\n\t\t,[CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,CAST(-1 AS INT) AS [EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactInternetSales];\nGO\n\n\nCREATE TABLE [dbo].[DimAccount](\n\t[AccountKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentAccountKey] [int] NULL,\n\t[AccountCodeAlternateKey] [int] NULL,\n\t[ParentAccountCodeAlternateKey] [int] NULL,\n\t[AccountDescription] [nvarchar](50) NULL,\n\t[AccountType] [nvarchar](50) NULL,\n\t[Operator] [nvarchar](50) NULL,\n\t[CustomMembers] [nvarchar](300) NULL,\n\t[ValueType] [nvarchar](50) NULL,\n\t[CustomMemberOptions] [nvarchar](200) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimCurrency](\n\t[CurrencyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3) NOT NULL,\n\t[CurrencyName] [nvarchar](50) NOT NULL,\n\t[FormatString] [nvarchar](20) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimDepartmentGroup](\n\t[DepartmentGroupKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentDepartmentGroupKey] [int] NULL,\n\t[DepartmentGroupName] [nvarchar](50) NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimEmployee](\n\t[EmployeeKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentEmployeeKey] [int] NULL,\n\t[EmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[ParentEmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[FirstName] [nvarchar](50) NOT NULL,\n\t[LastName] [nvarchar](50) NOT NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NOT NULL,\n\t[Title] [nvarchar](50) NULL,\n\t[HireDate] [date] NULL,\n\t[BirthDate] [date] NULL,\n\t[LoginID] [nvarchar](256) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[EmergencyContactName] [nvarchar](50) NULL,\n\t[EmergencyContactPhone] [nvarchar](25) NULL,\n\t[SalariedFlag] [bit] NULL,\n\t[Gender] [nchar](1) NULL,\n\t[PayFrequency] [tinyint] NULL,\n\t[BaseRate] [money] NULL,\n\t[VacationHours] [smallint] NULL,\n\t[SickLeaveHours] [smallint] NULL,\n\t[CurrentFlag] [bit] NOT NULL,\n\t[SalespersonFlag] [bit] NOT NULL,\n\t[DepartmentName] [nvarchar](50) NULL,\n\t[StartDate] [date] NULL,\n\t[EndDate] [date] NULL,\n\t[Status] [nvarchar](50) NULL,\n\t[EmployeePhoto] [varbinary](max) NULL)\nWITH  \n(   \n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED INDEX (EmployeeKey)  \n) \nGO\n\nCREATE TABLE [dbo].[DimOrganization](\n\t[OrganizationKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentOrganizationKey] [int] NULL,\n\t[PercentageOfOwnership] [nvarchar](16) NULL,\n\t[OrganizationName] [nvarchar](50) NULL,\n\t[CurrencyKey] [int] NULL\n)\t\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\nCREATE TABLE [dbo].[DimPromotion](\n\t[PromotionKey] [int] IDENTITY(1,1) NOT NULL,\n\t[PromotionAlternateKey] [int] NULL,\n\t[EnglishPromotionName] [nvarchar](255) NULL,\n\t[SpanishPromotionName] [nvarchar](255) NULL,\n\t[FrenchPromotionName] [nvarchar](255) NULL,\n\t[DiscountPct] [float] NULL,\n\t[EnglishPromotionType] [nvarchar](50) NULL,\n\t[SpanishPromotionType] [nvarchar](50) NULL,\n\t[FrenchPromotionType] [nvarchar](50) NULL,\n\t[EnglishPromotionCategory] [nvarchar](50) NULL,\n\t[SpanishPromotionCategory] [nvarchar](50) NULL,\n\t[FrenchPromotionCategory] [nvarchar](50) NULL,\n\t[StartDate] [datetime] NOT NULL,\n\t[EndDate] [datetime] NULL,\n\t[MinQty] [int] NULL,\n\t[MaxQty] [int] NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCREATE TABLE [dbo].[DimReseller](\n\t[ResellerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[ResellerAlternateKey] [nvarchar](15) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[BusinessType] [varchar](20) NOT NULL,\n\t[ResellerName] [nvarchar](50) NOT NULL,\n\t[NumberEmployees] [int] NULL,\n\t[OrderFrequency] [char](1) NULL,\n\t[OrderMonth] [tinyint] NULL,\n\t[FirstOrderYear] [int] NULL,\n\t[LastOrderYear] [int] NULL,\n\t[ProductLine] [nvarchar](50) NULL,\n\t[AddressLine1] [nvarchar](60) NULL,\n\t[AddressLine2] [nvarchar](60) NULL,\n\t[AnnualSales] [money] NULL,\n\t[BankName] [nvarchar](50) NULL,\n\t[MinPaymentType] [tinyint] NULL,\n\t[MinPaymentAmount] [money] NULL,\n\t[AnnualRevenue] [money] NULL,\n\t[YearOpened] [int] NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n)\nGO\n\n\n",
@@ -1173,10 +1173,56 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"content": {
 					"query": "-- !! Make sure to run this against the DP500DWH database!\n\nCREATE SCHEMA [Staging]\nGO\n\nCREATE TABLE [Staging].[FactInternetSales]\n(\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[CustomerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [float] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n\t)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[FactInternetSales]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/FactInternetSales.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\n\n\n\nCREATE TABLE [Staging].[DimAccount]\n( \n\t[AccountKey] [int]  NOT NULL,\n\t[ParentAccountKey] [int]  NULL,\n\t[AccountCodeAlternateKey] [int]  NULL,\n\t[ParentAccountCodeAlternateKey] [int]  NULL,\n\t[AccountDescription] [nvarchar](50)  NULL,\n\t[AccountType] [nvarchar](50)  NULL,\n\t[Operator] [nvarchar](50)  NULL,\n\t[CustomMembers] [nvarchar](300)  NULL,\n\t[ValueType] [nvarchar](50)  NULL,\n\t[CustomMemberOptions] [nvarchar](200)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimAccount]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimAccount.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\nDROP TABLE [Staging].[DimCurrency]\nCREATE TABLE [Staging].[DimCurrency]\n( \n\t[CurrencyKey] [int]  NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3)  NOT NULL,\n\t[CurrencyName] [nvarchar](50)  NOT NULL,\n\t[FormatString] [nvarchar](20)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimCurrency]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimCurrency.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n\n\n\nCREATE TABLE [Staging].[DimCustomer]\n( \n\t[CustomerKey] [int]  NOT NULL,\n\t[GeographyKey] [int]  NULL,\n\t[CustomerAlternateKey] [nvarchar](15)  NOT NULL,\n\t[Title] [nvarchar](8)  NULL,\n\t[FirstName] [nvarchar](50)  NULL,\n\t[MiddleName] [nvarchar](50)  NULL,\n\t[LastName] [nvarchar](50)  NULL,\n\t[NameStyle] [bit]  NULL,\n\t[BirthDate] [date]  NULL,\n\t[MaritalStatus] [nchar](1)  NULL,\n\t[Suffix] [nvarchar](10)  NULL,\n\t[Gender] [nvarchar](1)  NULL,\n\t[EmailAddress] [nvarchar](50)  NULL,\n\t[YearlyIncome] [money]  NULL,\n\t[TotalChildren] [tinyint]  NULL,\n\t[NumberChildrenAtHome] [tinyint]  NULL,\n\t[EnglishEducation] [nvarchar](40)  NULL,\n\t[SpanishEducation] [nvarchar](40)  NULL,\n\t[FrenchEducation] [nvarchar](40)  NULL,\n\t[EnglishOccupation] [nvarchar](100)  NULL,\n\t[SpanishOccupation] [nvarchar](100)  NULL,\n\t[FrenchOccupation] [nvarchar](100)  NULL,\n\t[HouseOwnerFlag] [nchar](1)  NULL,\n\t[NumberCarsOwned] [tinyint]  NULL,\n\t[AddressLine1] [nvarchar](120)  NULL,\n\t[AddressLine2] [nvarchar](120)  NULL,\n\t[Phone] [nvarchar](20)  NULL,\n\t[DateFirstPurchase] [date]  NULL,\n\t[CommuteDistance] [nvarchar](15)  NULL\n)\nWITH\n(\n\tDISTRIBUTION = ROUND_ROBIN,\n\tCLUSTERED COLUMNSTORE INDEX\n)\nGO\n\nCOPY INTO [Staging].[DimCustomer]\nFROM 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/data/DimCustomer.txt'\nWITH\n(\n\tFILE_TYPE = 'CSV'\n\t,MAXERRORS = 0\n\t,FIELDTERMINATOR = '\\t'\n\t,FIRSTROW = 1\n\t,ERRORFILE = 'https://datalake3mstaeetovkk4.dfs.core.windows.net/landing/Allfiles/03/errors/'\n    ,ENCODING = 'UTF16'\n)\nGO\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "DP500DWH",
+						"poolName": "DP500DWH"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/08_sql_date_dimension')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 03"
+				},
+				"content": {
+					"query": "CREATE TABLE dbo.DimDate\n( \n    DateKey INT NOT NULL,\n    DateAltKey DATETIME NOT NULL,\n    DayOfMonth INT NOT NULL,\n    DayOfWeek INT NOT NULL,\n    DayName NVARCHAR(15) NOT NULL,\n    MonthOfYear INT NOT NULL,\n    MonthName NVARCHAR(15) NOT NULL,\n    CalendarQuarter INT  NOT NULL,\n    CalendarYear INT NOT NULL,\n    FiscalQuarter INT NOT NULL,\n    FiscalYear INT NOT NULL\n)\nWITH\n(\n    DISTRIBUTION = REPLICATE,\n    CLUSTERED COLUMNSTORE INDEX\n);\n\n-- Create a temporary table for the dates we need\nCREATE TABLE #TmpStageDate (DateVal DATE NOT NULL)\n\n-- Populate the temp table with a range of dates\nDECLARE @StartDate DATE\nDECLARE @EndDate DATE\nSET @StartDate = '2019-01-01'\nSET @EndDate = '2022-12-31' \nDECLARE @LoopDate DATE\nSET @LoopDate = @StartDate\nWHILE @LoopDate <= @EndDate\nBEGIN\n    INSERT INTO #TmpStageDate VALUES\n    (\n        @LoopDate\n    ) \n    SET @LoopDate = DATEADD(dd, 1, @LoopDate)\nEND\n\n-- Insert the dates and calculated attributes into the dimension table\nINSERT INTO dbo.DimDate \nSELECT  CAST(CONVERT(VARCHAR(8), DateVal, 112) AS int) , -- date key\n        DateVal, -- date alt key\n        Day(DateVal),  -- day number of month\n        datepart(dw, DateVal), -- day number of week\n        datename(dw, DateVal), -- day name of week\n        Month(DateVal), -- month number of year\n        datename(mm, DateVal), -- month name\n        datepart(qq, DateVal), -- calendar quarter\n        Year(DateVal), -- calendar year\n        CASE\n            WHEN Month(DateVal) IN (1, 2, 3) THEN 3\n            WHEN Month(DateVal) IN (4, 5, 6) THEN 4\n            WHEN Month(DateVal) IN (7, 8, 9) THEN 1\n            WHEN Month(DateVal) IN (10, 11, 12) THEN 2\n        END, -- fiscal quarter (fiscal year runs from Jul to June)\n        CASE\n            WHEN Month(DateVal) < 7 THEN Year(DateVal)\n            ELSE Year(DateVal) + 1\n        END -- Fiscal year \nFROM #TmpStageDate\nGO\n\n\nSELECT TOP 10 * FROM dbo.DimDate",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "DP500DWH",
+						"poolName": "DP500DWH"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/sql_dedicated_tables_setup')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 04"
+				},
+				"content": {
+					"query": "-- generate sql to drop tables\nSELECT 'DROP TABLE ' + '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']'\nFROM INFORMATION_SCHEMA.TABLES\nORDER BY TABLE_SCHEMA, TABLE_NAME\n\n-- copy delete statements and execute\nDROP TABLE [dbo].[DimDate]\nDROP TABLE [dbo].[DimGeography]\nDROP TABLE [dbo].[FactInternetSales]\nDROP TABLE [Staging].[FactInternetSales]\n\n-- start creating all tables\n\nSET ANSI_NULLS ON\nGO\nSET QUOTED_IDENTIFIER ON\nGO\nCREATE TABLE [dbo].[FactInternetSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[CustomerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [float] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL\n)\n\nGO\nCREATE TABLE [dbo].[DimCustomer](\n\t[CustomerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[CustomerAlternateKey] [nvarchar](15) NOT NULL,\n\t[Title] [nvarchar](8) NULL,\n\t[FirstName] [nvarchar](50) NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[LastName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NULL,\n\t[BirthDate] [date] NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[Suffix] [nvarchar](10) NULL,\n\t[Gender] [nvarchar](1) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[YearlyIncome] [money] NULL,\n\t[TotalChildren] [tinyint] NULL,\n\t[NumberChildrenAtHome] [tinyint] NULL,\n\t[EnglishEducation] [nvarchar](40) NULL,\n\t[SpanishEducation] [nvarchar](40) NULL,\n\t[FrenchEducation] [nvarchar](40) NULL,\n\t[EnglishOccupation] [nvarchar](100) NULL,\n\t[SpanishOccupation] [nvarchar](100) NULL,\n\t[FrenchOccupation] [nvarchar](100) NULL,\n\t[HouseOwnerFlag] [nchar](1) NULL,\n\t[NumberCarsOwned] [tinyint] NULL,\n\t[AddressLine1] [nvarchar](120) NULL,\n\t[AddressLine2] [nvarchar](120) NULL,\n\t[Phone] [nvarchar](20) NULL,\n\t[DateFirstPurchase] [date] NULL,\n\t[CommuteDistance] [nvarchar](15) NULL\n)\n\nGO\nCREATE TABLE [dbo].[DimDate](\n\t[DateKey] [int] NOT NULL,\n\t[FullDateAlternateKey] [date] NOT NULL,\n\t[DayNumberOfWeek] [tinyint] NOT NULL,\n\t[EnglishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[SpanishDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[FrenchDayNameOfWeek] [nvarchar](10) NOT NULL,\n\t[DayNumberOfMonth] [tinyint] NOT NULL,\n\t[DayNumberOfYear] [smallint] NOT NULL,\n\t[WeekNumberOfYear] [tinyint] NOT NULL,\n\t[EnglishMonthName] [nvarchar](10) NOT NULL,\n\t[SpanishMonthName] [nvarchar](10) NOT NULL,\n\t[FrenchMonthName] [nvarchar](10) NOT NULL,\n\t[MonthNumberOfYear] [tinyint] NOT NULL,\n\t[CalendarQuarter] [tinyint] NOT NULL,\n\t[CalendarYear] [smallint] NOT NULL,\n\t[CalendarSemester] [tinyint] NOT NULL,\n\t[FiscalQuarter] [tinyint] NOT NULL,\n\t[FiscalYear] [smallint] NOT NULL,\n\t[FiscalSemester] [tinyint] NOT NULL\n)\n\nGO\nCREATE TABLE [dbo].[DimGeography](\n\t[GeographyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[City] [nvarchar](30) NULL,\n\t[StateProvinceCode] [nvarchar](3) NULL,\n\t[StateProvinceName] [nvarchar](50) NULL,\n\t[CountryRegionCode] [nvarchar](3) NULL,\n\t[EnglishCountryRegionName] [nvarchar](50) NULL,\n\t[SpanishCountryRegionName] [nvarchar](50) NULL,\n\t[FrenchCountryRegionName] [nvarchar](50) NULL,\n\t[PostalCode] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[IpAddressLocator] [nvarchar](15) NULL)\n\nGO\nCREATE TABLE [dbo].[DimProduct](\n\t[ProductKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductAlternateKey] [nvarchar](25) NULL,\n\t[ProductSubcategoryKey] [int] NULL,\n\t[WeightUnitMeasureCode] [nchar](3) NULL,\n\t[SizeUnitMeasureCode] [nchar](3) NULL,\n\t[EnglishProductName] [nvarchar](50) NOT NULL,\n\t[SpanishProductName] [nvarchar](50) NOT NULL,\n\t[FrenchProductName] [nvarchar](50) NOT NULL,\n\t[StandardCost] [money] NULL,\n\t[FinishedGoodsFlag] [bit] NOT NULL,\n\t[Color] [nvarchar](15) NOT NULL,\n\t[SafetyStockLevel] [smallint] NULL,\n\t[ReorderPoint] [smallint] NULL,\n\t[ListPrice] [money] NULL,\n\t[Size] [nvarchar](50) NULL,\n\t[SizeRange] [nvarchar](50) NULL,\n\t[Weight] [float] NULL,\n\t[DaysToManufacture] [int] NULL,\n\t[ProductLine] [nchar](2) NULL,\n\t[DealerPrice] [money] NULL,\n\t[Class] [nchar](2) NULL,\n\t[Style] [nchar](2) NULL,\n\t[ModelName] [nvarchar](50) NULL,\n\t[LargePhoto] [varbinary](max) NULL,\n\t[EnglishDescription] [nvarchar](400) NULL,\n\t[FrenchDescription] [nvarchar](400) NULL,\n\t[ChineseDescription] [nvarchar](400) NULL,\n\t[ArabicDescription] [nvarchar](400) NULL,\n\t[HebrewDescription] [nvarchar](400) NULL,\n\t[ThaiDescription] [nvarchar](400) NULL,\n\t[GermanDescription] [nvarchar](400) NULL,\n\t[JapaneseDescription] [nvarchar](400) NULL,\n\t[TurkishDescription] [nvarchar](400) NULL,\n\t[StartDate] [datetime] NULL,\n\t[EndDate] [datetime] NULL,\n\t[Status] [nvarchar](7) NULL)\nWITH  \n  (   \n    CLUSTERED INDEX (ProductKey)  \n  ); \nGO\n\nCREATE TABLE [dbo].[DimProductCategory](\n\t[ProductCategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductCategoryAlternateKey] [int] NULL,\n\t[EnglishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductCategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductCategoryName] [nvarchar](50) NOT NULL)\n\nGO\nCREATE TABLE [dbo].[DimProductSubcategory](\n\t[ProductSubcategoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ProductSubcategoryAlternateKey] [int] NULL,\n\t[EnglishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[SpanishProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[FrenchProductSubcategoryName] [nvarchar](50) NOT NULL,\n\t[ProductCategoryKey] [int] NULL)\nGO\n\nCREATE TABLE [dbo].[DimSalesTerritory](\n\t[SalesTerritoryKey] [int] IDENTITY(1,1) NOT NULL,\n\t[SalesTerritoryAlternateKey] [int] NULL,\n\t[SalesTerritoryRegion] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryCountry] [nvarchar](50) NOT NULL,\n\t[SalesTerritoryGroup] [nvarchar](50) NULL,\n\t[SalesTerritoryImage] [varbinary](max) NULL)\nWITH  \n  (   \n    CLUSTERED INDEX (SalesTerritoryKey)  \n  ); \nGO\n\n\n-- vDMPrep will be used as a data source by the other data mining views.  \n-- Uses DW data at customer, product, day, etc. granularity and\n-- gets region, model, year, month, etc.\nCREATE VIEW [dbo].[vDMPrep]\nAS\n    SELECT\n        pc.[EnglishProductCategoryName]\n        ,Coalesce(p.[ModelName], p.[EnglishProductName]) AS [Model]\n        ,c.[CustomerKey]\n        ,s.[SalesTerritoryGroup] AS [Region]\n        ,CASE\n            WHEN Month(GetDate()) < Month(c.[BirthDate])\n                THEN DateDiff(yy,c.[BirthDate],GetDate()) - 1\n            WHEN Month(GetDate()) = Month(c.[BirthDate])\n            AND Day(GetDate()) < Day(c.[BirthDate])\n                THEN DateDiff(yy,c.[BirthDate],GetDate()) - 1\n            ELSE DateDiff(yy,c.[BirthDate],GetDate())\n        END AS [Age]\n        ,CASE\n            WHEN c.[YearlyIncome] < 40000 THEN 'Low'\n            WHEN c.[YearlyIncome] > 60000 THEN 'High'\n            ELSE 'Moderate'\n        END AS [IncomeGroup]\n        ,d.[CalendarYear]\n        ,d.[FiscalYear]\n        ,d.[MonthNumberOfYear] AS [Month]\n        ,f.[SalesOrderNumber] AS [OrderNumber]\n        ,f.SalesOrderLineNumber AS LineNumber\n        ,f.OrderQuantity AS Quantity\n        ,f.ExtendedAmount AS Amount  \n    FROM\n        [dbo].[FactInternetSales] f\n    INNER JOIN [dbo].[DimDate] d\n        ON f.[OrderDateKey] = d.[DateKey]\n    INNER JOIN [dbo].[DimProduct] p\n        ON f.[ProductKey] = p.[ProductKey]\n    INNER JOIN [dbo].[DimProductSubcategory] psc\n        ON p.[ProductSubcategoryKey] = psc.[ProductSubcategoryKey]\n    INNER JOIN [dbo].[DimProductCategory] pc\n        ON psc.[ProductCategoryKey] = pc.[ProductCategoryKey]\n    INNER JOIN [dbo].[DimCustomer] c\n        ON f.[CustomerKey] = c.[CustomerKey]\n    INNER JOIN [dbo].[DimGeography] g\n        ON c.[GeographyKey] = g.[GeographyKey]\n    INNER JOIN [dbo].[DimSalesTerritory] s\n        ON g.[SalesTerritoryKey] = s.[SalesTerritoryKey] \n;\n\nGO\n-- vTimeSeries view supports the creation of time series data mining models.\n--      - Replaces earlier bike models with successor models.\n--      - Abbreviates model names to improve readability in mining model viewer\n--      - Concatenates model and region so that table only has one input.\n--      - Creates a date field indexed to monthly reporting date for use in prediction.\nCREATE VIEW [dbo].[vTimeSeries] \nAS\n    SELECT \n        CASE [Model] \n            WHEN 'Mountain-100' THEN 'M200' \n            WHEN 'Road-150' THEN 'R250' \n            WHEN 'Road-650' THEN 'R750' \n            WHEN 'Touring-1000' THEN 'T1000' \n            ELSE Left([Model], 1) + Right([Model], 3) \n        END + ' ' + [Region] AS [ModelRegion] \n        ,(Convert(Integer, [CalendarYear]) * 100) + Convert(Integer, [Month]) AS [TimeIndex] \n        ,Sum([Quantity]) AS [Quantity] \n        ,Sum([Amount]) AS [Amount]\n\t\t,CalendarYear\n\t\t,[Month]\n\t\t,DATEFROMPARTS([CalendarYear], [Month], 25)\n\t\tas ReportingDate\n    FROM \n        [dbo].[vDMPrep] \n    WHERE \n        [Model] IN ('Mountain-100', 'Mountain-200', 'Road-150', 'Road-250', \n            'Road-650', 'Road-750', 'Touring-1000') \n    GROUP BY \n        CASE [Model] \n            WHEN 'Mountain-100' THEN 'M200' \n            WHEN 'Road-150' THEN 'R250' \n            WHEN 'Road-650' THEN 'R750' \n            WHEN 'Touring-1000' THEN 'T1000' \n            ELSE Left(Model,1) + Right(Model,3) \n        END + ' ' + [Region] \n        ,(Convert(Integer, [CalendarYear]) * 100) + Convert(Integer, [Month])\n\t\t,CalendarYear\n\t\t,[Month]\n\t\t,DATEFROMPARTS([CalendarYear], [Month], 25);\nGO\n-- vTargetMail supports targeted mailing data model\n-- Uses vDMPrep to determine if a customer buys a bike and joins to DimCustomer\nCREATE VIEW [dbo].[vTargetMail] \nAS\n    SELECT\n        c.[CustomerKey], \n        c.[GeographyKey], \n        c.[CustomerAlternateKey], \n        c.[Title], \n        c.[FirstName], \n        c.[MiddleName], \n        c.[LastName], \n        c.[NameStyle], \n        c.[BirthDate], \n        c.[MaritalStatus], \n        c.[Suffix], \n        c.[Gender], \n        c.[EmailAddress], \n        c.[YearlyIncome], \n        c.[TotalChildren], \n        c.[NumberChildrenAtHome], \n        c.[EnglishEducation], \n        c.[SpanishEducation], \n        c.[FrenchEducation], \n        c.[EnglishOccupation], \n        c.[SpanishOccupation], \n        c.[FrenchOccupation], \n        c.[HouseOwnerFlag], \n        c.[NumberCarsOwned], \n        c.[AddressLine1], \n        c.[AddressLine2], \n        c.[Phone], \n        c.[DateFirstPurchase], \n        c.[CommuteDistance], \n        x.[Region], \n        x.[Age], \n        CASE x.[Bikes] \n            WHEN 0 THEN 0 \n            ELSE 1 \n        END AS [BikeBuyer]\n    FROM\n        [dbo].[DimCustomer] c INNER JOIN (\n            SELECT\n                [CustomerKey]\n                ,[Region]\n                ,[Age]\n                ,Sum(\n                    CASE [EnglishProductCategoryName] \n                        WHEN 'Bikes' THEN 1 \n                        ELSE 0 \n                    END) AS [Bikes]\n            FROM\n                [dbo].[vDMPrep] \n            GROUP BY\n                [CustomerKey]\n                ,[Region]\n                ,[Age]\n            ) AS [x]\n        ON c.[CustomerKey] = x.[CustomerKey]\n;\n\nGO\n\n/* vAssocSeqOrders supports assocation and sequence clustering data mmining models.\n      - Limits data to FY2020.\n      - Returns order case table.*/\nCREATE VIEW [dbo].[vAssocSeqOrders]\nAS\nSELECT DISTINCT OrderNumber, CustomerKey, Region, IncomeGroup\nFROM         dbo.vDMPrep\nWHERE     (FiscalYear = 2020)\nGO\n\n/* vAssocSeqLineItems supports assocation and sequence clustering data mmining models.\n      - Limits data to FY2020.\n      - Returns line item nested table.*/\nCREATE VIEW [dbo].[vAssocSeqLineItems]\nAS\nSELECT     OrderNumber, LineNumber, Model\nFROM         dbo.vDMPrep\nWHERE     (FiscalYear = 2020)\nGO\n\nCREATE TABLE [dbo].[FactResellerSales](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[ResellerKey] [int] NOT NULL,\n\t[ProductKey] [int] NOT NULL,\n\t[OrderDateKey] [int] NOT NULL,\n\t[DueDateKey] [int] NOT NULL,\n\t[ShipDateKey] [int] NULL,\n\t[EmployeeKey] [int] NOT NULL,\n\t[PromotionKey] [int] NOT NULL,\n\t[CurrencyKey] [int] NOT NULL,\n\t[SalesTerritoryKey] [int] NOT NULL,\n\t[OrderQuantity] [smallint] NOT NULL,\n\t[UnitPrice] [money] NOT NULL,\n\t[ExtendedAmount] [money] NOT NULL,\n\t[UnitPriceDiscountPct] [decimal](7, 4) NOT NULL,\n\t[DiscountAmount] [money] NOT NULL,\n\t[ProductStandardCost] [money] NOT NULL,\n\t[TotalProductCost] [money] NOT NULL,\n\t[SalesAmount] [money] NOT NULL,\n\t[TaxAmount] [money] NOT NULL,\n\t[FreightAmount] [money] NOT NULL,\n\t[CarrierTrackingNumber] [nvarchar](25) NULL,\n\t[CustomerPONumber] [nvarchar](25) NULL,\n\t[RevisionNumber] [tinyint] NOT NULL)\nGO\n\nCREATE VIEW [dbo].[vFactSales]\nAS\n\tSELECT\n\t\tCAST(N'Reseller' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,[ResellerKey]\n\t\t,CAST(-1 AS INT) AS [CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,[EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactResellerSales]\n\tUNION ALL\n\tSELECT\n\t\tCAST(N'Internet' AS NVARCHAR(10)) AS [Channel]\n\t\t,CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) AS [SalesOrderKey]\n\t\t,((CAST(RIGHT([SalesOrderNumber], (LEN([SalesOrderNumber]) - 2)) AS INT) * 1000) + [SalesOrderLineNumber]) AS [SalesOrderLineKey]\n\t\t,[SalesOrderNumber]\n\t\t,[SalesOrderLineNumber]\n\t\t,CAST(-1 AS INT) AS [ResellerKey]\n\t\t,[CustomerKey]\n\t\t,[ProductKey]\n\t\t,[OrderDateKey]\n\t\t,[DueDateKey]\n\t\t,[ShipDateKey]\n\t\t,[PromotionKey]\n\t\t,[CurrencyKey]\n\t\t,[SalesTerritoryKey]\n\t\t,CAST(-1 AS INT) AS [EmployeeKey]\n\t\t,[OrderQuantity]\n\t\t,[UnitPrice]\n\t\t,[ExtendedAmount]\n\t\t,[UnitPriceDiscountPct]\n\t\t,[DiscountAmount]\n\t\t,[ProductStandardCost]\n\t\t,[TotalProductCost]\n\t\t,[SalesAmount]\n\t\t,[TaxAmount]\n\t\t,[FreightAmount]\n\t\t,[CarrierTrackingNumber]\n\t\t,[CustomerPONumber]\n\t\t,[RevisionNumber]\n\tFROM\n\t\t[dbo].[FactInternetSales];\nGO\n\nCREATE TABLE [dbo].[AdventureWorksDWBuildVersion](\n\t[DBVersion] [nvarchar](50) NULL,\n\t[VersionDate] [datetime] NULL\n)\nGO\n\nCREATE TABLE [dbo].[DimAccount](\n\t[AccountKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentAccountKey] [int] NULL,\n\t[AccountCodeAlternateKey] [int] NULL,\n\t[ParentAccountCodeAlternateKey] [int] NULL,\n\t[AccountDescription] [nvarchar](50) NULL,\n\t[AccountType] [nvarchar](50) NULL,\n\t[Operator] [nvarchar](50) NULL,\n\t[CustomMembers] [nvarchar](300) NULL,\n\t[ValueType] [nvarchar](50) NULL,\n\t[CustomMemberOptions] [nvarchar](200) NULL)\n\nGO\nCREATE TABLE [dbo].[DimCurrency](\n\t[CurrencyKey] [int] IDENTITY(1,1) NOT NULL,\n\t[CurrencyAlternateKey] [nchar](3) NOT NULL,\n\t[CurrencyName] [nvarchar](50) NOT NULL,\n\t[FormatString] [nvarchar](20) NULL)\n\nGO\nCREATE TABLE [dbo].[DimDepartmentGroup](\n\t[DepartmentGroupKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentDepartmentGroupKey] [int] NULL,\n\t[DepartmentGroupName] [nvarchar](50) NULL)\n\nGO\nCREATE TABLE [dbo].[DimEmployee](\n\t[EmployeeKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentEmployeeKey] [int] NULL,\n\t[EmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[ParentEmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n\t[SalesTerritoryKey] [int] NULL,\n\t[FirstName] [nvarchar](50) NOT NULL,\n\t[LastName] [nvarchar](50) NOT NULL,\n\t[MiddleName] [nvarchar](50) NULL,\n\t[NameStyle] [bit] NOT NULL,\n\t[Title] [nvarchar](50) NULL,\n\t[HireDate] [date] NULL,\n\t[BirthDate] [date] NULL,\n\t[LoginID] [nvarchar](256) NULL,\n\t[EmailAddress] [nvarchar](50) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[MaritalStatus] [nchar](1) NULL,\n\t[EmergencyContactName] [nvarchar](50) NULL,\n\t[EmergencyContactPhone] [nvarchar](25) NULL,\n\t[SalariedFlag] [bit] NULL,\n\t[Gender] [nchar](1) NULL,\n\t[PayFrequency] [tinyint] NULL,\n\t[BaseRate] [money] NULL,\n\t[VacationHours] [smallint] NULL,\n\t[SickLeaveHours] [smallint] NULL,\n\t[CurrentFlag] [bit] NOT NULL,\n\t[SalespersonFlag] [bit] NOT NULL,\n\t[DepartmentName] [nvarchar](50) NULL,\n\t[StartDate] [date] NULL,\n\t[EndDate] [date] NULL,\n\t[Status] [nvarchar](50) NULL,\n\t[EmployeePhoto] [varbinary](max) NULL)\nWITH  \n  (   \n    CLUSTERED INDEX (EmployeeKey)  \n  ); \nGO\nCREATE TABLE [dbo].[DimOrganization](\n\t[OrganizationKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ParentOrganizationKey] [int] NULL,\n\t[PercentageOfOwnership] [nvarchar](16) NULL,\n\t[OrganizationName] [nvarchar](50) NULL,\n\t[CurrencyKey] [int] NULL)\n\nGO\nCREATE TABLE [dbo].[DimPromotion](\n\t[PromotionKey] [int] IDENTITY(1,1) NOT NULL,\n\t[PromotionAlternateKey] [int] NULL,\n\t[EnglishPromotionName] [nvarchar](255) NULL,\n\t[SpanishPromotionName] [nvarchar](255) NULL,\n\t[FrenchPromotionName] [nvarchar](255) NULL,\n\t[DiscountPct] [float] NULL,\n\t[EnglishPromotionType] [nvarchar](50) NULL,\n\t[SpanishPromotionType] [nvarchar](50) NULL,\n\t[FrenchPromotionType] [nvarchar](50) NULL,\n\t[EnglishPromotionCategory] [nvarchar](50) NULL,\n\t[SpanishPromotionCategory] [nvarchar](50) NULL,\n\t[FrenchPromotionCategory] [nvarchar](50) NULL,\n\t[StartDate] [datetime] NOT NULL,\n\t[EndDate] [datetime] NULL,\n\t[MinQty] [int] NULL,\n\t[MaxQty] [int] NULL)\nGO\n\nCREATE TABLE [dbo].[DimReseller](\n\t[ResellerKey] [int] IDENTITY(1,1) NOT NULL,\n\t[GeographyKey] [int] NULL,\n\t[ResellerAlternateKey] [nvarchar](15) NULL,\n\t[Phone] [nvarchar](25) NULL,\n\t[BusinessType] [varchar](20) NOT NULL,\n\t[ResellerName] [nvarchar](50) NOT NULL,\n\t[NumberEmployees] [int] NULL,\n\t[OrderFrequency] [char](1) NULL,\n\t[OrderMonth] [tinyint] NULL,\n\t[FirstOrderYear] [int] NULL,\n\t[LastOrderYear] [int] NULL,\n\t[ProductLine] [nvarchar](50) NULL,\n\t[AddressLine1] [nvarchar](60) NULL,\n\t[AddressLine2] [nvarchar](60) NULL,\n\t[AnnualSales] [money] NULL,\n\t[BankName] [nvarchar](50) NULL,\n\t[MinPaymentType] [tinyint] NULL,\n\t[MinPaymentAmount] [money] NULL,\n\t[AnnualRevenue] [money] NULL,\n\t[YearOpened] [int] NULL)\nGO\n\nCREATE TABLE [dbo].[DimSalesReason](\n\t[SalesReasonKey] [int] IDENTITY(1,1) NOT NULL,\n\t[SalesReasonAlternateKey] [int] NOT NULL,\n\t[SalesReasonName] [nvarchar](50) NOT NULL,\n\t[SalesReasonReasonType] [nvarchar](50) NOT NULL)\nGO\n\nCREATE TABLE [dbo].[DimScenario](\n\t[ScenarioKey] [int] IDENTITY(1,1) NOT NULL,\n\t[ScenarioName] [nvarchar](50) NULL)\nGO\n\nCREATE TABLE [dbo].[FactCallCenter](\n\t[FactCallCenterID] [int] IDENTITY(1,1) NOT NULL,\n\t[DateKey] [int] NOT NULL,\n\t[WageType] [nvarchar](15) NOT NULL,\n\t[Shift] [nvarchar](20) NOT NULL,\n\t[LevelOneOperators] [smallint] NOT NULL,\n\t[LevelTwoOperators] [smallint] NOT NULL,\n\t[TotalOperators] [smallint] NOT NULL,\n\t[Calls] [int] NOT NULL,\n\t[AutomaticResponses] [int] NOT NULL,\n\t[Orders] [int] NOT NULL,\n\t[IssuesRaised] [smallint] NOT NULL,\n\t[AverageTimePerIssue] [smallint] NOT NULL,\n\t[ServiceGrade] [float] NOT NULL)\nGO\n\nCREATE TABLE [dbo].[FactCurrencyRate](\n\t[CurrencyKey] [int] NOT NULL,\n\t[DateKey] [int] NOT NULL,\n\t[AverageRate] [float] NOT NULL,\n\t[EndOfDayRate] [float] NOT NULL)\nGO\n\nCREATE TABLE [dbo].[FactFinance](\n\t[FinanceKey] [int] IDENTITY(1,1) NOT NULL,\n\t[DateKey] [int] NOT NULL,\n\t[OrganizationKey] [int] NOT NULL,\n\t[DepartmentGroupKey] [int] NOT NULL,\n\t[ScenarioKey] [int] NOT NULL,\n\t[AccountKey] [int] NOT NULL,\n\t[Amount] [money] NOT NULL\n) \nGO\n\nCREATE TABLE [dbo].[FactInternetSalesReason](\n\t[SalesOrderNumber] [nvarchar](20) NOT NULL,\n\t[SalesOrderLineNumber] [tinyint] NOT NULL,\n\t[SalesReasonKey] [int] NOT NULL)\nGO\n\nCREATE TABLE [dbo].[FactProductInventory](\n\t[ProductKey] [int] NOT NULL,\n\t[DateKey] [int] NOT NULL,\n\t[UnitCost] [money] NOT NULL,\n\t[UnitsIn] [int] NOT NULL,\n\t[UnitsOut] [int] NOT NULL,\n\t[UnitsBalance] [int] NOT NULL)\nGO\n\nCREATE TABLE [dbo].[FactSalesQuota](\n\t[SalesQuotaKey] [int] IDENTITY(1,1) NOT NULL,\n\t[EmployeeKey] [int] NOT NULL,\n\t[DateKey] [int] NOT NULL,\n\t[SalesAmountQuota] [money] NOT NULL)\n\nGO",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1196,7 +1242,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -1214,7 +1260,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "b71478df-4c0e-4c05-ae8a-fdec622cd226"
+						"spark.autotune.trackingId": "94b27b87-731e-4f3b-9e14-7ec6e60e0f61"
 					}
 				},
 				"metadata": {
@@ -1228,10 +1274,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+						"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
 						"name": "synapsespark",
 						"type": "Spark",
-						"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -1273,10 +1319,10 @@
 							}
 						},
 						"source": [
-							"datalake = 'datalake3mstaeetovkk4'"
+							"datalake = 'datalakecn32xts6vteh6'"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -1308,7 +1354,7 @@
 							"display(df.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 14
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -1340,7 +1386,7 @@
 							"df.printSchema()"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -1390,7 +1436,7 @@
 							"display(df.limit(10))"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 6
 					},
 					{
 						"cell_type": "markdown",
@@ -1422,7 +1468,7 @@
 							"df.createOrReplaceTempView(\"sales\")"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 7
 					},
 					{
 						"cell_type": "markdown",
@@ -1462,7 +1508,7 @@
 							"WHERE Customer LIKE 'E%'"
 						],
 						"outputs": [],
-						"execution_count": 17
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -1506,7 +1552,7 @@
 							"LIMIT 50"
 						],
 						"outputs": [],
-						"execution_count": 22
+						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
@@ -1552,7 +1598,7 @@
 							"ORDER BY OrderDate"
 						],
 						"outputs": [],
-						"execution_count": 23
+						"execution_count": 10
 					},
 					{
 						"cell_type": "markdown",
@@ -1590,7 +1636,7 @@
 							"SELECT * FROM TotalSalesByDate LIMIT 10"
 						],
 						"outputs": [],
-						"execution_count": 27
+						"execution_count": 11
 					}
 				]
 			},
@@ -1602,7 +1648,7 @@
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
 				"folder": {
-					"name": "Module 02"
+					"name": "Module 03"
 				},
 				"nbformat": 4,
 				"nbformat_minor": 2,
@@ -1620,7 +1666,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2ae78d98-205f-444d-8ca8-4dbdf597b9a4"
+						"spark.autotune.trackingId": "db9e7afe-f497-4038-bd8c-0823fc79b2fb"
 					}
 				},
 				"metadata": {
@@ -1634,10 +1680,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/b895a719-7034-411a-9944-ff196d1f450f/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-3mstaeetovkk4/bigDataPools/synapsespark",
+						"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
 						"name": "synapsespark",
 						"type": "Spark",
-						"endpoint": "https://synapse-3mstaeetovkk4.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -1681,7 +1727,7 @@
 						"source": [
 							"from pyspark.sql import types\r\n",
 							"\r\n",
-							"datalake = 'datalake3mstaeetovkk4'\r\n",
+							"datalake = 'datalakecn32xts6vteh6'\r\n",
 							"\r\n",
 							"customSchema = types.StructType([\r\n",
 							"    types.StructField(\"SalesOrderNumber\", types.StringType(), True),\r\n",
@@ -1700,7 +1746,7 @@
 							"df.createOrReplaceTempView(\"sales\")"
 						],
 						"outputs": [],
-						"execution_count": 41
+						"execution_count": 2
 					},
 					{
 						"cell_type": "markdown",
@@ -1744,7 +1790,7 @@
 							"LIMIT 50"
 						],
 						"outputs": [],
-						"execution_count": 42
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -1799,7 +1845,7 @@
 							"plt.show()"
 						],
 						"outputs": [],
-						"execution_count": 43
+						"execution_count": 4
 					}
 				]
 			},
@@ -1841,6 +1887,343 @@
 			},
 			"dependsOn": [],
 			"location": "uksouth"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlDimension')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().Table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adventureworksdw2022dp500_azuresqldatabase_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/03_flatten')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "Module 03"
+				},
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "synapsespark",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "e4b175fb-8435-4966-8e58-86557573731b"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/784f1210-8faf-4cf4-b9aa-e50fa084adce/resourceGroups/rg-dp-500-platform/providers/Microsoft.Synapse/workspaces/synapse-cn32xts6vteh6/bigDataPools/synapsespark",
+						"name": "synapsespark",
+						"type": "Spark",
+						"endpoint": "https://synapse-cn32xts6vteh6.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/synapsespark",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.1",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Analyze complex data types in Azure Synapse Analytics\r\n",
+							"\r\n",
+							"Notebook based on article: https://learn.microsoft.com/en-us/azure/synapse-analytics/how-to-analyze-complex-schema\r\n",
+							"\r\n",
+							"Complex data types are increasingly common and represent a challenge for data engineers. Analyzing nested schema and arrays can involve time-consuming and complex SQL queries. Additionally, it can be difficult to rename or cast the nested columns data type. Also, when you're working with deeply nested objects, you can encounter performance problems.\r\n",
+							"\r\n",
+							"Data engineers need to understand how to efficiently process complex data types and make them easily accessible to everyone. In the following example, you use Spark in Azure Synapse Analytics to read and transform objects into a flat structure through data frames. You use the serverless model of SQL in Azure Synapse Analytics to query such objects directly, and return those results as a regular table.\r\n",
+							"\r\n",
+							"## Create a Spark DataFrame from a JSON string\r\n",
+							"\r\n",
+							"1. Add the JSON content from the variable to a list.\r\n",
+							"2. Create a Spark dataset from the list.\r\n",
+							"3. Use spark.read.json to parse the Spark dataset."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"collapsed": false
+						},
+						"source": [
+							"json = \"\"\"{\r\n",
+							"    \"id\": \"66532691-ab20-11ea-8b1d-936b3ec64e54\",\r\n",
+							"    \"context\": {\r\n",
+							"        \"data\": {\r\n",
+							"            \"eventTime\": \"2020-06-10T13:43:34.553Z\",\r\n",
+							"            \"samplingRate\": \"100.0\",\r\n",
+							"            \"isSynthetic\": \"false\"\r\n",
+							"        },\r\n",
+							"        \"session\": {\r\n",
+							"            \"isFirst\": \"false\",\r\n",
+							"            \"id\": \"38619c14-7a23-4687-8268-95862c5326b1\"\r\n",
+							"        },\r\n",
+							"        \"custom\": {\r\n",
+							"            \"dimensions\": [\r\n",
+							"                {\r\n",
+							"                    \"customerInfo\": {\r\n",
+							"                        \"ProfileType\": \"ExpertUser\",\r\n",
+							"                        \"RoomName\": \"\",\r\n",
+							"                        \"CustomerName\": \"diamond\",\r\n",
+							"                        \"UserName\": \"XXXX@yahoo.com\"\r\n",
+							"                    }\r\n",
+							"                },\r\n",
+							"                {\r\n",
+							"                    \"customerInfo\": {\r\n",
+							"                        \"ProfileType\": \"Novice\",\r\n",
+							"                        \"RoomName\": \"\",\r\n",
+							"                        \"CustomerName\": \"topaz\",\r\n",
+							"                        \"UserName\": \"XXXX@outlook.com\"\r\n",
+							"                    }\r\n",
+							"                }\r\n",
+							"            ]\r\n",
+							"        }\r\n",
+							"    }\r\n",
+							"}\"\"\"\r\n",
+							"json_list = []\r\n",
+							"json_list.append(json)\r\n",
+							"\r\n",
+							"df = spark.read.json(sc.parallelize(json_list))\r\n",
+							"\r\n",
+							"display(df)"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Define a function to flatten the nested schema\r\n",
+							"\r\n",
+							"You can use this generic function without change. "
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from pyspark.sql.functions import col\r\n",
+							"\r\n",
+							"def flatten_df(nested_df):\r\n",
+							"    stack = [((), nested_df)]\r\n",
+							"    columns = []\r\n",
+							"\r\n",
+							"    while len(stack) > 0:\r\n",
+							"        parents, df = stack.pop()\r\n",
+							"\r\n",
+							"        flat_cols = [\r\n",
+							"            col(\".\".join(parents + (c[0],))).alias(\"_\".join(parents + (c[0],)))\r\n",
+							"            for c in df.dtypes\r\n",
+							"            if c[1][:6] != \"struct\"\r\n",
+							"        ]\r\n",
+							"\r\n",
+							"        nested_cols = [\r\n",
+							"            c[0]\r\n",
+							"            for c in df.dtypes\r\n",
+							"            if c[1][:6] == \"struct\"\r\n",
+							"        ]\r\n",
+							"\r\n",
+							"        columns.extend(flat_cols)\r\n",
+							"\r\n",
+							"        for nested_col in nested_cols:\r\n",
+							"            projected_df = df.select(nested_col + \".*\")\r\n",
+							"            stack.append((parents + (nested_col,), projected_df))\r\n",
+							"\r\n",
+							"    return nested_df.select(columns)"
+						],
+						"outputs": [],
+						"execution_count": 3
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Use the function to flatten the nested schema\r\n",
+							"\r\n",
+							"In this step, you flatten the nested schema of the data frame (df) into a new data frame. The display function should return 10 columns and 1 row. The array and its nested elements are still there."
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"from pyspark.sql.types import StringType, StructField, StructType\r\n",
+							"df_flat = flatten_df(df)\r\n",
+							"display(df_flat.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 4
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Transform the array\r\n",
+							"\r\n",
+							"Here, you transform the array, context_custom_dimensions, in the data frame df_flat, into a new data frame df_flat_explode. In the following code, you also define which column to select:"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"from pyspark.sql.functions import explode\r\n",
+							"from pyspark.sql.functions import flatten\r\n",
+							"from pyspark.sql.functions import arrays_zip\r\n",
+							"\r\n",
+							"df_flat_explode = df_flat.select(\"id\", explode(df_flat.context_custom_dimensions), \"context_session_id\",\"context_data_eventTime\",\"context_data_samplingRate\")\r\n",
+							"display(df_flat_explode.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 10
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"## Use the function to flatten the nested schema\r\n",
+							"\r\n",
+							"Finally, you use the function to flatten the nested schema of the data frame df_flat_explode, into a new data frame, df_flat_explode_flat:"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"df_flat_explode_flat = flatten_df(df_flat_explode)\r\n",
+							"display(df_flat_explode_flat.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 11
+					}
+				]
+			},
+			"dependsOn": []
 		}
 	]
 }
