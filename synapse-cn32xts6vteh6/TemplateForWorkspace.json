@@ -2751,6 +2751,290 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SalesLT.Customer.parquet",
+						"folderPath": "adventureworkslt/tables/parquet",
+						"fileSystem": "landing"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "INT32"
+					},
+					{
+						"name": "NameStyle",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "Title",
+						"type": "UTF8"
+					},
+					{
+						"name": "FirstName",
+						"type": "UTF8"
+					},
+					{
+						"name": "MiddleName",
+						"type": "UTF8"
+					},
+					{
+						"name": "LastName",
+						"type": "UTF8"
+					},
+					{
+						"name": "Suffix",
+						"type": "UTF8"
+					},
+					{
+						"name": "CompanyName",
+						"type": "UTF8"
+					},
+					{
+						"name": "SalesPerson",
+						"type": "UTF8"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "UTF8"
+					},
+					{
+						"name": "Phone",
+						"type": "UTF8"
+					},
+					{
+						"name": "PasswordHash",
+						"type": "UTF8"
+					},
+					{
+						"name": "PasswordSalt",
+						"type": "UTF8"
+					},
+					{
+						"name": "rowguid",
+						"type": "UTF8"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "INT96"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Pipeline 1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DelimitedText1",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Parquet2",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "aggregate1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as string,",
+						"          {Rotton Tomato} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"filter1 aggregate(groupBy(year),",
+						"     AverageRating = sum( toInteger(Rating))) ~> aggregate1",
+						"source1 filter(genres == \"Comedy\") ~> filter1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     partitionFileNames:['moviescomedybyyear.parquet'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/DelimitedText1')]",
+				"[concat(variables('workspaceId'), '/datasets/Parquet2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesDB.csv",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "analytics"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
 		}
 	]
 }
