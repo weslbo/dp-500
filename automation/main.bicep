@@ -19,10 +19,10 @@ resource rg_platform 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: location
 }
 
-resource rg_infra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: 'rg-dp-500-infra'
-  location: location
-}
+// resource rg_infra 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+//   name: 'rg-dp-500-infra'
+//   location: location
+// }
 
 // deploy datalake using module
 module datalake 'datalake.bicep' = {
@@ -85,12 +85,12 @@ module keyvault 'keyvault.bicep' = {
   }
 }
 
-module vmpowerbi 'infra.bicep' = {
-  name: 'infra-deployment'
-  scope: rg_infra
-  params: {
-    location: location
-    sqlAdministratorLogin: sqlAdministratorLogin
-    sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
-  }
-}
+// module vmpowerbi 'infra.bicep' = {
+//   name: 'infra-deployment'
+//   scope: rg_infra
+//   params: {
+//     location: location
+//     sqlAdministratorLogin: sqlAdministratorLogin
+//     sqlAdministratorLoginPassword: sqlAdministratorLoginPassword
+//   }
+// }

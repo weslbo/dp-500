@@ -69,6 +69,18 @@ Connect-PowerBIServiceAccount
 Get-PowerBIDataset -Scope Organization | Format-Table -AutoSize
 
 Get-PowerBIDatasource -DatasetId b5a9d5fd-afe2-4271-82e5-252a4fd72f85 -Scope Organization | Select ConnectionDetails | ConvertTo-Json
+
+Get-PowerBIDataset -Scope Organization -ErrorAction SilentlyContinue `
+| ForEach-Object { `
+    $dsId = $_.Id; `
+    Get-PowerBIDatasource -DatasetId $dsId -Scope Organization -ErrorAction SilentlyContinue `
+    | Where-Object { `
+        $_.DatasourceType -eq 'Sql' `
+        -and ($_.ConnectionDetails.Server -like 'sqlserver-cn32xts6vteh6.database.windows.net' `
+              -and $_.ConnectionDetails.Database -like 'AdventureWorksDW2022-DP-500') `
+    } `
+    | ForEach-Object { $dsId } `
+}
 ```
 
 ## Automate Power BI administration [[learn module]](https://learn.microsoft.com/training/modules/power-bi-admin-automate)

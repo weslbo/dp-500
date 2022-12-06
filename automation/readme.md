@@ -27,8 +27,6 @@ This will deploy the following resources:
 | rg-dp-500-platform  |  AdventureWorksDW2022-DP-500 |  SQL Database (currently empty, should be imported from bacpac) |
 | rg-dp-500-platform  |  AdventureWorksLT |  SQL Database (sample database) |
 | rg-dp-500-platform  |  keyvault-xxxxxx |  Azure KeyVault with sqlpassword. Purview and Synapse managed identities have access |
-| rg-dp-500-infra  |  vm-powerbi |  A visualstudio2022 VM, with a custom script extension to install Power BI Desktop, Power BI Report Builder, DAX Studio, etc (chocolatey). Will automatically shutdown every evening |
-| rg-dp-500-infra  |  vm-sqlserver | A sql2019-ws2019 VM. Will automatically shutdown every evening |
 
 Permissions (automatically configured):
 
