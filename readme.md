@@ -4,8 +4,9 @@ Welcome to this repository, targeted to trainers delivering DP-500. It provides 
 
 First of all, there is a [set of Bicep templates](/automation/readme.md), allowing you to deploy a DEMO Azure environment for DP-500. It contains the following resources:
 
-- A [Virtual Machine](/automation/infra.bicep) with Power BI Desktop, Report Builder, DAX Studio, Tabular Editor, Data Gateway already installed, as well as a set of lab and demo files from github repos
-- A SQL Server Virtual Machine
+- ~~A [Virtual Machine](/automation/infra.bicep) with Power BI Desktop, Report Builder, DAX Studio, Tabular Editor, Data Gateway already installed, as well as a set of lab and demo files from github repos~~ UPDATE: Consider using a Microsoft DevBox (Preview) [link](https://learn.microsoft.com/en-us/azure/dev-box/quickstart-configure-dev-box-service?tabs=AzureADJoin)
+- ~~A SQL Server Virtual Machine~~
+
 - An [Azure Synapse Analytics](/automation/synapse.bicep) environment, configured with a number of pipelines (copy data) and scripts (to demo)
 - A few Azure [SQL Databases](/automation/sql.bicep) on the serverless tier (AdventureWorksLT and AdventureWorksDW2022-DP-500)
 - An Azure [Data Lake](/automation/datalake.bicep) with some containers
