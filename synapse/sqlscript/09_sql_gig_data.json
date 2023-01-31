@@ -1,0 +1,20 @@
+{
+	"name": "09_sql_gig_data",
+	"properties": {
+		"folder": {
+			"name": "Module 04"
+		},
+		"content": {
+			"query": "CREATE SCHEMA WesleyAndTheBolsters\n\nCREATE TABLE WesleyAndTheBolsters.DimInstruments(\n    InstrumentID INT IDENTITY(1,1) NOT NULL,\n    Name VARCHAR(50) NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = REPLICATE,\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nCREATE TABLE WesleyAndTheBolsters.GigFacts(\n    ID INT IDENTITY(1,1) NOT NULL,\n    InstrumentID INT NOT NULL,\n    NumberOfSolos INT NOT NULL\n)\nWITH\n(\n\tDISTRIBUTION = HASH(InstrumentID),\n\tCLUSTERED COLUMNSTORE INDEX\n)\n\nINSERT INTO WesleyAndTheBolsters.DimInstruments (Name) VALUES ('Drums')\nINSERT INTO WesleyAndTheBolsters.DimInstruments (Name) VALUES ('Guitar')\nINSERT INTO WesleyAndTheBolsters.DimInstruments (Name) VALUES ('Bass')\nINSERT INTO WesleyAndTheBolsters.DimInstruments (Name) VALUES ('Cowbell')\nINSERT INTO WesleyAndTheBolsters.DimInstruments (Name) VALUES ('Keys')\n\nSELECT * FROM WesleyAndTheBolsters.DimInstruments\n\nINSERT INTO WesleyAndTheBolsters.GigFacts (InstrumentID, NumberOfSolos) VALUES (57, 10)\nINSERT INTO WesleyAndTheBolsters.GigFacts (InstrumentID, NumberOfSolos) VALUES (60, 20)\nINSERT INTO WesleyAndTheBolsters.GigFacts (InstrumentID, NumberOfSolos) VALUES (6, 5)\nINSERT INTO WesleyAndTheBolsters.GigFacts (InstrumentID, NumberOfSolos) VALUES (47, 99)\nINSERT INTO WesleyAndTheBolsters.GigFacts (InstrumentID, NumberOfSolos) VALUES (2, 7)\n\nSELECT f.ID, i.Name as Instrument, f.NumberOfSolos\nFROM WesleyAndTheBolsters.GigFacts f \n    JOIN WesleyAndTheBolsters.DimInstruments i on f.InstrumentID = i.InstrumentID\nORDER BY f.NumberOfSolos DESC\n\nDBCC PDW_SHOWSPACEUSED('WesleyAndTheBolsters.GigFacts');\n\nSELECT *\nFROM sys.tables t \nJOIN sys.pdw_replicated_table_cache_state c \n  ON c.object_id = t.object_id\nJOIN sys.pdw_table_distribution_properties p\n  ON p.object_id = t.object_id\nWHERE p.[distribution_policy_desc] = 'REPLICATE'\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "DP500DWH",
+				"poolName": "DP500DWH"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
