@@ -9,15 +9,18 @@
 		},
 		"adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'adventureworksdw2022dp500_azuresqldatabase_linkedservice'"
+			"metadata": "Secure string for 'connectionString' of 'adventureworksdw2022dp500_azuresqldatabase_linkedservice'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat('sqlserver-', linkedService().suffix, '.database.windows.net')}\";Initial Catalog=AdventureWorksDW2022-DP-500;User ID=azureuser"
 		},
 		"adventureworkslt_azuresqldatabase_linkedservice_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'adventureworkslt_azuresqldatabase_linkedservice'"
+			"metadata": "Secure string for 'connectionString' of 'adventureworkslt_azuresqldatabase_linkedservice'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat('sqlserver-', linkedService().suffix, '.database.windows.net')}\";Initial Catalog=AdventureWorksLT;User ID=azureuser"
 		},
 		"synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer'"
+			"metadata": "Secure string for 'connectionString' of 'synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapse-6i6nkvrr23bng.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
 		"datalake_linkedservice_properties_typeProperties_url": {
 			"type": "string",
@@ -567,6 +570,365 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/pipeline_02_dataflow')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "01_dataflow_sample",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Movies": {},
+									"MoviesSink": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/01_dataflow_sample')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ComedyMoviesRating')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "3mstaeetovkk4"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesDB.csv",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/MoviesCSVfile')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "moviesDB.csv",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "movie",
+						"type": "String"
+					},
+					{
+						"name": "title",
+						"type": "String"
+					},
+					{
+						"name": "genres",
+						"type": "String"
+					},
+					{
+						"name": "year",
+						"type": "String"
+					},
+					{
+						"name": "Rating",
+						"type": "String"
+					},
+					{
+						"name": "Rotton Tomato",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "SalesLT.Customer.parquet",
+						"folderPath": "adventureworkslt/tables/parquet",
+						"fileSystem": "landing"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": [
+					{
+						"name": "CustomerID",
+						"type": "INT32"
+					},
+					{
+						"name": "NameStyle",
+						"type": "BOOLEAN"
+					},
+					{
+						"name": "Title",
+						"type": "UTF8"
+					},
+					{
+						"name": "FirstName",
+						"type": "UTF8"
+					},
+					{
+						"name": "MiddleName",
+						"type": "UTF8"
+					},
+					{
+						"name": "LastName",
+						"type": "UTF8"
+					},
+					{
+						"name": "Suffix",
+						"type": "UTF8"
+					},
+					{
+						"name": "CompanyName",
+						"type": "UTF8"
+					},
+					{
+						"name": "SalesPerson",
+						"type": "UTF8"
+					},
+					{
+						"name": "EmailAddress",
+						"type": "UTF8"
+					},
+					{
+						"name": "Phone",
+						"type": "UTF8"
+					},
+					{
+						"name": "PasswordHash",
+						"type": "UTF8"
+					},
+					{
+						"name": "PasswordSalt",
+						"type": "UTF8"
+					},
+					{
+						"name": "rowguid",
+						"type": "UTF8"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "INT96"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Parquet2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "datalake_linkedservice",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"suffix": "cn32xts6vteh6"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "analytics"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlDimension')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().Table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/adventureworksdw2022dp500_azuresqldatabase_linkedservice')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/dataset_adls_landingzone_binary')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -1024,6 +1386,82 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/01_dataflow_sample')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "MoviesCSVfile",
+								"type": "DatasetReference"
+							},
+							"name": "Movies"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ComedyMoviesRating",
+								"type": "DatasetReference"
+							},
+							"name": "MoviesSink"
+						}
+					],
+					"transformations": [
+						{
+							"name": "filter1"
+						},
+						{
+							"name": "aggregate1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          movie as string,",
+						"          title as string,",
+						"          genres as string,",
+						"          year as string,",
+						"          Rating as string,",
+						"          {Rotton Tomato} as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> Movies",
+						"Movies filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> filter1",
+						"filter1 aggregate(groupBy(year),",
+						"     AverageComedyRating = avg(toInteger(Rating))) ~> aggregate1",
+						"aggregate1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Column_1 as string,",
+						"          Column_2 as string,",
+						"          Column_3 as string,",
+						"          Column_4 as string,",
+						"          Column_5 as string,",
+						"          Column_6 as string,",
+						"          Column_7 as string,",
+						"          Column_8 as string,",
+						"          Column_9 as string",
+						"     ),",
+						"     partitionFileNames:['ComedyMoviesRating.csv'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> MoviesSink"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/MoviesCSVfile')]",
+				"[concat(variables('workspaceId'), '/datasets/ComedyMoviesRating')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/01_sql_serverless_csv')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1260,7 +1698,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "94b27b87-731e-4f3b-9e14-7ec6e60e0f61"
+						"spark.autotune.trackingId": "6c18aab9-e6b6-421e-bd48-db62bb7a34b9"
 					}
 				},
 				"metadata": {
@@ -1285,7 +1723,8 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1564,6 +2003,8 @@
 							}
 						},
 						"source": [
+							"Make sure to explore the CHART feature (built in in the notebook)!\r\n",
+							"\r\n",
 							"Create a new temporary view by using SQL:"
 						]
 					},
@@ -1637,6 +2078,104 @@
 						],
 						"outputs": [],
 						"execution_count": 11
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"Lets create some chart using matplotlib"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from matplotlib import pyplot as plt\r\n",
+							"\r\n",
+							"totalOrdersByTerritory = sqlContext.sql(\"SELECT SalesTerritoryKey, COUNT(*) as TotalOrders \\\r\n",
+							"                                         FROM Sales \\\r\n",
+							"                                         GROUP BY SalesTerritoryKey\\\r\n",
+							"                                         ORDER BY SalesTerritoryKey\").toPandas()\r\n",
+							"\r\n",
+							"# clear the plot area\r\n",
+							"plt.clf()\r\n",
+							"\r\n",
+							"# create a figure\r\n",
+							"figure = plt.figure(figsize=(12, 8))\r\n",
+							"\r\n",
+							"# create a bar plot of total sales by datalake\r\n",
+							"plt.bar(x=totalOrdersByTerritory['SalesTerritoryKey'], height=totalOrdersByTerritory['TotalOrders'], color='magenta')\r\n",
+							"\r\n",
+							"# customize the chart\r\n",
+							"plt.title('Order count by sales territory')\r\n",
+							"plt.xlabel('Sales territory')\r\n",
+							"plt.ylabel('Total number of orders')\r\n",
+							"plt.grid(color='#95a5a6', linestyle='--')\r\n",
+							"\r\n",
+							"# show the plot area\r\n",
+							"plt.show()"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from urllib.request import urlopen\r\n",
+							"import json\r\n",
+							"with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:\r\n",
+							"    counties = json.load(response)\r\n",
+							"\r\n",
+							"import pandas as pd\r\n",
+							"df = pd.read_csv(\"https://raw.githubusercontent.com/plotly/datasets/master/fips-unemp-16.csv\",\r\n",
+							"                   dtype={\"fips\": str})\r\n",
+							"\r\n",
+							"import plotly\r\n",
+							"import plotly.express as px\r\n",
+							"\r\n",
+							"fig = px.choropleth(df, geojson=counties, locations='fips', color='unemp',\r\n",
+							"                           color_continuous_scale=\"Viridis\",\r\n",
+							"                           range_color=(0, 12),\r\n",
+							"                           scope=\"usa\",\r\n",
+							"                           labels={'unemp':'unemployment rate'}\r\n",
+							"                          )\r\n",
+							"fig.update_layout(margin={\"r\":0,\"t\":0,\"l\":0,\"b\":0})\r\n",
+							"\r\n",
+							"# create an html document that embeds the Plotly plot\r\n",
+							"h = plotly.offline.plot(fig, output_type='div')\r\n",
+							"\r\n",
+							"# display this html\r\n",
+							"displayHTML(h)"
+						],
+						"outputs": [],
+						"execution_count": null
 					}
 				]
 			},
@@ -1691,8 +2230,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1896,72 +2434,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/synapsespark')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
-				},
-				"autoScale": {
-					"enabled": true,
-					"maxNodeCount": 10,
-					"minNodeCount": 3
-				},
-				"nodeCount": 3,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.1",
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "uksouth"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/DP500DWH')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "uksouth"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SqlDimension')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"Table": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": {
-						"value": "@dataset().Table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/adventureworksdw2022dp500_azuresqldatabase_linkedservice')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/03_flatten')]",
 			"type": "Microsoft.Synapse/workspaces/notebooks",
 			"apiVersion": "2019-06-01-preview",
@@ -2010,8 +2482,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2318,8 +2789,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2469,8 +2939,7 @@
 						"sparkVersion": "3.1",
 						"nodeCount": 3,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2516,411 +2985,41 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/pipeline_02_dataflow')]",
-			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"name": "[concat(parameters('workspaceName'), '/synapsespark')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "01_dataflow_sample",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"Movies": {},
-									"MoviesSink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
 				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 3,
+				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.1",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
-				"[concat(variables('workspaceId'), '/dataflows/01_dataflow_sample')]"
-			]
+			"dependsOn": [],
+			"location": "uksouth"
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/01_dataflow_sample')]",
-			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"name": "[concat(parameters('workspaceName'), '/DP500DWH')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "MoviesCSVfile",
-								"type": "DatasetReference"
-							},
-							"name": "Movies"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "ComedyMoviesRating",
-								"type": "DatasetReference"
-							},
-							"name": "MoviesSink"
-						}
-					],
-					"transformations": [
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "aggregate1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          movie as string,",
-						"          title as string,",
-						"          genres as string,",
-						"          year as string,",
-						"          Rating as string,",
-						"          {Rotton Tomato} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> Movies",
-						"Movies filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> filter1",
-						"filter1 aggregate(groupBy(year),",
-						"     AverageComedyRating = avg(toInteger(Rating))) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          Column_1 as string,",
-						"          Column_2 as string,",
-						"          Column_3 as string,",
-						"          Column_4 as string,",
-						"          Column_5 as string,",
-						"          Column_6 as string,",
-						"          Column_7 as string,",
-						"          Column_8 as string,",
-						"          Column_9 as string",
-						"     ),",
-						"     partitionFileNames:['ComedyMoviesRating.csv'],",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> MoviesSink"
-					]
-				}
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/MoviesCSVfile')]",
-				"[concat(variables('workspaceId'), '/datasets/ComedyMoviesRating')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/MoviesCSVfile')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "datalake_linkedservice",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"suffix": "cn32xts6vteh6"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "moviesDB.csv",
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "movie",
-						"type": "String"
-					},
-					{
-						"name": "title",
-						"type": "String"
-					},
-					{
-						"name": "genres",
-						"type": "String"
-					},
-					{
-						"name": "year",
-						"type": "String"
-					},
-					{
-						"name": "Rating",
-						"type": "String"
-					},
-					{
-						"name": "Rotton Tomato",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/ComedyMoviesRating')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "datalake_linkedservice",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"suffix": "3mstaeetovkk4"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					},
-					{
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Parquet1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "datalake_linkedservice",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "SalesLT.Customer.parquet",
-						"folderPath": "adventureworkslt/tables/parquet",
-						"fileSystem": "landing"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": [
-					{
-						"name": "CustomerID",
-						"type": "INT32"
-					},
-					{
-						"name": "NameStyle",
-						"type": "BOOLEAN"
-					},
-					{
-						"name": "Title",
-						"type": "UTF8"
-					},
-					{
-						"name": "FirstName",
-						"type": "UTF8"
-					},
-					{
-						"name": "MiddleName",
-						"type": "UTF8"
-					},
-					{
-						"name": "LastName",
-						"type": "UTF8"
-					},
-					{
-						"name": "Suffix",
-						"type": "UTF8"
-					},
-					{
-						"name": "CompanyName",
-						"type": "UTF8"
-					},
-					{
-						"name": "SalesPerson",
-						"type": "UTF8"
-					},
-					{
-						"name": "EmailAddress",
-						"type": "UTF8"
-					},
-					{
-						"name": "Phone",
-						"type": "UTF8"
-					},
-					{
-						"name": "PasswordHash",
-						"type": "UTF8"
-					},
-					{
-						"name": "PasswordSalt",
-						"type": "UTF8"
-					},
-					{
-						"name": "rowguid",
-						"type": "UTF8"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "INT96"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/DelimitedText1')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "datalake_linkedservice",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"suffix": "cn32xts6vteh6"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "moviesDB.csv",
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "movie",
-						"type": "String"
-					},
-					{
-						"name": "title",
-						"type": "String"
-					},
-					{
-						"name": "genres",
-						"type": "String"
-					},
-					{
-						"name": "year",
-						"type": "String"
-					},
-					{
-						"name": "Rating",
-						"type": "String"
-					},
-					{
-						"name": "Rotton Tomato",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Parquet2')]",
-			"type": "Microsoft.Synapse/workspaces/datasets",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "datalake_linkedservice",
-					"type": "LinkedServiceReference",
-					"parameters": {
-						"suffix": "cn32xts6vteh6"
-					}
-				},
-				"annotations": [],
-				"type": "Parquet",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileSystem": "analytics"
-					},
-					"compressionCodec": "snappy"
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('workspaceId'), '/linkedServices/datalake_linkedservice')]"
-			]
+			"dependsOn": [],
+			"location": "uksouth"
 		}
 	]
 }
