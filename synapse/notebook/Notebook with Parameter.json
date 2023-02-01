@@ -1,6 +1,7 @@
 {
-	"name": "Notebook 1",
+	"name": "Notebook with Parameter",
 	"properties": {
+		"description": "Wesley and De Bolster",
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"sessionProperties": {
@@ -13,7 +14,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7177dd2a-80c2-48de-9fd4-de133f556206"
+				"spark.autotune.trackingId": "a7953e71-2597-462a-a552-d55912a873d2"
 			}
 		},
 		"metadata": {
