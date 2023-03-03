@@ -1,0 +1,24 @@
+{
+	"name": "SqlDimension",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "adventureworksdw2022dp500_azuresqldatabase_linkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Table": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	}
+}
