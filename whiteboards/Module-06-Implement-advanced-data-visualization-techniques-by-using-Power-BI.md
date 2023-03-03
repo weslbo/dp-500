@@ -6,7 +6,9 @@ tbd
 
 ## Monitor data in real-time with Power BI [[learn module]](https://learn.microsoft.com/training/modules/monitor-data-real-time-power-bi)
 
-tbd
+Mindmap: https://app.mindmapmaker.org/#m:mm3b3a11c2b4f947e785cb32f0221522b4
+
+
 
 ## Create paginated reports [[learn module]](https://learn.microsoft.com/training/modules/create-paginated-reports-power-bi)
 
