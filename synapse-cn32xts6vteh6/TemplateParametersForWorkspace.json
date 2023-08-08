@@ -14,6 +14,9 @@
 		"synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapse-6i6nkvrr23bng.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://keyvault-cn32xts6vteh6.vault.azure.net/"
+		},
 		"datalake_linkedservice_properties_typeProperties_url": {
 			"value": "@{concat('https://datalake', linkedService().suffix, '.dfs.core.windows.net')}"
 		},
