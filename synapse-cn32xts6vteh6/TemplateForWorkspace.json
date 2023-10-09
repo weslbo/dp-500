@@ -3277,7 +3277,7 @@
 				"annotations": []
 			},
 			"dependsOn": [],
-			"location": "westcentralus"
+			"location": "eastus"
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/DP500DWH')]",
@@ -3289,7 +3289,7 @@
 				"annotations": []
 			},
 			"dependsOn": [],
-			"location": "westcentralus"
+			"location": "eastus"
 		}
 	]
 }
