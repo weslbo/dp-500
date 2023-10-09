@@ -5,6 +5,12 @@
 		"workspaceName": {
 			"value": "synapse-cn32xts6vteh6"
 		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
 		"adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat('sqlserver-', linkedService().suffix, '.database.windows.net')}\";Initial Catalog=AdventureWorksDW2022-DP-500;User ID=azureuser"
 		},
@@ -13,6 +19,9 @@
 		},
 		"synapse-6i6nkvrr23bng-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapse-6i6nkvrr23bng.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://datalakecn32xts6vteh6.dfs.core.windows.net/"
 		},
 		"AzureKeyVault1_properties_typeProperties_baseUrl": {
 			"value": "https://keyvault-cn32xts6vteh6.vault.azure.net/"
