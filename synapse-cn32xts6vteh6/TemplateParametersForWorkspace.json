@@ -8,9 +8,6 @@
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
-		"AzureSqlDatabase1_connectionString": {
-			"value": ""
-		},
 		"adventureworksdw2022dp500_azuresqldatabase_linkedservice_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=\"@{concat('sqlserver-', linkedService().suffix, '.database.windows.net')}\";Initial Catalog=AdventureWorksDW2022-DP-500;User ID=azureuser"
 		},
