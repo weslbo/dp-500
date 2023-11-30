@@ -2,7 +2,7 @@
 	"name": "PurviewPermissions",
 	"properties": {
 		"content": {
-			"query": "-- execute against serverless master\nCREATE LOGIN [purview-cn32xts6vteh6] FROM EXTERNAL PROVIDER\n\n-- execute against serverless default db\nCREATE USER [purview-cn32xts6vteh6] FROM LOGIN [purview-cn32xts6vteh6]\n\n-- execute against serverless AdventureWorksLTServerless db\nCREATE USER [purview-cn32xts6vteh6] FROM LOGIN [purview-cn32xts6vteh6]\n\n\n\nALTER ROLE db_datareader ADD MEMBER [purview-cn32xts6vteh6]\nUSE DP500DWH\nCREATE USER [purview-cn32xts6vteh6] FROM LOGIN [purview-cn32xts6vteh6]\nALTER ROLE db_datareader ADD MEMBER [purview-cn32xts6vteh6]\n\n\n",
+			"query": "-- execute against serverless master\nCREATE LOGIN [purview-cn32xts6vteh6] FROM EXTERNAL PROVIDER\n\n-- execute against serverless default db\nCREATE USER [purview-cn32xts6vteh6] FROM LOGIN [purview-cn32xts6vteh6]\n\n-- execute against serverless AdventureWorksLTServerless db\nCREATE USER [purview-cn32xts6vteh6] FROM LOGIN [purview-cn32xts6vteh6]\n\n\n-- execute against DWH dedicated pool\nCREATE USER [purview-cn32xts6vteh6] FROM EXTERNAL PROVIDER\nGO\n\nEXEC sp_addrolemember 'db_datareader', [purview-cn32xts6vteh6]\nGO\n",
 			"metadata": {
 				"language": "sql"
 			},
